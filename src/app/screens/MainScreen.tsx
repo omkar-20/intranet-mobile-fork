@@ -1,10 +1,12 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet, Text} from 'react-native';
+import {SafeAreaView, StyleSheet} from 'react-native';
+
+import MainNavigator from '../navigation/MainNavigator';
 
 const MainScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <Text>Main Screen</Text>
+      <MainNavigator />
     </SafeAreaView>
   );
 };
@@ -14,7 +16,5 @@ export default MainScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
