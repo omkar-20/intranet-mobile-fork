@@ -1,11 +1,14 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet, Text} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
 
 function App(): JSX.Element {
   return (
-    <SafeAreaView style={styles.container}>
-      <Text>Welcome to Intranet</Text>
-    </SafeAreaView>
+    <NavigationContainer>
+      <SafeAreaView style={styles.container}>
+        <Text>Welcome to Intranet</Text>
+      </SafeAreaView>
+    </NavigationContainer>
   );
 }
 
