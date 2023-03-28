@@ -4,7 +4,7 @@ import {SafeAreaView, StyleSheet, Text} from 'react-native';
 const HomeScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <Text>Home Screen</Text>
+      <Text style={styles.text}>Home Screen</Text>
     </SafeAreaView>
   );
 };
@@ -16,5 +16,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+  },
+  text: {
+    color: '#707070',
   },
 });
