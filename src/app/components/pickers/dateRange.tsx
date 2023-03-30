@@ -2,9 +2,9 @@ import React, {memo} from 'react';
 import {StyleSheet, View, ViewStyle} from 'react-native';
 
 import DatePicker from './datePicker';
+import Linear from '../seperator/linear';
 
 import strings from '../../constant/strings';
-import Linear from '../seperator/linear';
 
 type Props = {
   style?: ViewStyle;

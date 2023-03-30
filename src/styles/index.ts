@@ -1,13 +1,21 @@
 import {StyleSheet} from 'react-native';
 import colors from '../app/constant/colors';
 
-const FlexStyles = StyleSheet.create({
+const flexStyles = StyleSheet.create({
   horizontal: {
     width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
+  vertical: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'space-around',
   },
 });
 
-const BorderStyles = StyleSheet.create({
+const borderStyles = StyleSheet.create({
   thinBorder: {
     borderColor: colors.BORDER,
     borderWidth: 1,
@@ -15,4 +23,4 @@ const BorderStyles = StyleSheet.create({
   },
 });
 
-export {FlexStyles, BorderStyles};
+export {flexStyles, borderStyles};

@@ -1,13 +1,15 @@
-import React, {memo} from 'react';
-import {Platform, View, ViewStyle} from 'react-native';
+import React, {memo, useMemo} from 'react';
+import {Platform, StyleSheet, View, ViewStyle} from 'react-native';
 
 import RNPickerSelect, {Item, PickerStyle} from 'react-native-picker-select';
 
 import Typography from '../typography';
-import strings from '../../constant/strings';
 
-import {styles} from '../typography';
-import {FlexStyles, BorderStyles} from '../../../styles';
+import strings from '../../constant/strings';
+import colors from '../../constant/colors';
+import fonts from '../../constant/fonts';
+
+import {flexStyles, borderStyles} from '../../../styles';
 
 type Props = {
   style?: ViewStyle;
@@ -28,21 +30,24 @@ const PickerSelect = ({
   style,
   textStyle,
 }: Props) => {
-  const selectedStyle =
-    Platform.OS === 'ios'
-      ? {inputIOS: styles.header}
-      : {
-          inputAndroid: state.match(strings.NO_SELECT)
-            ? styles.description
-            : styles.header,
-        };
+  const selectedStyle = useMemo(
+    () =>
+      Platform.OS === 'ios'
+        ? {inputIOS: styles.header}
+        : {
+            inputAndroid: state.match(strings.NO_SELECT)
+              ? styles.placeholder
+              : styles.header,
+          },
+    [state],
+  );
 
   return (
-    <View style={FlexStyles.horizontal}>
+    <View style={flexStyles.horizontal}>
       <Typography type="header">{label}</Typography>
-      <View style={[BorderStyles.thinBorder, style]}>
+      <View style={[borderStyles.thinBorder, style]}>
         <RNPickerSelect
-          onValueChange={value => onChange(value)}
+          onValueChange={onChange}
           items={itemsList}
           value={state}
           placeholder={placeHolder}
@@ -52,5 +57,20 @@ const PickerSelect = ({
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  header: {
+    color: colors.SECONDARY,
+    lineHeight: 16,
+    fontFamily: fonts.ARIAL,
+    fontSize: 14,
+  },
+  placeholder: {
+    color: colors.SECONDARY_TEXT,
+    lineHeight: 16,
+    fontFamily: fonts.OVERPASS,
+    fontSize: 14,
+  },
+});
 
 export default memo(PickerSelect);
