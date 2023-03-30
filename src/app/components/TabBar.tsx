@@ -12,6 +12,7 @@ import CalendarIcon from '../../assets/svg/calendar.svg';
 import MenuIcon from '../../assets/svg/menu.svg';
 
 import {MainTabParamList} from '../navigation/types';
+import colors from '../constant/colors';
 
 // Defining specific types because
 // ButtonTabBarProps is not generic in the library
@@ -80,10 +81,10 @@ const styles = StyleSheet.create({
   container: {
     height: 56,
     flexDirection: 'row',
-    backgroundColor: '#F2F2F2',
+    backgroundColor: colors.SECONDARY_BACKGROUND,
 
     borderTopWidth: StyleSheet.hairlineWidth,
-    borderColor: '#707070',
+    borderColor: colors.GREY_BORDER_COLOR,
 
     paddingVertical: 9,
   },
@@ -93,7 +94,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonTitle: {
-    color: '#000000',
+    color: colors.WHITE,
   },
 });
 

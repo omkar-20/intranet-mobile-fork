@@ -8,6 +8,7 @@ import LoginScreen from '../screens/LoginScreen';
 import MainScreen from '../screens/MainScreen';
 
 import {RootStackParamList} from './types';
+import {LOGIN_SCREEN, MAIN_SCREEN} from '../constant/screenNames';
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 
@@ -18,8 +19,8 @@ const screenOptions: NativeStackNavigationOptions = {
 const RootNavigator = () => {
   return (
     <RootStack.Navigator screenOptions={screenOptions}>
-      <RootStack.Screen name="Login" component={LoginScreen} />
-      <RootStack.Screen name="Main" component={MainScreen} />
+      <RootStack.Screen name={LOGIN_SCREEN} component={LoginScreen} />
+      <RootStack.Screen name={MAIN_SCREEN} component={MainScreen} />
     </RootStack.Navigator>
   );
 };
