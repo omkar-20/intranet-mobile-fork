@@ -1,4 +1,4 @@
-import React, {PropsWithChildren} from 'react';
+import React, {memo, PropsWithChildren} from 'react';
 import {StyleSheet, Text, TextStyle} from 'react-native';
 
 import colors from '../../constant/colors';
@@ -19,20 +19,15 @@ const Typography = ({
   style,
   alignment,
   fontFamily,
-}: Props) => (
-  <Text
-    style={[
-      styles[type],
-      {
-        fontSize: size,
-        textAlign: alignment,
-        fontFamily: fontFamily,
-      },
-      style,
-    ]}>
-    {children}
-  </Text>
-);
+}: Props) => {
+  const selectedStyle = {
+    fontSize: size,
+    textAlign: alignment,
+    fontFamily: fontFamily,
+  };
+
+  return <Text style={[styles[type], selectedStyle, style]}>{children}</Text>;
+};
 
 const styles = StyleSheet.create({
   title: {
@@ -66,5 +61,5 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
 });
-
-export default Typography;
+export default memo(Typography);
+export {styles};

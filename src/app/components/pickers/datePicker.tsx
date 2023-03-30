@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {memo, useState} from 'react';
 import {StyleSheet, TouchableOpacity, ViewStyle} from 'react-native';
 
 import DateTimePicker, {
@@ -7,11 +7,13 @@ import DateTimePicker, {
 
 import Typography from '../typography';
 
+import DateFormatter from '../../utils/dateFormatter';
+
 import fonts from '../../constant/fonts';
 import colors from '../../constant/colors';
-import {CALENDAR} from '../../constant/icons';
-
+import {Calendar} from '../../constant/icons';
 import strings from '../../constant/strings';
+
 import {BorderStyles, FlexStyles} from '../../../styles';
 
 type Props = {
@@ -21,7 +23,7 @@ type Props = {
   selectedDate: Date | undefined;
   maximumDate?: Date;
   minimumDate?: Date;
-  setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
+  onChange: (date: Date | undefined, isStart: boolean) => void;
   hideIcon?: boolean;
 };
 const DatePicker = ({
@@ -29,46 +31,42 @@ const DatePicker = ({
   initialDate = new Date(),
   selectedDate,
   placeHolder = strings.SELECT,
-  setDate,
+  onChange,
   maximumDate = new Date(),
   minimumDate,
   hideIcon = true,
 }: Props) => {
   const [isVisible, setIsVisible] = useState<Boolean>(false);
-
+  const isStart = placeHolder === strings.FROM;
   const handleDateChange = (
     event: DateTimePickerEvent,
     date: Date | undefined,
   ) => {
-    event.type === 'neutralButtonPressed' ? setDate(undefined) : setDate(date);
+    event.type === 'neutralButtonPressed'
+      ? onChange(undefined, isStart)
+      : onChange(date, isStart);
     handleVisibility();
   };
 
   const handleVisibility = () => setIsVisible(!isVisible);
 
-  const dateFormater = (date: Date) =>
-    `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
-
+  const selectedStyle = selectedDate
+    ? {
+        color: colors.SECONDARY,
+        fontFamily: fonts.ARIAL,
+      }
+    : {
+        color: colors.PLACEHOLDER_TEXT,
+        fontFamily: fonts.OVERPASS,
+      };
   return (
     <TouchableOpacity
       onPress={handleVisibility}
       style={[BorderStyles.thinBorder, FlexStyles.horizontal, style]}>
-      <Typography
-        type={'header'}
-        style={
-          selectedDate
-            ? {
-                color: colors.SECONDARY,
-                fontFamily: fonts.ARIAL,
-              }
-            : {
-                color: colors.PLACEHOLDER_TEXT,
-                fontFamily: fonts.OVERPASS,
-              }
-        }>
-        {selectedDate ? dateFormater(selectedDate) : placeHolder}
+      <Typography type={'header'} style={selectedStyle}>
+        {selectedDate ? DateFormatter(selectedDate) : placeHolder}
       </Typography>
-      {!hideIcon && <CALENDAR style={styles.icon} />}
+      {!hideIcon && <Calendar style={styles.icon} />}
       {isVisible && (
         <DateTimePicker
           value={initialDate}
@@ -90,4 +88,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DatePicker;
+export default memo(DatePicker);

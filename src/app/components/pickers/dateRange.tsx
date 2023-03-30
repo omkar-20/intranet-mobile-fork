@@ -1,43 +1,39 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {StyleSheet, View, ViewStyle} from 'react-native';
 
 import DatePicker from './datePicker';
 
 import strings from '../../constant/strings';
+import Linear from '../seperator/linear';
 
 type Props = {
   style?: ViewStyle;
-  selectedStartDate: Date | undefined;
-  selectedEndDate: Date | undefined;
-  setStartDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
-  setEndDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
+  startDate: Date | undefined;
+  endDate: Date | undefined;
+  onChange: (date: Date | undefined, isStart: boolean) => void;
 };
 
-const DateRange = ({
-  style,
-  selectedStartDate,
-  selectedEndDate,
-  setStartDate,
-  setEndDate,
-}: Props) => {
+const DateRange = ({style, startDate, endDate, onChange}: Props) => {
   return (
-    <View style={style}>
+    <View style={[styles.main, style]}>
       <DatePicker
-        initialDate={selectedStartDate ? selectedStartDate : new Date()}
-        selectedDate={selectedStartDate}
+        initialDate={startDate ? startDate : new Date()}
+        selectedDate={startDate}
         placeHolder={strings.FROM}
-        setDate={setStartDate}
-        maximumDate={selectedEndDate}
+        onChange={onChange}
+        maximumDate={endDate}
         style={styles.leftDatePicker}
       />
 
+      <Linear />
+
       <DatePicker
-        initialDate={selectedEndDate ? selectedEndDate : new Date()}
-        selectedDate={selectedEndDate}
+        initialDate={endDate ? endDate : new Date()}
+        selectedDate={endDate}
         placeHolder={strings.TO}
-        setDate={setEndDate}
+        onChange={onChange}
         hideIcon={false}
-        minimumDate={selectedStartDate}
+        minimumDate={startDate}
         style={styles.rightDatePicker}
       />
     </View>
@@ -45,6 +41,11 @@ const DateRange = ({
 };
 
 const styles = StyleSheet.create({
+  main: {
+    width: '100%',
+    flexDirection: 'row',
+    height: 40,
+  },
   leftDatePicker: {
     width: '50%',
     alignItems: 'center',
@@ -57,10 +58,10 @@ const styles = StyleSheet.create({
     width: '50%',
     alignItems: 'center',
     justifyContent: 'space-around',
-    borderStartWidth: 1,
+    borderStartWidth: 0,
     borderTopStartRadius: 0,
     borderBottomStartRadius: 0,
   },
 });
 
-export default DateRange;
+export default memo(DateRange);

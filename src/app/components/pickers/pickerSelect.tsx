@@ -1,17 +1,21 @@
-import React from 'react';
+import React, {memo} from 'react';
+import {Platform, View, ViewStyle} from 'react-native';
 
-import RNPickerSelect, {Item} from 'react-native-picker-select';
-import {Platform, Text, View} from 'react-native';
+import RNPickerSelect, {Item, PickerStyle} from 'react-native-picker-select';
 
+import Typography from '../typography';
 import strings from '../../constant/strings';
 
-import {FlexStyles, TextStyles, BorderStyles} from '../../../styles';
+import {styles} from '../typography';
+import {FlexStyles, BorderStyles} from '../../../styles';
 
 type Props = {
+  style?: ViewStyle;
+  textStyle?: PickerStyle;
   label: String;
   placeHolder: Item;
   state: String;
-  setState: React.Dispatch<React.SetStateAction<String>>;
+  onChange: (text: string) => void;
   itemsList: Item[];
 };
 
@@ -19,31 +23,34 @@ const PickerSelect = ({
   label,
   placeHolder,
   state,
-  setState,
+  onChange,
   itemsList,
+  style,
+  textStyle,
 }: Props) => {
+  const selectedStyle =
+    Platform.OS === 'ios'
+      ? {inputIOS: styles.header}
+      : {
+          inputAndroid: state.match(strings.NO_SELECT)
+            ? styles.description
+            : styles.header,
+        };
+
   return (
     <View style={FlexStyles.horizontal}>
-      <Text style={TextStyles.sectionSubheadText}>{label}</Text>
-      <View style={BorderStyles.thinBorder}>
+      <Typography type="header">{label}</Typography>
+      <View style={[BorderStyles.thinBorder, style]}>
         <RNPickerSelect
-          onValueChange={value => setState(value)}
+          onValueChange={value => onChange(value)}
           items={itemsList}
           value={state}
           placeholder={placeHolder}
-          style={
-            Platform.OS === 'ios'
-              ? {inputIOS: TextStyles.placeholderText}
-              : {
-                  inputAndroid: state.match(strings.NO_SELECT)
-                    ? TextStyles.placeholderText
-                    : TextStyles.sectionHeadText,
-                }
-          }
+          style={{...textStyle, ...selectedStyle}}
         />
       </View>
     </View>
   );
 };
 
-export default PickerSelect;
+export default memo(PickerSelect);
