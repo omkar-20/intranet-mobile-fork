@@ -1,0 +1,166 @@
+{
+  "publicProfile": {
+    "publicProfile": {
+      "firstName": "Rohit",
+      "lastName": "Nale",
+      "gender": "Male",
+      "mobileNumber": "000000000000000",
+      "bloodGroup": "B +ve",
+      "dateOfBirth": "1997-04-08"
+    },
+    "socialDetails": {
+      "github": "RohitNalePUCSD",
+      "linkdin": "https://www.linkedin.com/in/rohit-nale-1111a715a/",
+      "facebook": "https://www.facebook.com/profile.php?id=100010014845384",
+      "blog": ""
+    }
+  },
+  "privateProfile": {
+    "personalDetail": {
+      "panNumber": "BNIPN9095G",
+      "personalEmail": "rohitnale738@gmail.com",
+      "passportNumber": "",
+      "qualification": null,
+      "dateOfJoining": "2020-09-21",
+      "workExprience": 0,
+      "previousCompany": "Non",
+      "tshirtSize": "L"
+    },
+    "emergencyContactDetails": [
+      {
+        "name": "Narayan Nale",
+        "relation": "Brother",
+        "phoneNumber": "+919503320331"
+      },
+      {
+        "name": "Shashikant Nale",
+        "relation": "Father",
+        "phoneNumber": "+919890975621"
+      }
+    ],
+    "address": [
+      {
+        "typeOfAddress": "Temporary Address",
+        "address": " Vidnyan Nagar, Onkar appartement, plat no :204 ",
+        "city": "Pune",
+        "pinCode": "411021",
+        "state": "Maharashtra",
+        "mobileNumber": "8625946477"
+      },
+      {
+        "typeOfAddress": "Permanent Address",
+        "address": "Omar apartment Vidnyan Nagar",
+        "city": "Solapur",
+        "pinCode": "411021",
+        "state": "MAHARASHTRA",
+        "mobileNumber": "9834753047"
+      }
+    ]
+  },
+  "employeeDetail": {
+    "employeeDetail": {
+      "employeeId": "242",
+      "emailId": "rohit.nale@joshsoftware.com",
+      "employeeLocation": "Pune"
+    },
+    "designationDetails": {
+      "designation": "Software Engineer",
+      "designationTrack": "Not Applicable"
+    },
+    "assessmentDetails": {
+      "assessmentMonth": ["March", "September"],
+      "assessmentPlatform": "Snowflake"
+    },
+    "otherDetails": {
+      "status": "approved",
+      "role": "Employee",
+      "grade": "J11",
+      "company": "Josh Software Private Limited",
+      "businessUnit": "Internal IT",
+      "startDateOfNoticePeriod": null,
+      "dateOfRelieving": null,
+      "notificationEmails": [],
+      "defaultLeaveApprover": "pallavi.harapanahalli@joshsoftware.com",
+      "reasonOfResignation": "",
+      "availableLeaves": 20,
+      "description": "",
+      "isBillable": false,
+      "skipUnassignedProjectTsMail": false,
+      "source": "",
+      "division": "Technical",
+      "joiningBonusPaid": false,
+      "subBusinessUnit": "Application Support"
+    },
+    "currentProjects": [
+      {
+        "projectName": "Intranet",
+        "type": "Investment",
+        "startDate": "2021-03-08",
+        "endDate": "2023-03-31",
+        "isTimesheetRequired": true,
+        "billable": false,
+        "allocation": 160
+      },
+      {
+        "projectName": "21Nuatica-V2",
+        "type": "Maintenance",
+        "startDate": "2021-07-01",
+        "endDate": "2023-03-31",
+        "isTimesheetRequired": true,
+        "billable": true,
+        "allocation": 0
+      },
+      {
+        "projectName": "60 Decibels Platform Development and Enhancement",
+        "type": "T&M",
+        "startDate": "2023-03-29",
+        "endDate": "2023-07-31",
+        "isTimesheetRequired": false,
+        "billable": true,
+        "allocation": 160
+      }
+    ],
+    "previousProjects": [
+      {
+        "projectName": "Flip.id",
+        "type": "T&M",
+        "startDate": "2020-10-19",
+        "endDate": "2021-02-03",
+        "isTimesheetRequired": true,
+        "billable": true,
+        "allocation": 160
+      }
+    ]
+  },
+  "skills": {
+    "primarySkill": "Ruby",
+    "secondarySkill": null,
+    "ternarySkill": null,
+    "otherSkills": "MySQL,C,Data Structure,Git,GO"
+  },
+  "assets": {
+    "currentAsset": [],
+    "previousAsset": [
+      {
+        "name": "Macbook Pro A1707",
+        "startDate": "2023-04-05",
+        "endDate": null
+      }
+    ]
+  },
+  "deployment": {
+    "availableFrom": "2023-08-01",
+    "cvLink": null,
+    "interviewRejected": null,
+    "deploymentOwnerEmails": [
+      "saurabh@joshsoftwares.com",
+      "susahnt@joshSoftwares.com"
+    ],
+    "deploymentNote": null,
+    "remark": null,
+    "OETA": null,
+    "NETA": null,
+    "availableHours": null,
+    "ownedByEmails": null
+  }
+}

@@ -1,34 +1,42 @@
-import {StyleSheet, View, TouchableOpacity, Linking, Alert} from 'react-native';
+import React from 'react';
+import {TouchableOpacity, ViewStyle} from 'react-native';
 
-import {borderStyles} from '../../../styles';
-import CustomImage from '../atoms/customImage';
+import {Blog, Facebook, Github, Linkdin} from '../../constant/icons';
 
-const handlePress = async (uri: string) => {
-  const supported = await Linking.canOpenURL(uri);
+type Props = {
+  uri: string;
+  circleViewStyle?: ViewStyle;
+  borderType?: 'thinBorder' | 'circleBorder';
+  handlePress: (uri: string) => {};
+  data: {name: string};
+};
 
-  if (supported) {
-    console.log(uri);
-    await Linking.openURL(uri);
-  } else {
-    Alert.alert(`Don't know how to open this URL: ${uri}`);
+const renderSvg = (type: string) => {
+  switch (type) {
+    case 'github':
+      return <Github />;
+    case 'linkdin':
+      return <Linkdin />;
+    case 'facebook':
+      return <Facebook />;
+    case 'blog':
+      return <Blog />;
   }
 };
 
-const CircleView = ({uri}: {uri: string}) => {
-  console.log(uri);
+const CircleView = ({
+  uri,
+  circleViewStyle,
+  borderType = 'circleBorder',
+  handlePress,
+  data,
+}: Props) => {
+  const checkPress = () => handlePress(uri);
   return (
-    <TouchableOpacity
-      style={borderStyles.circleBorder}
-      onPress={() => handlePress(uri)}>
-      <CustomImage
-        uri={
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/LinkedIn_icon_circle.svg/800px-LinkedIn_icon_circle.svg.png'
-        }
-      />
+    <TouchableOpacity style={[circleViewStyle]} onPress={checkPress}>
+      {renderSvg(data.name)}
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default CircleView;
