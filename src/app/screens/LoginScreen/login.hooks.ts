@@ -17,7 +17,8 @@ export const useLogin = () => {
       const authToken = responseData.data.jwtToken;
 
       await AsyncStore.setItem(AsyncStore.AUTH_TOKEN_KEY, authToken);
-      setUserData({token: authToken});
+
+      setUserData({authToken});
     },
     onError: async (error: AxiosError<LoginResponseBody>) => {
       await googleSignOut();
