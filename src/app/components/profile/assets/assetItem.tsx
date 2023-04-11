@@ -3,8 +3,9 @@ import {StyleSheet, View} from 'react-native';
 
 import Typography from '../../typography';
 
-import {AssetType} from '../../../types';
+import dataFormatter from '../../../utils/userProfile/dataFormatter';
 
+import {AssetType} from '../../../types';
 import colors from '../../../constant/colors';
 
 type Props = {
@@ -16,23 +17,23 @@ const AssetItem = ({asset, count}: Props) => {
   return (
     <View style={styles.assetContainer}>
       <Typography style={[styles.leftText, {flexBasis: '25%'}]} type="header">
-        {asset.name ? asset.name : '-'}
+        {dataFormatter(asset.name)}
       </Typography>
 
       <Typography
         style={[styles.text, {flexBasis: `${55 / (count - 2)}%`}]}
         type="header">
-        {asset.startDate ? asset.startDate : '-'}
+        {dataFormatter(asset.startDate)}
       </Typography>
       {count === 4 && (
         <Typography
           style={[styles.text, {flexBasis: `${55 / (count - 2)}%`}]}
           type="header">
-          {asset.endDate ? asset.endDate : '-'}
+          {dataFormatter(asset.endDate)}
         </Typography>
       )}
       <Typography style={[styles.text, {flexBasis: '20%'}]}>
-        {asset.isActive ? 'Yes' : asset.isActive == false ? 'No' : '-'}
+        {dataFormatter(asset.isActive)}
       </Typography>
     </View>
   );

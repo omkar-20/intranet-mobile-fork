@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {StyleSheet, View} from 'react-native';
+
+import Typography from '../../typography';
 
 import labelFormatter from '../../../utils/userProfile/labelFormatter';
 import dataFormatter from '../../../utils/userProfile/dataFormatter';
-
-import Typography from '../../typography';
 
 type Props = {
   label: string;
@@ -13,19 +13,13 @@ type Props = {
 
 const CardDetailsRow = ({label, data}: Props) => {
   const formattedData: string = dataFormatter(data);
-  const isEmail: boolean =
-    typeof formattedData === 'string' && formattedData.includes('@');
+
   return (
     <View style={styles.detailsData}>
       <Typography style={styles.labelFlex} type="label">
         {labelFormatter(label)}
       </Typography>
-      <Typography
-        style={[
-          styles.contentStyle,
-          isEmail ? {textTransform: 'lowercase'} : {},
-        ]}
-        type="header">
+      <Typography style={[styles.contentStyle]} type="header">
         {formattedData}
       </Typography>
     </View>
@@ -51,4 +45,4 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
 });
-export default CardDetailsRow;
+export default memo(CardDetailsRow);

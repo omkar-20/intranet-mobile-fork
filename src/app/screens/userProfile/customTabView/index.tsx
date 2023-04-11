@@ -20,18 +20,19 @@ import Data from '../../../Database/data.json';
 import colors from '../../../constant/colors';
 import fonts from '../../../constant/fonts';
 
+const renderScene = SceneMap({
+  publicProfile: () => <PublicProfile data={Data.publicProfile} />,
+  personalDetails: () => <PersonalDetails data={Data.privateProfile} />,
+  skills: () => <Skills data={Data.skills} />,
+  employeeDetails: () => <EmployeeDetails data={Data.employeeDetail} />,
+  assets: () => <Asset data={Data.assets} />,
+  deployment: () => <Deployment data={Data.deployment} />,
+});
+
 const CustomTabView = () => {
   const layout = useWindowDimensions();
 
   const [index, setIndex] = React.useState(0);
-  const renderScene = SceneMap({
-    publicProfile: () => <PublicProfile data={Data.publicProfile} />,
-    personalDetails: () => <PersonalDetails data={Data.privateProfile} />,
-    skills: () => <Skills data={Data.skills} />,
-    employeeDetails: () => <EmployeeDetails data={Data.employeeDetail} />,
-    assets: () => <Asset data={Data.assets} />,
-    deployment: () => <Deployment data={Data.deployment} />,
-  });
 
   const [routes] = React.useState([
     {key: 'publicProfile', title: 'Public Profile'},

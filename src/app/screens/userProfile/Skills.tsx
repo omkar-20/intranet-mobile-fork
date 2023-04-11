@@ -1,11 +1,11 @@
 import React from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
-
 import {View} from 'react-native-animatable';
 
 import CardDetails from '../../components/profile/cardDetails';
 import DetailsView from '../../components/profile/cardDetails/detailsView';
 import CustomChip from '../../components/customChip';
+import ErrorMessage from '../../components/ErrorMessage';
 
 import {skillsType} from '../../types';
 
@@ -19,20 +19,27 @@ const Skills = ({data}: Props) => {
     <ScrollView>
       <CardDetails title="Details">
         <DetailsView
-          data={{primary: data.primarySkill, secondary: data.secondarySkill}}
+          data={{
+            primarySkill: data.primarySkill,
+            secondarySkill: data.secondarySkill,
+            ternarySkill: data.ternarySkill,
+          }}
         />
       </CardDetails>
       <CardDetails title="Other Skills">
         <View style={styles.containerStyle}>
           {skillsFormatter(data.otherSkills as string).map(
-            (skill: string, index: number) => (
-              <CustomChip
-                key={index}
-                label={skill}
-                style={styles.chipStyle}
-                mode="view"
-              />
-            ),
+            (skill: string, index: number) =>
+              skill ? (
+                <CustomChip
+                  key={index}
+                  label={skill}
+                  style={styles.chipStyle}
+                  mode="view"
+                />
+              ) : (
+                <ErrorMessage key={index} data="Other Skills" />
+              ),
           )}
         </View>
       </CardDetails>

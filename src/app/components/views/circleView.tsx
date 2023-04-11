@@ -24,13 +24,7 @@ const renderSvg = (type: string) => {
   }
 };
 
-const CircleView = ({
-  uri,
-  circleViewStyle,
-  borderType = 'circleBorder',
-  handlePress,
-  data,
-}: Props) => {
+const CircleView = ({uri, circleViewStyle, handlePress, data}: Props) => {
   const checkPress = () => handlePress(uri);
   return (
     <TouchableOpacity style={[circleViewStyle]} onPress={checkPress}>

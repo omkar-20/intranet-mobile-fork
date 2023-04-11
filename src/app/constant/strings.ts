@@ -4,4 +4,6 @@ export default {
   FROM: 'From',
   TO: 'To',
   SEARCH: 'Search',
+  YES: 'YES',
+  NO: 'NO',
 };

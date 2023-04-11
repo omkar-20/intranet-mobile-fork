@@ -5,7 +5,6 @@ import AssetItem from './assetItem';
 import AssetLabel from './assetLabel';
 
 import {AssetType} from '../../../types';
-
 import colors from '../../../constant/colors';
 
 type Props = {
@@ -16,10 +15,11 @@ const AssetView = ({labels, assets}: Props) => {
   return (
     <View>
       <AssetLabel
-        containerStyle={{marginBottom: 10}}
+        containerStyle={styles.assetContainer}
         textColor={{color: colors.LABEL_COLOR_SECONDARY}}
         labels={labels}
       />
+
       {assets.map((asset, index) => (
         <AssetItem asset={asset} key={index} count={labels.length} />
       ))}
@@ -29,15 +29,7 @@ const AssetView = ({labels, assets}: Props) => {
 
 const styles = StyleSheet.create({
   assetContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
-    marginBottom: 20,
-    flex: 1,
-  },
-  labelOfDetails: {
-    color: colors.LABEL_COLOR_PRIMARY,
-    fontFamily: 'Arial, Regular',
+    marginBottom: 10,
   },
 });
 export default AssetView;

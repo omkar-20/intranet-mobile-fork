@@ -2,6 +2,7 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 
 import CircleView from '../../views/circleView';
+import ErrorMessage from '../../ErrorMessage';
 
 import urlHandler from '../../../utils/userProfile/urlHandler';
 
@@ -15,11 +16,18 @@ type Props = {
 
 const ProfileView = ({data}: Props) => {
   const dataArray = Object.entries(data);
+  let count = 0;
   return (
     <View style={styles.profileContainer}>
       {dataArray.map(([name, uri], index) => {
-        if (name == 'github') {
-          uri = `https://github.com/${uri}`;
+        // if (name === 'github') {
+        //   uri = `https://github.com/${uri}`;
+        // }
+        if (!uri) {
+          if (count === dataArray.length - 1) {
+            return <ErrorMessage data="Social Details" />;
+          }
+          count++;
         }
         return uri ? (
           <CircleView

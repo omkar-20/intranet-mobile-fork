@@ -1,9 +1,8 @@
 import React, {useCallback, useState} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
-
 import * as Animatable from 'react-native-animatable';
-
 import Accordion from 'react-native-collapsible/Accordion';
+
 import DetailsView from './profile/cardDetails/detailsView';
 import Typography from './typography';
 
@@ -17,18 +16,14 @@ type Props = {
 const CustomAccordian = ({data}: Props) => {
   const [activeProjects, setActiveProjects] = useState<number[]>([]);
 
-  const setProjects = useCallback(
-    (sections: number[]) => {
-      setActiveProjects(sections ? sections : []);
-    },
-    [activeProjects],
-  );
+  const setProjects = useCallback((sections: number[]) => {
+    setActiveProjects(sections ? sections : []);
+  }, []);
 
   const renderHeader = (
     content: projectType,
     index: number,
     isActive: boolean,
-    sections: projectType[],
   ) => {
     return (
       <Animatable.View duration={400} style={styles.header}>
@@ -40,12 +35,7 @@ const CustomAccordian = ({data}: Props) => {
     );
   };
 
-  const renderContent = (
-    content: projectType,
-    index: number,
-    isActive: boolean,
-    sections: projectType[],
-  ) => {
+  const renderContent = (content: projectType) => {
     // Accordion Content view
     return (
       <Animatable.View duration={400}>

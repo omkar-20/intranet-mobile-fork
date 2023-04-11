@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {ScrollView} from 'react-native';
 
 import CardDetails from '../../components/profile/cardDetails';

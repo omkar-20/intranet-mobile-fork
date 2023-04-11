@@ -16,11 +16,13 @@ const AssetLabel = ({containerStyle, labels, textColor}: Props) => {
       {labels.map((label, index) => {
         let value = 55 / (labels.length - 2);
         let textAlign: 'center' | 'left' | 'right' | 'justify' = 'center';
-        if (index == 0) {
+        if (index === 0) {
           value = 25;
           textAlign = 'left';
         }
-        if (index == labels.length - 1) value = 20;
+        if (index === labels.length - 1) {
+          value = 20;
+        }
 
         return (
           <Typography

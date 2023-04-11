@@ -1,4 +1,4 @@
-import React, {PropsWithChildren, useMemo} from 'react';
+import React, {PropsWithChildren} from 'react';
 import {StyleSheet, View, ViewStyle} from 'react-native';
 
 import Typography from '../../typography';
@@ -20,23 +20,18 @@ const CardDetails = ({children, title, cardStyle}: Props) => {
         fontFamily={fonts.ARIAL_AND_BOLD}>
         {title}
       </Typography>
-      {useMemo(() => children, [])}
+      {children}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   detailContainer: {
-    borderRadius: 3,
     flex: 1,
     marginBottom: 16,
     backgroundColor: colors.TERNARY_BACKGROUND,
     flexDirection: 'column',
     padding: 16,
-    shadowColor: colors.SHADOW_COLOR,
-    shadowRadius: 6,
-    elevation: 6,
-    margin: 10,
   },
   title: {
     paddingBottom: 21.5,

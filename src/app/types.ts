@@ -92,19 +92,19 @@ export type skillsType = {
   otherSkills: string | null;
 };
 export type deploymentDetailsType = {
-  availableForm: string | null;
+  availableFrom: string | null;
   cvLink: string | null;
-  deploymentOwnerEmail: string | null;
-  ownedByEmails: string | null;
+  deploymentOwnerEmails: string[] | null;
+  ownedByEmails: string[] | null;
   OETA: string | null;
   NETA: string | null;
-  availableHours: number;
+  availableHours: number | null;
   interviewRejected: string | null;
   deploymentNote: string | null;
   remark: string | null;
 };
 
-export type detailsType =
+export type detailItemType =
   | profileDetailsType
   | personalDetailsType
   | emergencyContactDetailsType
@@ -116,4 +116,27 @@ export type detailsType =
   | projectType
   | projectType[]
   | deploymentDetailsType
-  | {primary: string | null; secondary: string | null};
+  | {
+      primarySkill: string | null;
+      secondarySkill: string | null;
+      ternarySkill: string | null;
+    };
+
+export type detailsType =
+  | profileDetailsType
+  | personalDetailsType
+  | emergencyContactDetailsType[]
+  | addressType[]
+  | addressType
+  | employeeDetailsType
+  | designationDetailsType
+  | assessmentDetailsType
+  | otherDetailsType
+  | projectType
+  | projectType[]
+  | deploymentDetailsType
+  | {
+      primarySkill: string | null;
+      secondarySkill: string | null;
+      ternarySkill: string | null;
+    };
