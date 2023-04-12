@@ -2,6 +2,7 @@ import React, {memo, PropsWithChildren} from 'react';
 import {StyleSheet, View, ViewStyle} from 'react-native';
 
 import ReactNativeModal, {ModalProps} from 'react-native-modal';
+import colors from '../../constant/colors';
 
 type Props = (PropsWithChildren | ModalProps) & {
   style?: ViewStyle;
@@ -9,7 +10,13 @@ type Props = (PropsWithChildren | ModalProps) & {
 };
 
 const BottomModal = ({children, style, contentStyle, ...props}: Props) => (
-  <ReactNativeModal style={[styles.main, style]} {...props}>
+  <ReactNativeModal
+    animationIn={'slideInUp'}
+    animationOut={'slideOutDown'}
+    animationInTiming={500}
+    animationOutTiming={500}
+    style={[styles.main, style]}
+    {...props}>
     <View style={[styles.contentStyle, contentStyle]}>{children}</View>
   </ReactNativeModal>
 );
@@ -21,7 +28,7 @@ const styles = StyleSheet.create({
   },
   contentStyle: {
     alignItems: 'center',
-    minHeight: '50%',
+    backgroundColor: colors.WHITE,
     justifyContent: 'space-around',
   },
 });

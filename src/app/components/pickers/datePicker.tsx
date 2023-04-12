@@ -1,5 +1,11 @@
 import React, {memo, useCallback, useState} from 'react';
-import {StyleSheet, TextStyle, TouchableOpacity, ViewStyle} from 'react-native';
+import {
+  StyleSheet,
+  TextStyle,
+  View,
+  TouchableOpacity,
+  ViewStyle,
+} from 'react-native';
 
 import DateTimePicker, {
   DatePickerOptions,
@@ -17,7 +23,7 @@ import fonts from '../../constant/fonts';
 import colors from '../../constant/colors';
 import {Calendar} from '../../constant/icons';
 
-import {borderStyles, flexStyles} from '../../../styles';
+import {borderStyles} from '../../../styles';
 
 type Props = (BaseProps &
   IOSNativeProps &
@@ -56,23 +62,25 @@ const DatePicker = ({
   return (
     <TouchableOpacity
       onPress={handleVisibility}
-      style={[borderStyles.thinBorder, flexStyles.horizontal, style]}>
-      <Typography
-        type={'header'}
-        style={{
-          ...(selectedDate ? styles.date : styles.placeholder),
-          ...textStyle,
-        }}>
-        {selectedDate ? dateFormater(selectedDate) : placeholder}
-      </Typography>
-      {!hideIcon && <Calendar style={styles.icon} />}
-      {isVisible && (
-        <DateTimePicker
-          onChange={handleDateChange}
-          neutralButton={{label: 'Clear', textColor: 'grey'}}
-          {...props}
-        />
-      )}
+      style={[borderStyles.thinBorder, styles.picker, style]}>
+      <View>
+        <Typography
+          type={'header'}
+          style={{
+            ...(selectedDate ? styles.date : styles.placeholder),
+            ...textStyle,
+          }}>
+          {selectedDate ? dateFormater(selectedDate) : placeholder}
+        </Typography>
+        {!hideIcon && <Calendar style={styles.icon} height={20} width={20} />}
+        {isVisible && (
+          <DateTimePicker
+            onChange={handleDateChange}
+            neutralButton={{label: 'Clear', textColor: 'grey'}}
+            {...props}
+          />
+        )}
+      </View>
     </TouchableOpacity>
   );
 };
@@ -80,17 +88,25 @@ const DatePicker = ({
 const styles = StyleSheet.create({
   icon: {
     position: 'absolute',
-    right: 9,
+    right: 10,
   },
   date: {
     color: colors.SECONDARY,
     fontFamily: fonts.ARIAL,
-    fontSize: 16,
+    textAlignVertical: 'bottom',
+    paddingHorizontal: 10,
+    fontSize: 15,
   },
   placeholder: {
     color: colors.PLACEHOLDER_TEXT,
     fontFamily: fonts.OVERPASS,
+    textAlignVertical: 'bottom',
+    paddingHorizontal: 10,
     fontSize: 16,
+  },
+  picker: {
+    paddingVertical: 10,
+    justifyContent: 'flex-end',
   },
 });
 

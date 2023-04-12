@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {memo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
+import Modal from 'react-native-modal';
 
-import Modal from '../modal';
 import Typography from '../typography';
 import DatePicker from './datePicker';
 import Button from '../button';
@@ -13,43 +13,33 @@ import fonts from '../../constant/fonts';
 type Props = {
   isVisible: boolean;
   toggleModal: () => void;
-  onSubmit?: () => void;
-  startDate?: Date;
-  endDate?: Date;
-  onChangeStart: (date?: Date) => void;
-  onChangeEnd: (date?: Date) => void;
+  onSubmit: (startDate?: Date, endDate?: Date) => void;
 };
 
-const DateRange = ({
-  isVisible,
-  startDate,
-  toggleModal,
-  onSubmit,
-  endDate,
-  onChangeEnd,
-  onChangeStart,
-}: Props) => {
-  const handleCancel = () => toggleModal();
+const DateRange = ({isVisible, toggleModal, onSubmit}: Props) => {
+  const [startDate, setStartDate] = useState<Date>();
+  const [endDate, setEndDate] = useState<Date>();
+
+  const onChangeStart = (date?: Date) => setStartDate(date);
+
+  const onChangeEnd = (date?: Date) => setEndDate(date);
 
   const handleSubmit = () => {
-    onSubmit?.();
+    onSubmit(startDate, endDate);
     toggleModal();
-  };
-
-  const handleOverdropTouch = () => {
-    toggleModal();
-    return true;
   };
 
   const newDate = new Date();
+
   return (
     <Modal
+      isVisible={isVisible}
       animationIn="zoomInUp"
       animationInTiming={500}
-      isVisible={isVisible}
       animationOut="zoomOutDown"
       animationOutTiming={500}
-      onStartShouldSetResponder={handleOverdropTouch}
+      onBackButtonPress={toggleModal}
+      onBackdropPress={toggleModal}
       style={styles.modal}>
       <View style={styles.main}>
         <View style={styles.container}>
@@ -65,9 +55,11 @@ const DateRange = ({
             placeholder={strings.SELECT}
             onDateChange={onChangeStart}
             maximumDate={endDate ? endDate : newDate}
-            style={styles.datePicker}
             hideIcon={false}
           />
+        </View>
+
+        <View style={styles.container}>
           <Typography style={styles.secondaryText}>{strings.TO}</Typography>
 
           <DatePicker
@@ -78,13 +70,12 @@ const DateRange = ({
             hideIcon={false}
             minimumDate={startDate}
             maximumDate={newDate}
-            style={styles.datePicker}
           />
         </View>
 
         <View style={styles.bottomContainer}>
           <View style={styles.btn}>
-            <Button type="secondary" title="Cancel" onPress={handleCancel} />
+            <Button type="secondary" title="Cancel" onPress={toggleModal} />
           </View>
           <View style={styles.btn}>
             <Button type="primary" title="Ok" onPress={handleSubmit} />
@@ -97,30 +88,29 @@ const DateRange = ({
 
 const styles = StyleSheet.create({
   modal: {
-    alignItems: 'center',
     justifyContent: 'center',
-  },
-  secondaryText: {
-    fontSize: 16,
-    lineHeight: 18,
-    paddingVertical: 4,
-    fontFamily: fonts.ARIAL,
-    fontWeight: '500',
-    letterSpacing: 2,
-    color: colors.SECONDARY_TEXT,
+    alignItems: 'center',
   },
   main: {
+    width: '90%',
     backgroundColor: colors.WHITE,
     borderRadius: 20,
     paddingHorizontal: 20,
   },
+  secondaryText: {
+    fontSize: 16,
+    lineHeight: 18,
+    fontFamily: fonts.ARIAL,
+    fontWeight: '600',
+    letterSpacing: 2,
+    color: colors.SECONDARY_TEXT,
+  },
   container: {
-    width: '80%',
     paddingHorizontal: 5,
     paddingVertical: 10,
   },
   bottomContainer: {
-    paddingVertical: 10,
+    paddingVertical: 20,
     flexDirection: 'row',
   },
   btn: {
@@ -133,11 +123,9 @@ const styles = StyleSheet.create({
     fontFamily: fonts.ARIAL,
     letterSpacing: 0.7,
     color: colors.SECONDARY,
-  },
-  datePicker: {
-    height: 50,
-    width: '90%',
+    paddingBottom: 20,
+    paddingTop: 10,
   },
 });
 
-export default DateRange;
+export default memo(DateRange);
