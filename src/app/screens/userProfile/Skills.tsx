@@ -11,6 +11,7 @@ import {skillsType} from '../../types';
 
 type Props = {
   data: skillsType;
+  refresh?: () => void;
 };
 const skillsFormatter = (skills: string): string[] => skills.split(',');
 

@@ -33,7 +33,6 @@ const DetailsView = ({data}: Props) => {
 const styles = StyleSheet.create({
   detailsContainer: {
     flexDirection: 'column',
-    justifyContent: 'space-around',
     flex: 1,
   },
   elementStyle: {

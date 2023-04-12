@@ -20,12 +20,9 @@ const ProfileView = ({data}: Props) => {
   return (
     <View style={styles.profileContainer}>
       {dataArray.map(([name, uri], index) => {
-        // if (name === 'github') {
-        //   uri = `https://github.com/${uri}`;
-        // }
         if (!uri) {
           if (count === dataArray.length - 1) {
-            return <ErrorMessage data="Social Details" />;
+            return <ErrorMessage key={index} data="Social Details" />;
           }
           count++;
         }
