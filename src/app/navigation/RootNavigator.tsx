@@ -5,15 +5,20 @@ import {
 } from '@react-navigation/native-stack';
 
 import LoginScreen from '../screens/LoginScreen';
-import MainScreen from '../screens/MainScreen';
 import SplashScreen from '../screens/SplashScreen';
+import UserProfile from '../screens/userProfile';
+import MainNavigator from './MainNavigator';
 
 import UserContext from '../context/user.context';
 import AsyncStore from '../services/asyncStorage';
 import {initNotificationService} from '../services/firebase/messaging';
 
-import {LOGIN_SCREEN, MAIN_SCREEN} from '../constant/screenNames';
 import {RootStackParamList} from './types';
+import {
+  LOGIN_SCREEN,
+  MAIN_SCREEN,
+  USER_PROFILE_SCREEN,
+} from '../constant/screenNames';
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 
@@ -53,7 +58,13 @@ const RootNavigator = () => {
   return (
     <RootStack.Navigator screenOptions={screenOptions}>
       {user ? (
-        <RootStack.Screen name={MAIN_SCREEN} component={MainScreen} />
+        <>
+          <RootStack.Screen name={MAIN_SCREEN} component={MainNavigator} />
+          <RootStack.Screen
+            name={USER_PROFILE_SCREEN}
+            component={UserProfile}
+          />
+        </>
       ) : (
         <RootStack.Screen name={LOGIN_SCREEN} component={LoginScreen} />
       )}

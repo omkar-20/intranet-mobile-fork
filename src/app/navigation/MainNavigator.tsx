@@ -9,6 +9,7 @@ import HomeScreen from '../screens/HomeScreen';
 import LeaveScreen from '../screens/LeaveScreen';
 import TimesheetScreen from '../screens/TimesheetScreen';
 import TabBar from '../components/TabBar';
+import Header from '../components/header';
 
 import {
   HOME_SCREEN,
@@ -20,11 +21,12 @@ import {MainTabParamList} from './types';
 const MainTab = createBottomTabNavigator<MainTabParamList>();
 
 const screenOptions: BottomTabNavigationOptions = {
-  headerShown: false,
+  header: () => <Header type="primary" />,
 };
 
 const sceneContainerStyle: StyleProp<ViewStyle> = {
   backgroundColor: '#FFFFFF',
+  flex: 1,
 };
 
 const MainNavigator = () => {

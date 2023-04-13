@@ -2,12 +2,10 @@ import React from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
 
 import MainNavigator from '../navigation/MainNavigator';
-import Header from '../components/Header';
 
 const MainScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <Header />
       <MainNavigator />
     </SafeAreaView>
   );

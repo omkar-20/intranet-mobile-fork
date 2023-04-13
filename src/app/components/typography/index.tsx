@@ -44,5 +44,11 @@ const styles = StyleSheet.create({
     fontFamily: fonts.OVERPASS,
     fontSize: 10,
   },
+  label: {
+    color: colors.LABEL_COLOR_PRIMARY,
+    lineHeight: 16,
+    fontFamily: fonts.ARIAL,
+    fontSize: 14,
+  },
 });
 export default memo(Typography);

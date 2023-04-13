@@ -18,6 +18,12 @@ const borderStyles = StyleSheet.create({
     borderColor: colors.BORDER,
     borderBottomWidth: 1,
   },
+  circleBorder: {
+    borderColor: colors.GREY_BORDER_COLOR,
+    borderRadius: 32 / 2,
+    borderWidth: 1,
+    backgroundColor: colors.WHITE,
+  },
 });
 
 export {flexStyles, borderStyles};
