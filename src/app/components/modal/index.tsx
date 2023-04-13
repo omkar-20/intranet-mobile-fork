@@ -10,13 +10,7 @@ type Props = (PropsWithChildren | ModalProps) & {
 };
 
 const BottomModal = ({children, style, contentStyle, ...props}: Props) => (
-  <ReactNativeModal
-    animationIn={'slideInUp'}
-    animationOut={'slideOutDown'}
-    animationInTiming={500}
-    animationOutTiming={500}
-    style={[styles.main, style]}
-    {...props}>
+  <ReactNativeModal style={[styles.main, style]} {...props}>
     <View style={[styles.contentStyle, contentStyle]}>{children}</View>
   </ReactNativeModal>
 );

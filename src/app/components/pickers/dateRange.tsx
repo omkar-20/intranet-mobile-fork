@@ -13,12 +13,20 @@ import fonts from '../../constant/fonts';
 type Props = {
   isVisible: boolean;
   toggleModal: () => void;
+  initialStartDateValue?: Date;
+  initialEndDateValue?: Date;
   onSubmit: (startDate?: Date, endDate?: Date) => void;
 };
 
-const DateRange = ({isVisible, toggleModal, onSubmit}: Props) => {
-  const [startDate, setStartDate] = useState<Date>();
-  const [endDate, setEndDate] = useState<Date>();
+const DateRange = ({
+  isVisible,
+  toggleModal,
+  initialStartDateValue,
+  initialEndDateValue,
+  onSubmit,
+}: Props) => {
+  const [startDate, setStartDate] = useState(initialStartDateValue);
+  const [endDate, setEndDate] = useState(initialEndDateValue);
 
   const onChangeStart = (date?: Date) => setStartDate(date);
 
