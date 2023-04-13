@@ -91,6 +91,14 @@ export type skillsType = {
   ternarySkill: string | null;
   otherSkills: string | null;
 };
+
+export interface updateSkillFormDataType {
+  primaryTechnicalSkill?: string;
+  secondaryTechnicalSkill?: string;
+  ternaryTechnicalSkill?: string;
+  otherSkills?: string;
+}
+
 export type deploymentDetailsType = {
   availableFrom: string | null;
   cvLink: string | null;

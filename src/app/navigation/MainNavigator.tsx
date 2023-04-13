@@ -26,6 +26,7 @@ const screenOptions: BottomTabNavigationOptions = {
 
 const sceneContainerStyle: StyleProp<ViewStyle> = {
   backgroundColor: '#FFFFFF',
+  flex: 1,
 };
 
 const MainNavigator = () => {

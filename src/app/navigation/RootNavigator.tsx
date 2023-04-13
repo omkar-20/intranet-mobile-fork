@@ -5,9 +5,9 @@ import {
 } from '@react-navigation/native-stack';
 
 import LoginScreen from '../screens/LoginScreen';
-import MainScreen from '../screens/MainScreen';
 import SplashScreen from '../screens/SplashScreen';
 import UserProfile from '../screens/userProfile';
+import MainNavigator from './MainNavigator';
 
 import UserContext from '../context/user.context';
 import AsyncStore from '../services/asyncStorage';
@@ -59,7 +59,7 @@ const RootNavigator = () => {
     <RootStack.Navigator screenOptions={screenOptions}>
       {user ? (
         <>
-          <RootStack.Screen name={MAIN_SCREEN} component={MainScreen} />
+          <RootStack.Screen name={MAIN_SCREEN} component={MainNavigator} />
           <RootStack.Screen
             name={USER_PROFILE_SCREEN}
             component={UserProfile}
