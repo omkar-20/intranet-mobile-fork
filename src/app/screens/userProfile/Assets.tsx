@@ -3,9 +3,10 @@ import {ScrollView} from 'react-native';
 
 import DetailsCard from '../../components/profile/cardDetails';
 import AssetView from '../../components/profile/assets/assetView';
-import ErrorMessage from '../../components/ErrorMessage';
+import ErrorMessage from '../../components/errorMessage';
 
 import {AssetType} from '../../types';
+import {NO_CURRENT_ASSETS, NO_PREVIOUS_ASSETS} from '../../constant/message';
 
 const currentAssetsLabels = ['Name', 'Start Date', 'Is Active'];
 const previousAssetsLabels = ['Name', 'Start Date', 'End Date', 'Is Active'];
@@ -24,7 +25,7 @@ const Asset = ({data}: Props) => {
         {data.currentAsset?.length ? (
           <AssetView labels={currentAssetsLabels} assets={data.currentAsset} />
         ) : (
-          <ErrorMessage data="Current Assets" />
+          <ErrorMessage message={NO_CURRENT_ASSETS} />
         )}
       </DetailsCard>
 
@@ -36,7 +37,7 @@ const Asset = ({data}: Props) => {
           />
         </DetailsCard>
       ) : (
-        <ErrorMessage data="previous Assets" />
+        <ErrorMessage message={NO_PREVIOUS_ASSETS} />
       )}
     </ScrollView>
   );

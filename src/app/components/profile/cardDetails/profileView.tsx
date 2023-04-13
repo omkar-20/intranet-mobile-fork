@@ -2,13 +2,10 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 
 import CircleView from '../../views/circleView';
-import ErrorMessage from '../../ErrorMessage';
-
-import urlHandler from '../../../utils/userProfile/urlHandler';
+import ErrorMessage from '../../errorMessage';
 
 import {socialDetailsType} from '../../../types';
-
-const handlePress = (uri: string) => urlHandler(uri);
+import {NO_PROFILE_DATA} from '../../../constant/message';
 
 type Props = {
   data: socialDetailsType;
@@ -22,17 +19,12 @@ const ProfileView = ({data}: Props) => {
       {dataArray.map(([name, uri], index) => {
         if (!uri) {
           if (count === dataArray.length - 1) {
-            return <ErrorMessage key={index} data="Social Details" />;
+            return <ErrorMessage key={index} message={NO_PROFILE_DATA} />;
           }
           count++;
         }
         return uri ? (
-          <CircleView
-            key={index}
-            data={{name: name}}
-            uri={uri}
-            handlePress={handlePress}
-          />
+          <CircleView key={index} data={{name: name}} uri={uri} />
         ) : null;
       })}
     </View>

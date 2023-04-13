@@ -15,10 +15,9 @@ const AssetLabel = ({containerStyle, labels, textColor}: Props) => {
     <View style={{...styles.assetContainer, ...containerStyle}}>
       {labels.map((label, index) => {
         let value = 55 / (labels.length - 2);
-        let textAlign: 'center' | 'left' | 'right' | 'justify' = 'center';
+
         if (index === 0) {
           value = 25;
-          textAlign = 'left';
         }
         if (index === labels.length - 1) {
           value = 20;
@@ -30,8 +29,8 @@ const AssetLabel = ({containerStyle, labels, textColor}: Props) => {
               color: colors.LABEL_COLOR_SECONDARY,
               ...textColor,
               flexBasis: `${value}%`,
+              textAlign: index !== 0 ? 'center' : 'left',
             }}
-            alignment={textAlign}
             key={index}>
             {label}
           </Typography>

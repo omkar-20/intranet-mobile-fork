@@ -1,32 +1,38 @@
 import React, {useCallback, useState} from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import {StyleSheet, TouchableOpacity, ViewStyle} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Accordion from 'react-native-collapsible/Accordion';
 
-import DetailsView from './profile/cardDetails/detailsView';
-import Typography from './typography';
+import DetailsView from '../profile/cardDetails/detailsView';
+import Typography from '../typography';
 
-import {projectType} from '../types';
-import colors from '../constant/colors';
-import {ArrowDown, ArrowUp} from '../constant/icons';
+import {projectType} from '../../types';
+import colors from '../../constant/colors';
+import {ArrowDown, ArrowUp} from '../../constant/icons';
 
 type Props = {
   data: projectType[];
+  headerContainerStyle?: ViewStyle;
 };
-const CustomAccordian = ({data}: Props) => {
-  const [activeProjects, setActiveProjects] = useState<number[]>([]);
 
-  const setProjects = useCallback((sections: number[]) => {
-    setActiveProjects(sections ? sections : []);
+type contentType = projectType;
+
+const CustomAccordian = ({data, headerContainerStyle}: Props) => {
+  const [activeSections, setActiveSections] = useState<number[]>([]);
+
+  const setSections = useCallback((sections: number[]) => {
+    setActiveSections(sections ? sections : []);
   }, []);
 
   const renderHeader = (
-    content: projectType,
+    content: contentType,
     index: number,
     isActive: boolean,
   ) => {
     return (
-      <Animatable.View duration={400} style={styles.header}>
+      <Animatable.View
+        duration={400}
+        style={[styles.header, headerContainerStyle]}>
         <Typography style={styles.headerText} type="label">
           {content.projectName}
         </Typography>
@@ -35,7 +41,7 @@ const CustomAccordian = ({data}: Props) => {
     );
   };
 
-  const renderContent = (content: projectType) => {
+  const renderContent = (content: contentType) => {
     // Accordion Content view
     return (
       <Animatable.View duration={400}>
@@ -45,11 +51,11 @@ const CustomAccordian = ({data}: Props) => {
   };
   return (
     <Accordion
-      activeSections={activeProjects}
+      activeSections={activeSections}
       sections={data}
       renderHeader={renderHeader}
       renderContent={renderContent}
-      onChange={setProjects}
+      onChange={setSections}
       underlayColor="#E6EDFF"
       touchableComponent={TouchableOpacity}
     />

@@ -2,16 +2,16 @@ import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
-import {JoshLogo, Profile} from '../constant/icons';
-import colors from '../constant/colors';
-import {MainScreenNavigationProp} from '../navigation/types';
-import {USER_PROFILE_SCREEN} from '../constant/screenNames';
+import {JoshLogo, Profile} from '../../constant/icons';
+import colors from '../../constant/colors';
+import {MainScreenNavigationProp} from '../../navigation/types';
+import {USER_PROFILE_SCREEN} from '../../constant/screenNames';
 
 interface Props {
-  onMainScreen: boolean;
+  type: 'primary' | 'secondary';
 }
 
-const Header = (props: Props) => {
+const Header = ({type}: Props) => {
   const navigation = useNavigation<MainScreenNavigationProp>();
 
   const navigateToProfile = () => {
@@ -22,7 +22,7 @@ const Header = (props: Props) => {
     navigation.goBack();
   };
 
-  if (props.onMainScreen) {
+  if (type === 'primary') {
     return (
       <View style={styles.container}>
         <JoshLogo height={18} width={85} fill={colors.WHITE} />
@@ -31,22 +31,23 @@ const Header = (props: Props) => {
         </TouchableOpacity>
       </View>
     );
+  } else if (type === 'secondary') {
+    return (
+      <View style={styles.container}>
+        <TouchableOpacity
+          activeOpacity={0.5}
+          style={styles.backButton}
+          onPress={goBack}>
+          <Text style={styles.backArrow}>{'<'}</Text>
+          <Text style={styles.backText}>Profile</Text>
+        </TouchableOpacity>
+
+        <Profile height={18} width={18} fill={colors.WHITE} />
+      </View>
+    );
   }
 
-  return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        activeOpacity={0.5}
-        style={styles.backButton}
-        onPress={goBack}>
-        <Text style={styles.backArrow}>{'<'}</Text>
-        <Text style={styles.backText}>Profile</Text>
-      </TouchableOpacity>
-      <TouchableOpacity activeOpacity={0.5} onPress={navigateToProfile}>
-        <Profile height={18} width={18} fill={colors.WHITE} />
-      </TouchableOpacity>
-    </View>
-  );
+  return <></>;
 };
 
 const styles = StyleSheet.create({

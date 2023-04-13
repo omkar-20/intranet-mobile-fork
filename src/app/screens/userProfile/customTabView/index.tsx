@@ -36,8 +36,9 @@ import {
   skillsType,
   socialDetailsType,
 } from '../../../types';
-import ErrorMessage from '../../../components/ErrorMessage';
+import ErrorMessage from '../../../components/errorMessage';
 import {View} from 'react-native-animatable';
+import {NO_DATA_FETCHED} from '../../../constant/message';
 
 type dataType = {
   publicProfile: {
@@ -95,7 +96,6 @@ const CustomTabView = () => {
   });
 
   if (!isError && data && !isRefetchError) {
-    console.log(data);
     const renderScene = renderSceneWrapper(data, refetch);
     const renderTabBar = (
       props: SceneRendererProps & {
@@ -129,7 +129,7 @@ const CustomTabView = () => {
   } else {
     return (
       <View style={styles.errorMessageContainer}>
-        <ErrorMessage data="Profile" />
+        <ErrorMessage message={NO_DATA_FETCHED} />
       </View>
     );
   }

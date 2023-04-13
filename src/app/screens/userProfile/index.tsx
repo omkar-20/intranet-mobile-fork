@@ -1,12 +1,12 @@
 import React from 'react';
 
 import CustomTabView from './customTabView';
-import Header from '../../components/Header';
+import Header from '../../components/header';
 
 const UserProfile = () => {
   return (
     <>
-      <Header onMainScreen={false} />
+      <Header type="secondary" />
       <CustomTabView />
     </>
   );

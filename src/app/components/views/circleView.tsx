@@ -1,13 +1,14 @@
 import React from 'react';
 import {TouchableOpacity, ViewStyle} from 'react-native';
 
+import urlHandler from '../../utils/userProfile/urlHandler';
+
 import {Blog, Facebook, Github, Linkdin} from '../../constant/icons';
 
 type Props = {
   uri: string;
   circleViewStyle?: ViewStyle;
   borderType?: 'thinBorder' | 'circleBorder';
-  handlePress: (uri: string) => {};
   data: {name: string};
 };
 
@@ -24,7 +25,9 @@ const renderSvg = (type: string) => {
   }
 };
 
-const CircleView = ({uri, circleViewStyle, handlePress, data}: Props) => {
+const handlePress = (uri: string) => urlHandler(uri);
+
+const CircleView = ({uri, circleViewStyle, data}: Props) => {
   const checkPress = () => handlePress(uri);
   return (
     <TouchableOpacity style={[circleViewStyle]} onPress={checkPress}>

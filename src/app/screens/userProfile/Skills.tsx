@@ -5,9 +5,10 @@ import {View} from 'react-native-animatable';
 import CardDetails from '../../components/profile/cardDetails';
 import DetailsView from '../../components/profile/cardDetails/detailsView';
 import CustomChip from '../../components/customChip';
-import ErrorMessage from '../../components/ErrorMessage';
+import ErrorMessage from '../../components/errorMessage';
 
 import {skillsType} from '../../types';
+import {NO_OTHER_SKILLS} from '../../constant/message';
 
 type Props = {
   data: skillsType;
@@ -39,7 +40,7 @@ const Skills = ({data}: Props) => {
                   mode="view"
                 />
               ) : (
-                <ErrorMessage key={index} data="Other Skills" />
+                <ErrorMessage key={index} message={NO_OTHER_SKILLS} />
               ),
           )}
         </View>

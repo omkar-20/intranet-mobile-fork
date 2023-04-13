@@ -1,9 +1,9 @@
 import React from 'react';
 import {View, StyleSheet, ViewStyle} from 'react-native';
 
-import Typography from './typography';
+import Typography from '../typography';
 
-import {Cross} from '../constant/icons';
+import {Cross} from '../../constant/icons';
 
 type Props = {
   label: string;
