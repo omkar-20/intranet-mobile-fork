@@ -7,5 +7,19 @@ import Menu from '../../assets/svg/menu.svg';
 import Floating from '../../assets/svg/floating.svg';
 import JoshLogo from '../../assets/svg/logo.svg';
 import Profile from '../../assets/svg/profile.svg';
+import Search from '../../assets/svg/search.svg';
+import Arrow from '../../assets/svg/arrow.svg';
 
-export {Calendar, Delete, Edit, Clock, Home, Menu, Floating, JoshLogo, Profile};
+export {
+  Calendar,
+  Search,
+  Arrow,
+  Delete,
+  Edit,
+  Clock,
+  Home,
+  Menu,
+  Floating,
+  JoshLogo,
+  Profile,
+};
