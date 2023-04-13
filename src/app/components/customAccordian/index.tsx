@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useState, memo} from 'react';
 import {StyleSheet, TouchableOpacity, ViewStyle} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Accordion from 'react-native-collapsible/Accordion';
@@ -78,4 +78,4 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
   },
 });
-export default CustomAccordian;
+export default memo(CustomAccordian);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {View, StyleSheet, ViewStyle} from 'react-native';
 
 import Typography from '../typography';
@@ -43,4 +43,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CustomChip;
+export default memo(CustomChip);
