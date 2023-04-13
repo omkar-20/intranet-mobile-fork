@@ -5,30 +5,13 @@ import colors from '../../constant/colors';
 import fonts from '../../constant/fonts';
 
 type Props = PropsWithChildren & {
-  style?: TextStyle | TextStyle[];
-  type?: 'title' | 'header' | 'subheader' | 'description' | 'label';
-  size?: number;
-  alignment?: 'center' | 'left' | 'right' | 'justify';
-  fontFamily?: string;
-  key?: number;
+  style?: TextStyle;
+  type?: 'title' | 'header' | 'subheader' | 'description';
 };
 
-const Typography = ({
-  children,
-  type = 'title',
-  size,
-  style,
-  alignment,
-  fontFamily,
-}: Props) => {
-  const selectedStyle = {
-    fontSize: size,
-    textAlign: alignment,
-    fontFamily: fontFamily,
-  };
-
-  return <Text style={[styles[type], selectedStyle, style]}>{children}</Text>;
-};
+const Typography = ({children, type = 'title', style}: Props) => (
+  <Text style={[styles[type], style]}>{children}</Text>
+);
 
 const styles = StyleSheet.create({
   title: {

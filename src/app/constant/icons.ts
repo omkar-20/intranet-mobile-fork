@@ -15,8 +15,13 @@ import Facebook from '../../assets/svg/facebook.svg';
 import Github from '../../assets/svg/github.svg';
 import Blog from '../../assets/svg/blog.svg';
 
+import Search from '../../assets/svg/search.svg';
+import Arrow from '../../assets/svg/arrow.svg';
+
 export {
   Calendar,
+  Search,
+  Arrow,
   Delete,
   Edit,
   Clock,
