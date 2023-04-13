@@ -2,16 +2,17 @@ import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
-import {JoshLogo, Profile} from '../../constant/icons';
+import {Arrow, JoshLogo, Profile} from '../../constant/icons';
 import colors from '../../constant/colors';
 import {MainScreenNavigationProp} from '../../navigation/types';
 import {USER_PROFILE_SCREEN} from '../../constant/screenNames';
 
 interface Props {
-  type: 'primary' | 'secondary';
+  type: 'primary' | 'secondary' | 'ternary';
+  title?: string;
 }
 
-const Header = ({type}: Props) => {
+const Header = ({type, title}: Props) => {
   const navigation = useNavigation<MainScreenNavigationProp>();
 
   const navigateToProfile = () => {
@@ -38,11 +39,37 @@ const Header = ({type}: Props) => {
           activeOpacity={0.5}
           style={styles.backButton}
           onPress={goBack}>
-          <Text style={styles.backArrow}>{'<'}</Text>
-          <Text style={styles.backText}>Profile</Text>
+          <Arrow
+            height={18}
+            width={18}
+            style={styles.arrow}
+            fill={colors.WHITE}
+          />
+          <Text style={styles.backText}>{title}</Text>
         </TouchableOpacity>
 
         <Profile height={18} width={18} fill={colors.WHITE} />
+      </View>
+    );
+  } else if (type === 'ternary') {
+    return (
+      <View style={styles.container}>
+        <View style={styles.backButton}>
+          <TouchableOpacity activeOpacity={0.5} onPress={goBack}>
+            <Arrow
+              height={18}
+              width={18}
+              style={styles.arrow}
+              fill={colors.WHITE}
+            />
+          </TouchableOpacity>
+
+          <Text style={styles.backText}>{title}</Text>
+        </View>
+
+        <TouchableOpacity activeOpacity={0.5} onPress={navigateToProfile}>
+          <Profile height={18} width={18} fill={colors.WHITE} />
+        </TouchableOpacity>
       </View>
     );
   }
@@ -55,7 +82,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingTop: 26,
-    paddingBottom: 18,
+    paddingBottom: 13,
     paddingLeft: 16,
     paddingRight: 23,
 
@@ -63,13 +90,16 @@ const styles = StyleSheet.create({
   },
   backButton: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   backText: {
     color: colors.WHITE,
+    fontSize: 15,
+    marginStart: 20,
+    paddingBottom: 5,
   },
-  backArrow: {
-    marginRight: 17,
-    color: colors.WHITE,
+  arrow: {
+    transform: [{rotate: '180 deg'}],
   },
 });
 

@@ -2,12 +2,16 @@ import React from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
 
 import MainNavigator from '../navigation/MainNavigator';
+import {Navigation} from '../navigation/types';
+import StackNavigation from '../context/stack.context';
 
-const MainScreen = () => {
+const MainScreen = ({navigation}: {navigation: Navigation}) => {
   return (
-    <SafeAreaView style={styles.container}>
-      <MainNavigator />
-    </SafeAreaView>
+    <StackNavigation.Provider value={navigation}>
+      <SafeAreaView style={styles.container}>
+        <MainNavigator />
+      </SafeAreaView>
+    </StackNavigation.Provider>
   );
 };
 
