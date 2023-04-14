@@ -2,7 +2,6 @@ import React, {memo, useCallback, useEffect, useState} from 'react';
 import {
   Alert,
   Keyboard,
-  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -175,55 +174,54 @@ const CreateTimesheet = ({toggleModal, isVisible}: Props) => {
   };
 
   const onSave = () => {
+    // TO DO API CALL
     setAddedTimesheet([]);
     toggleModal();
   };
 
   return (
-    <ScrollView>
-      <Modal
-        isVisible={isVisible}
-        animationIn={'slideInUp'}
-        animationOut={'slideOutDown'}
-        animationInTiming={500}
-        animationOutTiming={500}
-        contentStyle={styles.main}>
-        <View style={[styles.horizontalPad, styles.form]}>
-          <Typography type="title" style={styles.title}>
-            Add Timesheet
-          </Typography>
+    <Modal
+      isVisible={isVisible}
+      animationIn={'slideInUp'}
+      animationOut={'slideOutDown'}
+      animationInTiming={500}
+      animationOutTiming={500}
+      contentStyle={styles.main}>
+      <View style={[styles.horizontalPad, styles.form]}>
+        <Typography type="title" style={styles.title}>
+          Add Timesheet
+        </Typography>
 
-          <TimesheetForm
-            onSubmit={onAdd}
-            isFormVisible={isFormVisible}
-            defaultData={formDefaultData}
+        <TimesheetForm
+          onSubmit={onAdd}
+          isFormVisible={isFormVisible}
+          defaultData={formDefaultData}
+        />
+      </View>
+      <TouchableOpacity onPress={() => handlePress()} style={styles.arrow}>
+        <Arrow width={22} height={22} />
+      </TouchableOpacity>
+
+      <SectionListTimesheet
+        timesheetListData={addedTimesheet}
+        onEdit={onEdit}
+        onDelete={onDelete}
+        style={styles.horizontalPad}
+      />
+
+      {!keyboardIsVisible && (
+        <View
+          style={[flexStyles.horizontal, styles.btns, styles.horizontalPad]}>
+          <Button title="Cancel" type="secondary" onPress={toggleModal} />
+          <Button
+            title="Save"
+            type="primary"
+            onPress={onSave}
+            disabled={addedTimesheet.length === 0}
           />
         </View>
-        <TouchableOpacity onPress={() => handlePress()} style={styles.arrow}>
-          <Arrow width={22} height={22} />
-        </TouchableOpacity>
-
-        <SectionListTimesheet
-          timesheetListData={addedTimesheet}
-          onEdit={onEdit}
-          onDelete={onDelete}
-          style={styles.horizontalPad}
-        />
-
-        {!keyboardIsVisible && (
-          <View
-            style={[flexStyles.horizontal, styles.btns, styles.horizontalPad]}>
-            <Button title="Cancel" type="secondary" onPress={toggleModal} />
-            <Button
-              title="Save"
-              type="primary"
-              onPress={onSave}
-              disabled={addedTimesheet.length === 0}
-            />
-          </View>
-        )}
-      </Modal>
-    </ScrollView>
+      )}
+    </Modal>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {memo, useCallback} from 'react';
 import {SectionList, StyleSheet, View, ViewStyle} from 'react-native';
 
 import Typography from '../../../components/typography';
@@ -70,4 +70,4 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
 });
-export default SectionListTimesheet;
+export default memo(SectionListTimesheet);

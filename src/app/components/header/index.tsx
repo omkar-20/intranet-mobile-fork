@@ -23,58 +23,58 @@ const Header = ({type, title}: Props) => {
     navigation.goBack();
   };
 
-  if (type === 'primary') {
-    return (
-      <View style={styles.container}>
-        <JoshLogo height={18} width={85} fill={colors.WHITE} />
-        <TouchableOpacity activeOpacity={0.5} onPress={navigateToProfile}>
-          <Profile height={18} width={18} fill={colors.WHITE} />
-        </TouchableOpacity>
-      </View>
-    );
-  } else if (type === 'secondary') {
-    return (
-      <View style={styles.container}>
-        <TouchableOpacity
-          activeOpacity={0.5}
-          style={styles.backButton}
-          onPress={goBack}>
-          <Arrow
-            height={20}
-            width={20}
-            style={styles.arrow}
-            fill={colors.WHITE}
-          />
-          <Text style={styles.backText}>{title}</Text>
-        </TouchableOpacity>
-
-        <Profile height={18} width={18} fill={colors.WHITE} />
-      </View>
-    );
-  } else if (type === 'ternary') {
-    return (
-      <View style={styles.container}>
-        <View style={styles.backButton}>
-          <TouchableOpacity activeOpacity={0.5} onPress={goBack}>
+  switch (type) {
+    case 'primary':
+      return (
+        <View style={styles.container}>
+          <JoshLogo height={18} width={85} fill={colors.WHITE} />
+          <TouchableOpacity activeOpacity={0.5} onPress={navigateToProfile}>
+            <Profile height={18} width={18} fill={colors.WHITE} />
+          </TouchableOpacity>
+        </View>
+      );
+    case 'secondary':
+      return (
+        <View style={styles.container}>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            style={styles.backButton}
+            onPress={goBack}>
             <Arrow
               height={20}
               width={20}
               style={styles.arrow}
               fill={colors.WHITE}
             />
+            <Text style={styles.backText}>{title}</Text>
           </TouchableOpacity>
 
-          <Text style={styles.backText}>{title}</Text>
-        </View>
-
-        <TouchableOpacity activeOpacity={0.5} onPress={navigateToProfile}>
           <Profile height={18} width={18} fill={colors.WHITE} />
-        </TouchableOpacity>
-      </View>
-    );
-  }
+        </View>
+      );
 
-  return <></>;
+    case 'ternary':
+      return (
+        <View style={styles.container}>
+          <View style={styles.backButton}>
+            <TouchableOpacity activeOpacity={0.5} onPress={goBack}>
+              <Arrow
+                height={20}
+                width={20}
+                style={styles.arrow}
+                fill={colors.WHITE}
+              />
+            </TouchableOpacity>
+
+            <Text style={styles.backText}>{title}</Text>
+          </View>
+
+          <TouchableOpacity activeOpacity={0.5} onPress={navigateToProfile}>
+            <Profile height={18} width={18} fill={colors.WHITE} />
+          </TouchableOpacity>
+        </View>
+      );
+  }
 };
 
 const styles = StyleSheet.create({

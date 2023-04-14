@@ -31,7 +31,7 @@ const TimesheetList = ({route}: Props) => {
   const [isEditModalVisible, setIsEditModalVisible] = useState<boolean>(false);
   const [editTimesheetData, setEditTimesheetData] =
     useState<TimesheetFormData>();
-
+  const [isDateRangeApplied, setIsDateRangeApplied] = useState(false);
   const newDate = new Date();
   const startOfMonth = new Date(newDate.getFullYear(), newDate.getMonth(), 1);
 
@@ -45,19 +45,23 @@ const TimesheetList = ({route}: Props) => {
 
   const onEditSave = (data?: TimesheetFormData) => {
     console.log(data);
+    // TO DO API CALL
     toggleModal();
   };
 
   const onDateRangeSubmit = useCallback((startDate?: Date, endDate?: Date) => {
     const date = new Date();
+    // sDate - start Date of the month
     const sDate = new Date(date.getFullYear(), date.getMonth(), 1);
 
     if (startDate && endDate) {
+      setIsDateRangeApplied(true);
       setDateRangeText(
-        `${dateFormater(startDate)} -> ${dateFormater(endDate)}`,
+        `${dateFormater(startDate)} to ${dateFormater(endDate)}`,
       );
     } else {
-      setDateRangeText(`${dateFormater(sDate)} -> ${dateFormater(date)}`);
+      setIsDateRangeApplied(false);
+      setDateRangeText(`${dateFormater(sDate)}  to  ${dateFormater(date)}`);
     }
   }, []);
 
@@ -65,6 +69,7 @@ const TimesheetList = ({route}: Props) => {
     workHours.slice(0, workHours.indexOf('('));
 
   const timesheetDeleteCall = (timesheetData: Timesheet) => {
+    // TO DO API CALL
     console.log(timesheetData);
   };
 
@@ -76,7 +81,6 @@ const TimesheetList = ({route}: Props) => {
       workHours: timesheetData.work_in_hours,
       description: timesheetData.description,
     });
-
     toggleModal();
   };
 
@@ -102,7 +106,11 @@ const TimesheetList = ({route}: Props) => {
             style={styles.filterText}>
             {dateRangeText}
           </Typography>
-          <Calendar height={17} width={17} />
+          <Calendar
+            height={17}
+            width={17}
+            fill={isDateRangeApplied ? colors.PRIMARY : colors.SECONDARY}
+          />
         </TouchableOpacity>
         {route ? (
           <>
