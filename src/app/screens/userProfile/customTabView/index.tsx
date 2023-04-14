@@ -90,12 +90,14 @@ const CustomTabView = () => {
     {key: 'deployment', title: 'Deployment'},
   ]);
 
-  const {data, refetch, isError, isRefetchError} = useQuery({
+  const {data, refetch, isError, isRefetchError, isLoading} = useQuery({
     queryKey: ['user'],
     queryFn: getUserRequest,
   });
 
-  if (!isError && data && !isRefetchError) {
+  if (isLoading) {
+    <></>;
+  } else if (!isError && data && !isRefetchError) {
     const renderScene = renderSceneWrapper(data, refetch);
     const renderTabBar = (
       props: SceneRendererProps & {
