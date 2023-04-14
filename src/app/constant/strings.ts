@@ -1,9 +1,18 @@
 export default {
   SELECT: 'Select',
+  SELECT_DATE_RANGE: 'Select Date Range',
   NO_SELECT: 'NO-SELECT',
   FROM: 'From',
   TO: 'To',
   SEARCH: 'Search',
   YES: 'YES',
   NO: 'NO',
+  DESCRIPTION_PLACEHOLDER: 'Type Description here',
+  PROJECTS: 'Projects',
+  WORK_HOURS: 'Total Worked Hours',
+  LEAVES: 'Leaves',
+  NOT_ALLOWED: 'Not Allowed',
+  DUBLICATE_ENTRY_ERROR: 'You have previous same timesheet entry',
+  EMPTY_TIMESHEET: 'Empty Timesheet',
+  EMPTY_TIMESHEET_MSG: 'Add timesheet before saving',
 };

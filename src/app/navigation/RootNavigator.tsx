@@ -20,7 +20,7 @@ import {
   USER_PROFILE_SCREEN,
 } from '../constant/screenNames';
 import TimesheetList from '../screens/TimesheetScreen/view/timesheetList';
-import MainScreen from '../screens/MainScreen';
+import MainNavigator from './MainNavigator';
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 
@@ -61,7 +61,7 @@ const RootNavigator = () => {
     <RootStack.Navigator screenOptions={screenOptions}>
       {user ? (
         <>
-          <RootStack.Screen name={MAIN_SCREEN} component={MainScreen} />
+          <RootStack.Screen name={MAIN_SCREEN} component={MainNavigator} />
           <RootStack.Screen
             name={USER_PROFILE_SCREEN}
             component={UserProfile}

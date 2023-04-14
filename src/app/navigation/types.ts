@@ -1,10 +1,11 @@
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {Employee} from '../../app/screens/TimesheetScreen/interface';
 
 export type RootStackParamList = {
   Login: undefined;
   Main: undefined;
   UserProfile: undefined;
-  UserTimesheet: undefined;
+  UserTimesheet: Employee;
 };
 
 export type MainTabParamList = {

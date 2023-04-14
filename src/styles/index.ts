@@ -15,7 +15,7 @@ const flexStyles = StyleSheet.create({
 
 const borderStyles = StyleSheet.create({
   thinBorder: {
-    borderColor: colors.BORDER,
+    borderColor: colors.TEXT_INPUT_BORDER,
     borderBottomWidth: 1,
   },
   circleBorder: {

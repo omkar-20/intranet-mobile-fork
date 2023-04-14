@@ -40,8 +40,8 @@ const Header = ({type, title}: Props) => {
           style={styles.backButton}
           onPress={goBack}>
           <Arrow
-            height={18}
-            width={18}
+            height={20}
+            width={20}
             style={styles.arrow}
             fill={colors.WHITE}
           />
@@ -57,8 +57,8 @@ const Header = ({type, title}: Props) => {
         <View style={styles.backButton}>
           <TouchableOpacity activeOpacity={0.5} onPress={goBack}>
             <Arrow
-              height={18}
-              width={18}
+              height={20}
+              width={20}
               style={styles.arrow}
               fill={colors.WHITE}
             />
@@ -81,11 +81,10 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingTop: 26,
+    paddingTop: 20,
     paddingBottom: 13,
     paddingLeft: 16,
     paddingRight: 23,
-
     backgroundColor: colors.PRIMARY,
   },
   backButton: {

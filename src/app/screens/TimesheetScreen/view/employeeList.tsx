@@ -1,5 +1,8 @@
-import React, {useCallback, useContext, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
+
+import {useNavigation} from '@react-navigation/native';
+import {MainScreenNavigationProp} from '../../../navigation/types';
 
 import EmployeeCard from '../component/employeeCard';
 import Input from '../../../components/input';
@@ -7,7 +10,6 @@ import DateRange from '../../../components/pickers/dateRange';
 import Linear from '../../../components/seperator/linear';
 import EmptyList from '../component/emptyList';
 
-import StackNavigation from '../../../context/stack.context';
 import {Employee} from '../interface';
 
 import {Calendar, Search} from '../../../constant/icons';
@@ -27,9 +29,8 @@ const searchIcon = () => <Search style={styles.icon} />;
 const EmployeeList = () => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [filterData, setFilterData] = useState<Employee[]>(employeeData);
-  const navigation = useContext(StackNavigation);
+  const navigation = useNavigation<MainScreenNavigationProp>();
 
-  console.log(navigation);
   const toggelDatePicker = () => setIsVisible(v => !v);
 
   const onDateRangeSubmit = useCallback((startDate?: Date, endDate?: Date) => {
@@ -48,12 +49,7 @@ const EmployeeList = () => {
   const renderItem = useCallback(
     ({item}: Props) => {
       const handleNavigation = () => {
-        if (navigation) {
-          navigation.navigate?.(USER_TIMESHEET, {
-            email: item.email,
-            name: item.name,
-          });
-        }
+        navigation.navigate(USER_TIMESHEET, item);
       };
       return (
         <TouchableOpacity key={item.name} onPress={handleNavigation}>
