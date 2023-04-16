@@ -1,12 +1,20 @@
 import React from 'react';
 
+export type UserRole = 'Manager' | 'Employee';
+
 export interface UserData {
+  role: UserRole;
+  userId: string;
+}
+
+export interface UserContextData {
   authToken: string;
+  userData: UserData;
 }
 
 type ContextValue = [
-  UserData | null,
-  React.Dispatch<React.SetStateAction<UserData | null>>,
+  UserContextData | null,
+  React.Dispatch<React.SetStateAction<UserContextData | null>>,
 ];
 
 const defaultValue: ContextValue = [null, () => {}];

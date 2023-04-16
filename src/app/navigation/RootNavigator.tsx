@@ -29,7 +29,7 @@ const screenOptions: NativeStackNavigationOptions = {
 };
 
 const RootNavigator = () => {
-  const [user, setUser] = useContext(UserContext);
+  const [userContextData, setUserContextData] = useContext(UserContext);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -38,11 +38,12 @@ const RootNavigator = () => {
       await initNotificationService();
 
       const authToken = await AsyncStore.getItem(AsyncStore.AUTH_TOKEN_KEY);
+      const userData = await AsyncStore.getItem(AsyncStore.USER_DATA);
 
-      if (authToken === null || authToken === '') {
-        setUser(null);
+      if (authToken === null || authToken === '' || userData === null) {
+        setUserContextData(null);
       } else {
-        setUser({authToken});
+        setUserContextData({authToken, userData: JSON.parse(userData)});
       }
 
       await new Promise<void>(resolve => setTimeout(resolve, 1000));
@@ -51,7 +52,7 @@ const RootNavigator = () => {
     };
 
     run();
-  }, [setUser]);
+  }, [setUserContextData]);
 
   if (loading) {
     return <SplashScreen />;
@@ -59,7 +60,7 @@ const RootNavigator = () => {
 
   return (
     <RootStack.Navigator screenOptions={screenOptions}>
-      {user ? (
+      {userContextData ? (
         <>
           <RootStack.Screen name={MAIN_SCREEN} component={MainNavigator} />
           <RootStack.Screen
