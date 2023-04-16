@@ -4,15 +4,15 @@ import {QueryClient, QueryClientProvider} from 'react-query';
 
 import RootNavigator from './app/navigation/RootNavigator';
 
-import UserContext, {UserData} from './app/context/user.context';
+import UserContext, {UserContextData} from './app/context/user.context';
 
 const queryClient = new QueryClient();
 
 const App = () => {
-  const user = useState<UserData | null>(null);
+  const userContextValue = useState<UserContextData | null>(null);
 
   return (
-    <UserContext.Provider value={user}>
+    <UserContext.Provider value={userContextValue}>
       <QueryClientProvider client={queryClient}>
         <NavigationContainer>
           <RootNavigator />
