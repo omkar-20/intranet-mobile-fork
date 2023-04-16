@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useState} from 'react';
+import React, {memo, useCallback, useEffect, useState} from 'react';
 import {Keyboard, StyleSheet, View} from 'react-native';
 import {useForm, Controller} from 'react-hook-form';
 import * as yup from 'yup';
@@ -33,50 +33,6 @@ type setType = Set<string>;
 const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
   const [keyboardIsVisible, setKeyboardIsVisible] = useState<boolean>(false);
   const [otherSkillsStore, setOtherSkillsStore] = useState(new Set());
-  const {data} = useQuery({
-    queryKey: ['getskills'],
-    queryFn: getAllSkillRequest,
-    initialData: [],
-  });
-  const mutation = useMutation(updateSkillRequest, {
-    onSuccess: () => {
-      toggleModal();
-      resetField('primaryTechnicalSkill');
-      resetField('secondaryTechnicalSkill');
-      resetField('ternaryTechnicalSkill');
-      resetField('otherSkills');
-      refresh();
-      Toast.showWithGravity(
-        'Skills updated Successfully',
-        Toast.SHORT,
-        Toast.CENTER,
-      );
-    },
-    retry: false,
-    onError: error => {
-      if (error) {
-        toggleModal();
-        Toast.showWithGravity(
-          'Something went worng',
-          Toast.SHORT,
-          Toast.CENTER,
-        );
-      }
-    },
-  });
-
-  const skillsListData = data.map((item: string) => ({
-    label: item,
-    value: item,
-  }));
-
-  useEffect(() => {
-    if (defaultData) {
-      setOtherSkillsStore(
-        new Set(skillsFormatter(defaultData.otherSkills as string)),
-      );
-    }
-  }, [defaultData]);
 
   const updateSkillFormSchema = yup.object().shape({
     primaryTechnicalSkill: yup.string(),
@@ -85,10 +41,7 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
       .string()
       .when(['primaryTechnicalSkill'], ([primaryTechnicalSkill], schema) => {
         return schema.test('unique', 'unique skills required', value => {
-          return (
-            !value ||
-            (!otherSkillsStore.has(value) && value !== primaryTechnicalSkill)
-          );
+          return !value || value !== primaryTechnicalSkill;
         });
       }),
     ternaryTechnicalSkill: yup
@@ -99,8 +52,7 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
           return schema.test('unique', 'unique skills required', value => {
             return (
               !value ||
-              (!otherSkillsStore.has(value) &&
-                value !== primaryTechnicalSkill &&
+              (value !== primaryTechnicalSkill &&
                 value !== secondaryTechnicalSkill)
             );
           });
@@ -135,13 +87,59 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
       ),
   });
 
+  const {data} = useQuery({
+    queryKey: ['getskills'],
+    queryFn: getAllSkillRequest,
+    initialData: [],
+  });
+
+  const mutation = useMutation(updateSkillRequest, {
+    onSuccess: () => {
+      toggleModal();
+      resetField('primaryTechnicalSkill');
+      resetField('secondaryTechnicalSkill');
+      resetField('ternaryTechnicalSkill');
+      resetField('otherSkills');
+      refresh();
+      Toast.showWithGravity(
+        'Skills updated Successfully',
+        Toast.SHORT,
+        Toast.CENTER,
+      );
+    },
+    retry: false,
+    onError: error => {
+      if (error) {
+        toggleModal();
+        Toast.showWithGravity(
+          'Something went wrong',
+          Toast.SHORT,
+          Toast.CENTER,
+        );
+      }
+    },
+  });
+
+  const skillsListData = data.map((item: string) => ({
+    label: item,
+    value: item,
+  }));
+
+  useEffect(() => {
+    if (defaultData) {
+      setOtherSkillsStore(
+        new Set(skillsFormatter(defaultData.otherSkills as string)),
+      );
+    }
+  }, [defaultData]);
+
   const {
     handleSubmit,
     control,
     resetField,
     formState: {errors},
   } = useForm({
-    mode: 'onChange',
+    mode: 'onSubmit',
     values: defaultData
       ? {
           primaryTechnicalSkill: defaultData.primarySkill
@@ -178,13 +176,13 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
     };
   }, []);
 
-  const onDeleteOtherSkills = (skill: string) => {
+  const onDeleteOtherSkills = useCallback((skill: string) => {
     setOtherSkillsStore(otherSkillsStore => {
-      const tmp = new Set(otherSkillsStore);
-      tmp.delete(skill);
-      return tmp;
+      const temperoryStore = new Set(otherSkillsStore);
+      temperoryStore.delete(skill);
+      return temperoryStore;
     });
-  };
+  }, []);
 
   const setToSkill = (data: setType): string => {
     return Array.from(data).toString();
@@ -210,6 +208,8 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
     }
     resetField('otherSkills');
   };
+
+  const submitHandler = (data: updateSkillFormDataType) => onSave(data);
 
   // console.log(isLoading);
   return (
@@ -344,7 +344,7 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
             <Button
               title="Cancel"
               disabled={mutation.isLoading}
-              onPress={() => toggleModal()}
+              onPress={toggleModal}
               type="secondary"
             />
           </View>
@@ -352,9 +352,7 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
             <Button
               title="save"
               isLoading={mutation.isLoading}
-              onPress={handleSubmit((data: updateSkillFormDataType) =>
-                onSave(data),
-              )}
+              onPress={handleSubmit(submitHandler)}
               type="primary"
             />
           </View>

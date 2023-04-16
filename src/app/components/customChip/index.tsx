@@ -12,17 +12,15 @@ type Props = {
   onDeleteOtherSkills?: (skill: string) => void;
 };
 const CustomChip = ({label, mode, style, onDeleteOtherSkills}: Props) => {
+  const handlePress = () =>
+    onDeleteOtherSkills ? onDeleteOtherSkills(label) : null;
   return (
     <View style={[styles.containerStyle, style]}>
       <Typography type="header" style={styles.textStyle}>
         {label}
       </Typography>
       {mode === 'edit' && (
-        <TouchableOpacity
-          onPress={() =>
-            onDeleteOtherSkills ? onDeleteOtherSkills(label) : null
-          }
-          style={styles.iconStyle}>
+        <TouchableOpacity onPress={handlePress} style={styles.iconStyle}>
           <Cross />
         </TouchableOpacity>
       )}
