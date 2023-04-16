@@ -41,7 +41,10 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
       .string()
       .when(['primaryTechnicalSkill'], ([primaryTechnicalSkill], schema) => {
         return schema.test('unique', 'unique skills required', value => {
-          return !value || value !== primaryTechnicalSkill;
+          return (
+            !value ||
+            (!otherSkillsStore.has(value) && value !== primaryTechnicalSkill)
+          );
         });
       }),
     ternaryTechnicalSkill: yup
@@ -53,7 +56,8 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
             return (
               !value ||
               (value !== primaryTechnicalSkill &&
-                value !== secondaryTechnicalSkill)
+                value !== secondaryTechnicalSkill &&
+                !otherSkillsStore.has(value))
             );
           });
         },
@@ -211,7 +215,6 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
 
   const submitHandler = (data: updateSkillFormDataType) => onSave(data);
 
-  // console.log(isLoading);
   return (
     <>
       <>
