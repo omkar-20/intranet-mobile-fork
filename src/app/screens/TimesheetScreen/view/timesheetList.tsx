@@ -1,4 +1,4 @@
-import React, {Fragment, useCallback, useState} from 'react';
+import React, {Fragment, useCallback, useMemo, useState} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 
 import DateRange from '../../../components/pickers/dateRange';
@@ -11,7 +11,6 @@ import Header from '../../../components/header';
 import {dateFormater} from '../../../utils/dateFormater';
 import {Employee, Timesheet, TimesheetFormData} from '../interface';
 
-import {timesheetListData} from '../../../constant/timesheet';
 import strings from '../../../constant/strings';
 import sizes from '../../../constant/sizes';
 import {TIMESHEET_SCREEN} from '../../../constant/screenNames';
@@ -19,54 +18,83 @@ import {Calendar} from '../../../constant/icons';
 import colors from '../../../constant/colors';
 
 import {borderStyles, flexStyles} from '../../../../styles';
+import {useQuery} from 'react-query';
+import {getTimesheetRequest} from '../../../services/timesheet/getTimesheet';
 
 type Props = {
   route?: {
-    params?: Employee;
+    params: Employee;
   };
 };
 
 const TimesheetList = ({route}: Props) => {
-  const [isDateRangeVisible, setIsDateRangeVisible] = useState<boolean>(false);
-  const [isEditModalVisible, setIsEditModalVisible] = useState<boolean>(false);
+  const newDate = useMemo(() => new Date(), []);
+  const startOfMonth = useMemo(
+    () => new Date(newDate.getFullYear(), newDate.getMonth(), 1),
+    [newDate],
+  );
+  const [isDateRangeVisible, setIsDateRangeVisible] = useState(false);
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [editTimesheetData, setEditTimesheetData] =
     useState<TimesheetFormData>();
-  const [isDateRangeApplied, setIsDateRangeApplied] = useState(false);
-  const newDate = new Date();
-  const startOfMonth = new Date(newDate.getFullYear(), newDate.getMonth(), 1);
 
-  const [dateRangeText, setDateRangeText] = useState<string>(
-    strings.SELECT_DATE_RANGE,
+  const [isDateRangeApplied, setIsDateRangeApplied] = useState(false);
+
+  const [dateRange, setDateRange] = useState<{
+    start_date: string;
+    end_date: string;
+  }>({start_date: dateFormater(startOfMonth), end_date: dateFormater(newDate)});
+
+  // const [page, setPage] = useState(0);
+
+  const {data} = useQuery(
+    ['timesheet/list', route?.params.user_id, dateRange],
+    () =>
+      getTimesheetRequest({
+        user_id: route ? route.params.user_id : '',
+        // page_number: 1,
+        from_date: dateRange.start_date,
+        to_date: dateRange.end_date,
+      }),
   );
 
   const toggleModal = () => setIsEditModalVisible(v => !v);
 
   const toggelDatePicker = () => setIsDateRangeVisible(v => !v);
 
-  const onEditSave = (data?: TimesheetFormData) => {
-    console.log(data);
+  const onEditSave = (editData?: TimesheetFormData) => {
+    console.log(editData);
     // TO DO API CALL
     toggleModal();
   };
 
-  const onDateRangeSubmit = useCallback((startDate?: Date, endDate?: Date) => {
-    const date = new Date();
-    // sDate - start Date of the month
-    const sDate = new Date(date.getFullYear(), date.getMonth(), 1);
+  // const increasePage = () => {
+  //   setPage(p => p + 1);
+  // };
+  // const decreasePage = () => {
+  //   setPage(p => p - 1);
+  // };
+  const onDateRangeSubmit = useCallback(
+    (startDate?: Date, endDate?: Date) => {
+      if (startDate && endDate) {
+        setIsDateRangeApplied(true);
+        setDateRange({
+          start_date: dateFormater(startDate),
+          end_date: dateFormater(endDate),
+        });
+      } else {
+        setIsDateRangeApplied(false);
+        setDateRange({
+          start_date: dateFormater(startOfMonth),
+          end_date: dateFormater(newDate),
+        });
+      }
+    },
+    [newDate, startOfMonth],
+  );
 
-    if (startDate && endDate) {
-      setIsDateRangeApplied(true);
-      setDateRangeText(
-        `${dateFormater(startDate)} to ${dateFormater(endDate)}`,
-      );
-    } else {
-      setIsDateRangeApplied(false);
-      setDateRangeText(`${dateFormater(sDate)}  to  ${dateFormater(date)}`);
-    }
-  }, []);
-
-  const workHoursTrim = (workHours: string) =>
-    workHours.slice(0, workHours.indexOf('('));
+  const workHoursTrim = (workHours?: string) =>
+    workHours?.slice(0, workHours.indexOf('('));
 
   const timesheetDeleteCall = (timesheetData: Timesheet) => {
     // TO DO API CALL
@@ -98,13 +126,11 @@ const TimesheetList = ({route}: Props) => {
             styles.filter,
           ]}>
           <Typography
-            type={
-              dateRangeText === strings.SELECT_DATE_RANGE
-                ? 'description'
-                : 'subheader'
-            }
+            type={isDateRangeApplied ? 'description' : 'subheader'}
             style={styles.filterText}>
-            {dateRangeText}
+            {isDateRangeApplied
+              ? `${dateRange.start_date} to ${dateRange.end_date}`
+              : strings.SELECT_DATE_RANGE}
           </Typography>
           <Calendar
             height={17}
@@ -138,20 +164,21 @@ const TimesheetList = ({route}: Props) => {
             {strings.PROJECTS}
           </Typography>
           <Typography type="subheader" style={styles.text}>
-            {timesheetListData.projects}
+            {data?.data.timesheets[0].projects}
           </Typography>
           <Typography type="description" style={styles.text}>
             {strings.WORK_HOURS}
           </Typography>
           <Typography type="subheader" style={styles.text}>
-            {workHoursTrim(timesheetListData.total_work)}
+            {workHoursTrim(data?.data.timesheets[0].total_work)}
           </Typography>
         </View>
 
         <SectionListTimesheet
-          timesheetListData={timesheetListData.data}
+          timesheetListData={data ? data?.data.timesheets[0].data : []}
           onDelete={timesheetDeleteCall}
           onEdit={timesheetEditCall}
+          // onEndReached={increasePage}
         />
 
         {isEditModalVisible ? (

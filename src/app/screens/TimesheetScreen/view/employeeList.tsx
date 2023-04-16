@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 
 import {useNavigation} from '@react-navigation/native';
@@ -14,8 +14,11 @@ import {Employee} from '../interface';
 
 import {Calendar, Search} from '../../../constant/icons';
 import sizes from '../../../constant/sizes';
-import {employeeData} from '../../../constant/timesheet';
 import {USER_TIMESHEET} from '../../../constant/screenNames';
+import {useQuery} from 'react-query';
+import {getEmployeeListRequest} from '../../../services/timesheet/getEmployeeList';
+import {dateFormater} from '../../../utils/dateFormater';
+import colors from '../../../constant/colors';
 
 type Props = {
   item: Employee;
@@ -27,24 +30,62 @@ const emptyComponent = () => <EmptyList />;
 const searchIcon = () => <Search style={styles.icon} />;
 
 const EmployeeList = () => {
+  const newDate = useMemo(() => new Date(), []);
+  const startOfMonth = useMemo(
+    () => new Date(newDate.getFullYear(), newDate.getMonth(), 1),
+    [newDate],
+  );
+
+  const [dateRange, setDateRange] = useState<{
+    start_date: string;
+    end_date: string;
+  }>({start_date: dateFormater(startOfMonth), end_date: dateFormater(newDate)});
+
+  const {data} = useQuery(['employee', dateRange], () =>
+    getEmployeeListRequest({
+      user_id: 'user_id',
+      start_date: dateRange.end_date,
+      end_date: dateRange.end_date,
+    }),
+  );
+
+  const [isDateRangeApplied, setIsDateRangeApplied] = useState(false);
   const [isVisible, setIsVisible] = useState<boolean>(false);
-  const [filterData, setFilterData] = useState<Employee[]>(employeeData);
+  const [filterData, setFilterData] = useState<Employee[]>([]);
   const navigation = useNavigation<MainScreenNavigationProp>();
 
   const toggelDatePicker = () => setIsVisible(v => !v);
 
-  const onDateRangeSubmit = useCallback((startDate?: Date, endDate?: Date) => {
-    console.log(startDate, endDate);
-  }, []);
+  const onDateRangeSubmit = useCallback(
+    (startDate?: Date, endDate?: Date) => {
+      if (startDate && endDate) {
+        setIsDateRangeApplied(true);
+        setDateRange({
+          start_date: dateFormater(startDate),
+          end_date: dateFormater(endDate),
+        });
+      } else {
+        setIsDateRangeApplied(false);
+        setDateRange({
+          start_date: dateFormater(startOfMonth),
+          end_date: dateFormater(newDate),
+        });
+      }
+    },
+    [newDate, startOfMonth],
+  );
 
-  const filterEmployee = useCallback((text: string) => {
-    const newData = employeeData.filter(
-      value =>
-        value.email.toLowerCase().startsWith(text.toLowerCase()) ||
-        value.name.toLowerCase().startsWith(text.toLowerCase()),
-    );
-    setFilterData(newData);
-  }, []);
+  const filterEmployee = useCallback(
+    (text: string) => {
+      const newData = data?.data.filter(
+        value =>
+          value.email.toLowerCase().startsWith(text.toLowerCase()) ||
+          value.name.toLowerCase().startsWith(text.toLowerCase()),
+      );
+      setFilterData(newData ? newData : []);
+    },
+    [data?.data],
+  );
 
   const renderItem = useCallback(
     ({item}: Props) => {
@@ -59,10 +100,6 @@ const EmployeeList = () => {
     },
     [navigation],
   );
-
-  const newDate = new Date();
-
-  const startOfMonth = new Date(newDate.getFullYear(), newDate.getMonth(), 1);
 
   return (
     <View style={styles.main}>
@@ -81,14 +118,19 @@ const EmployeeList = () => {
           style={styles.input}
         />
         <TouchableOpacity onPress={toggelDatePicker}>
-          <Calendar width={18} height={18} style={styles.icon} />
+          <Calendar
+            width={18}
+            height={18}
+            style={styles.icon}
+            fill={isDateRangeApplied ? colors.PRIMARY : colors.SECONDARY}
+          />
         </TouchableOpacity>
       </View>
 
       <FlatList
-        data={filterData}
+        data={filterData.length ? filterData : data?.data}
         renderItem={renderItem}
-        keyExtractor={(item, index) => item.employee_id + index}
+        keyExtractor={(item, index) => item.user_id + index}
         ItemSeparatorComponent={seperator}
         ListFooterComponent={filterData.length ? footer : <></>}
         ListEmptyComponent={emptyComponent}

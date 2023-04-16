@@ -1,7 +1,7 @@
 export interface Employee {
   name: string;
   email: string;
-  employee_id: string;
+  user_id: string;
 }
 
 export interface Timesheet {
