@@ -1,4 +1,4 @@
-import React, {memo, useCallback, useEffect, useState} from 'react';
+import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {Keyboard, StyleSheet, View} from 'react-native';
 import {useForm, Controller} from 'react-hook-form';
 import * as yup from 'yup';
@@ -34,62 +34,70 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
   const [keyboardIsVisible, setKeyboardIsVisible] = useState<boolean>(false);
   const [otherSkillsStore, setOtherSkillsStore] = useState(new Set());
 
-  const updateSkillFormSchema = yup.object().shape({
-    primaryTechnicalSkill: yup.string(),
+  const updateSkillFormSchema = useMemo(
+    () =>
+      yup.object().shape({
+        primaryTechnicalSkill: yup.string(),
 
-    secondaryTechnicalSkill: yup
-      .string()
-      .when(['primaryTechnicalSkill'], ([primaryTechnicalSkill], schema) => {
-        return schema.test('unique', 'unique skills required', value => {
-          return (
-            !value ||
-            (!otherSkillsStore.has(value) && value !== primaryTechnicalSkill)
-          );
-        });
+        secondaryTechnicalSkill: yup
+          .string()
+          .when(
+            ['primaryTechnicalSkill'],
+            ([primaryTechnicalSkill], schema) => {
+              return schema.test('unique', 'unique skills required', value => {
+                return (
+                  !value ||
+                  (!otherSkillsStore.has(value) &&
+                    value !== primaryTechnicalSkill)
+                );
+              });
+            },
+          ),
+        ternaryTechnicalSkill: yup
+          .string()
+          .when(
+            ['secondaryTechnicalSkill', 'primaryTechnicalSkill'],
+            ([secondaryTechnicalSkill, primaryTechnicalSkill], schema) => {
+              return schema.test('unique', 'unique skills required', value => {
+                return (
+                  !value ||
+                  (value !== primaryTechnicalSkill &&
+                    value !== secondaryTechnicalSkill &&
+                    !otherSkillsStore.has(value))
+                );
+              });
+            },
+          ),
+        otherSkills: yup
+          .string()
+          .when(
+            [
+              'secondaryTechnicalSkill',
+              'ternaryTechnicalSkill',
+              'primaryTechnicalSkill',
+            ],
+            (
+              [
+                secondaryTechnicalSkill,
+                ternaryTechnicalSkill,
+                primaryTechnicalSkill,
+              ],
+              schema,
+            ) => {
+              return schema.test('unique', 'unique skills required', value => {
+                return (
+                  !value ||
+                  (!otherSkillsStore.has(value) &&
+                    value !== primaryTechnicalSkill &&
+                    value !== secondaryTechnicalSkill &&
+                    value !== ternaryTechnicalSkill)
+                );
+              });
+            },
+          ),
       }),
-    ternaryTechnicalSkill: yup
-      .string()
-      .when(
-        ['secondaryTechnicalSkill', 'primaryTechnicalSkill'],
-        ([secondaryTechnicalSkill, primaryTechnicalSkill], schema) => {
-          return schema.test('unique', 'unique skills required', value => {
-            return (
-              !value ||
-              (value !== primaryTechnicalSkill &&
-                value !== secondaryTechnicalSkill &&
-                !otherSkillsStore.has(value))
-            );
-          });
-        },
-      ),
-    otherSkills: yup
-      .string()
-      .when(
-        [
-          'secondaryTechnicalSkill',
-          'ternaryTechnicalSkill',
-          'primaryTechnicalSkill',
-        ],
-        (
-          [
-            secondaryTechnicalSkill,
-            ternaryTechnicalSkill,
-            primaryTechnicalSkill,
-          ],
-          schema,
-        ) => {
-          return schema.test('unique', 'unique skills required', value => {
-            return (
-              !value ||
-              (!otherSkillsStore.has(value) &&
-                value !== primaryTechnicalSkill &&
-                value !== secondaryTechnicalSkill &&
-                value !== ternaryTechnicalSkill)
-            );
-          });
-        },
-      ),
-  });
+    [otherSkillsStore],
+  );
 
   const {data} = useQuery({
     queryKey: ['getskills'],
