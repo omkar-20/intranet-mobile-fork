@@ -39,6 +39,7 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
       yup.object().shape({
         primaryTechnicalSkill: yup
           .string()
+          .required()
           .test(
             'unique',
             'unique Skills required',
@@ -50,6 +51,7 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
             ['primaryTechnicalSkill'],
             ([primaryTechnicalSkill], schema) => {
               return schema
+
                 .test('unique', 'unique skills required', value => {
                   return (
                     !value ||

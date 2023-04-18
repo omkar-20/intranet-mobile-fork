@@ -5,10 +5,12 @@ import Accordion from 'react-native-collapsible/Accordion';
 
 import DetailsView from '../profile/cardDetails/detailsView';
 import Typography from '../typography';
+import ErrorMessage from '../errorMessage';
 
 import {projectType} from '../../types';
 import colors from '../../constant/colors';
 import {ArrowDown, ArrowUp} from '../../constant/icons';
+import {NO_DETAILS_FOUND} from '../../constant/message';
 
 type Props = {
   data: projectType[];
@@ -49,16 +51,23 @@ const CustomAccordian = ({data, headerContainerStyle}: Props) => {
       </Animatable.View>
     );
   };
+
   return (
-    <Accordion
-      activeSections={activeSections}
-      sections={data}
-      renderHeader={renderHeader}
-      renderContent={renderContent}
-      onChange={setSections}
-      underlayColor="#E6EDFF"
-      touchableComponent={TouchableOpacity}
-    />
+    <>
+      {data.length === 0 ? (
+        <ErrorMessage message={NO_DETAILS_FOUND} />
+      ) : (
+        <Accordion
+          activeSections={activeSections}
+          sections={data}
+          renderHeader={renderHeader}
+          renderContent={renderContent}
+          onChange={setSections}
+          underlayColor="#E6EDFF"
+          touchableComponent={TouchableOpacity}
+        />
+      )}
+    </>
   );
 };
 

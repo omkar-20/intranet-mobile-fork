@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {useWindowDimensions, StyleSheet} from 'react-native';
+import {useWindowDimensions, StyleSheet, View} from 'react-native';
 import {
   TabView,
   SceneMap,
@@ -15,6 +15,7 @@ import PersonalDetails from '../PersonalDetails';
 import PublicProfile from '../PublicProfile';
 import Skills from '../Skills';
 import Asset from '../Assets';
+import ErrorMessage from '../../../components/errorMessage';
 
 import {getUserRequest} from '../../../services/api/userProfile';
 
@@ -36,8 +37,6 @@ import {
   skillsType,
   socialDetailsType,
 } from '../../../types';
-import ErrorMessage from '../../../components/errorMessage';
-import {View} from 'react-native-animatable';
 import {NO_DATA_FETCHED} from '../../../constant/message';
 import UserContext from '../../../context/user.context';
 

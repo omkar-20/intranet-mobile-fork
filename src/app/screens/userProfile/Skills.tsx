@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
-import {ScrollView, StyleSheet} from 'react-native';
-import {View} from 'react-native-animatable';
+import {ScrollView, StyleSheet, View} from 'react-native';
 
 import CardDetails from '../../components/profile/cardDetails';
 import DetailsView from '../../components/profile/cardDetails/detailsView';

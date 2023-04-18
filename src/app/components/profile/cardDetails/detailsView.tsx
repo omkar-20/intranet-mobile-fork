@@ -2,8 +2,10 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 
 import CardDetailsElement from './cardDetailsElement';
+import ErrorMessage from '../../errorMessage';
 
 import {detailItemType, detailsType} from '../../../types';
+import {NO_DETAILS_FOUND} from '../../../constant/message';
 
 type Props = {
   data: detailsType;
@@ -12,7 +14,9 @@ type Props = {
 const DetailsView = ({data}: Props) => {
   return (
     <View style={styles.detailsContainer}>
-      {Array.isArray(data) && data.length && typeof data === 'object' ? (
+      {!data || (Array.isArray(data) && data.length === 0) ? (
+        <ErrorMessage message={NO_DETAILS_FOUND} />
+      ) : Array.isArray(data) && data.length && typeof data === 'object' ? (
         data.map((detail, index) => (
           <CardDetailsElement
             key={index}
