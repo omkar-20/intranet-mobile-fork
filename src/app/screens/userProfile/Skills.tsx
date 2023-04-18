@@ -16,7 +16,8 @@ type Props = {
   data: skillsType;
   refresh: () => void;
 };
-const skillsFormatter = (skills: string): string[] => skills.split(',');
+const skillsFormatter = (skills: string): string[] =>
+  skills ? skills.split(',') : [];
 
 const Skills = ({data, refresh}: Props) => {
   const [shouldShowModal, setShouldShowModal] = useState<boolean>(false);
@@ -56,7 +57,7 @@ const Skills = ({data, refresh}: Props) => {
         <View style={styles.update}>
           <Button
             title="Update skills"
-            onPress={() => toggleModal()}
+            onPress={toggleModal}
             type="secondary"
           />
         </View>

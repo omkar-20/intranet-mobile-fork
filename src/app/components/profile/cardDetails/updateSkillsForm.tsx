@@ -37,20 +37,31 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
   const updateSkillFormSchema = useMemo(
     () =>
       yup.object().shape({
-        primaryTechnicalSkill: yup.string(),
-
+        primaryTechnicalSkill: yup
+          .string()
+          .test(
+            'unique',
+            'unique Skills required',
+            value => !value || !otherSkillsStore.has(value),
+          ),
         secondaryTechnicalSkill: yup
           .string()
           .when(
             ['primaryTechnicalSkill'],
             ([primaryTechnicalSkill], schema) => {
-              return schema.test('unique', 'unique skills required', value => {
-                return (
-                  !value ||
-                  (!otherSkillsStore.has(value) &&
-                    value !== primaryTechnicalSkill)
+              return schema
+                .test('unique', 'unique skills required', value => {
+                  return (
+                    !value ||
+                    (!otherSkillsStore.has(value) &&
+                      value !== primaryTechnicalSkill)
+                  );
+                })
+                .test(
+                  'priamary skill exist',
+                  'please fill primary skills first',
+                  value => primaryTechnicalSkill || !value,
                 );
-              });
             },
           ),
         ternaryTechnicalSkill: yup
@@ -58,14 +69,20 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
           .when(
             ['secondaryTechnicalSkill', 'primaryTechnicalSkill'],
             ([secondaryTechnicalSkill, primaryTechnicalSkill], schema) => {
-              return schema.test('unique', 'unique skills required', value => {
-                return (
-                  !value ||
-                  (value !== primaryTechnicalSkill &&
-                    value !== secondaryTechnicalSkill &&
-                    !otherSkillsStore.has(value))
+              return schema
+                .test('unique', 'unique skills required', value => {
+                  return (
+                    !value ||
+                    (value !== primaryTechnicalSkill &&
+                      value !== secondaryTechnicalSkill &&
+                      !otherSkillsStore.has(value))
+                  );
+                })
+                .test(
+                  'ternary must exist',
+                  'please fill secondary skills first',
+                  value => secondaryTechnicalSkill || !value,
                 );
-              });
             },
           ),
         otherSkills: yup
@@ -84,15 +101,21 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
               ],
               schema,
             ) => {
-              return schema.test('unique', 'unique skills required', value => {
-                return (
-                  !value ||
-                  (!otherSkillsStore.has(value) &&
-                    value !== primaryTechnicalSkill &&
-                    value !== secondaryTechnicalSkill &&
-                    value !== ternaryTechnicalSkill)
+              return schema
+                .test('unique', 'unique skills required', value => {
+                  return (
+                    !value ||
+                    (!otherSkillsStore.has(value) &&
+                      value !== primaryTechnicalSkill &&
+                      value !== secondaryTechnicalSkill &&
+                      value !== ternaryTechnicalSkill)
+                  );
+                })
+                .test(
+                  'ternary must exist',
+                  'please fill ternary skills first',
+                  () => ternaryTechnicalSkill || !otherSkillsStore.size,
                 );
-              });
             },
           ),
       }),
@@ -152,7 +175,7 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
     formState: {errors},
   } = useForm({
     mode: 'onSubmit',
-    values: defaultData
+    defaultValues: defaultData
       ? {
           primaryTechnicalSkill: defaultData.primarySkill
             ? defaultData.primarySkill
@@ -202,10 +225,16 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
   const onSave = (data: updateSkillFormDataType) => {
     const otherSkills = setToSkill(otherSkillsStore as setType);
     const resData: skillsType = {
-      primarySkill: data.primaryTechnicalSkill as string,
-      secondarySkill: data.secondaryTechnicalSkill as string,
-      ternarySkill: data.ternaryTechnicalSkill as string,
-      otherSkills: otherSkills,
+      primarySkill: data.primaryTechnicalSkill
+        ? data.primaryTechnicalSkill
+        : '',
+      secondarySkill: data.secondaryTechnicalSkill
+        ? data.secondaryTechnicalSkill
+        : '',
+      ternarySkill: data.ternaryTechnicalSkill
+        ? data.ternaryTechnicalSkill
+        : '',
+      otherSkills: otherSkills ? otherSkills : '',
     };
 
     mutation.mutate(resData);
@@ -221,8 +250,6 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
     resetField('otherSkills');
   };
 
-  const submitHandler = (data: updateSkillFormDataType) => onSave(data);
-
   return (
     <>
       <>
@@ -236,7 +263,7 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
               <PickerSelect
                 placeholder={{
                   label: strings.SELECT,
-                  value: undefined,
+                  value: '',
                 }}
                 onValueChange={onChange}
                 value={value ? value : strings.SELECT}
@@ -263,7 +290,7 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
               <PickerSelect
                 placeholder={{
                   label: strings.SELECT,
-                  value: undefined,
+                  value: '',
                 }}
                 onValueChange={onChange}
                 value={value ? value : strings.SELECT}
@@ -290,7 +317,7 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
               <PickerSelect
                 placeholder={{
                   label: strings.SELECT,
-                  value: undefined,
+                  value: '',
                 }}
                 onValueChange={onChange}
                 value={value ? value : strings.SELECT}
@@ -363,7 +390,7 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
             <Button
               title="save"
               isLoading={mutation.isLoading}
-              onPress={handleSubmit(submitHandler)}
+              onPress={handleSubmit(onSave)}
               type="primary"
             />
           </View>

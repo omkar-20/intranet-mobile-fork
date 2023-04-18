@@ -1,4 +1,4 @@
-export const LOGIN_ROUTE = '/api/hono/v1/login_in';
+export const LOGIN_ROUTE = '/api/mobile/v1/login_in';
 
 export const USER_PROFILE_ROUTE = '/api/mobile/v1/user_details';
 

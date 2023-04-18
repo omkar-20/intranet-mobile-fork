@@ -29,16 +29,16 @@ const Asset = ({data}: Props) => {
         )}
       </DetailsCard>
 
-      {data.previousAsset?.length ? (
-        <DetailsCard title="Previous Assets">
+      <DetailsCard title="Previous Assets">
+        {data.previousAsset?.length ? (
           <AssetView
             labels={previousAssetsLabels}
             assets={data.previousAsset}
           />
-        </DetailsCard>
-      ) : (
-        <ErrorMessage message={NO_PREVIOUS_ASSETS} />
-      )}
+        ) : (
+          <ErrorMessage message={NO_PREVIOUS_ASSETS} />
+        )}
+      </DetailsCard>
     </ScrollView>
   );
 };

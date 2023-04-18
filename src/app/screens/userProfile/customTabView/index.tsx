@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {useWindowDimensions, StyleSheet} from 'react-native';
 import {
   TabView,
@@ -39,6 +39,7 @@ import {
 import ErrorMessage from '../../../components/errorMessage';
 import {View} from 'react-native-animatable';
 import {NO_DATA_FETCHED} from '../../../constant/message';
+import UserContext from '../../../context/user.context';
 
 type dataType = {
   publicProfile: {
@@ -66,29 +67,46 @@ type dataType = {
   deployment: deploymentDetailsType;
 };
 
-const renderSceneWrapper = (data: dataType, refetch: () => {}) =>
-  SceneMap({
-    publicProfile: () => <PublicProfile data={data.publicProfile} />,
-    personalDetails: () => <PersonalDetails data={data.privateProfile} />,
-    skills: () => <Skills data={data.skills} refresh={refetch} />,
-    employeeDetails: () => <EmployeeDetails data={data.employeeDetail} />,
-    assets: () => <Asset data={data.assets} />,
-    deployment: () => <Deployment data={data.deployment} />,
-  });
+const renderSceneWrapper = (data: dataType, refetch: () => {}, role: string) =>
+  role === 'Manager'
+    ? SceneMap({
+        publicProfile: () => <PublicProfile data={data.publicProfile} />,
+        personalDetails: () => <PersonalDetails data={data.privateProfile} />,
+        skills: () => <Skills data={data.skills} refresh={refetch} />,
+        employeeDetails: () => <EmployeeDetails data={data.employeeDetail} />,
+        assets: () => <Asset data={data.assets} />,
+        deployment: () => <Deployment data={data.deployment} />,
+      })
+    : SceneMap({
+        publicProfile: () => <PublicProfile data={data.publicProfile} />,
+        skills: () => <Skills data={data.skills} refresh={refetch} />,
+        assets: () => <Asset data={data.assets} />,
+        personalDetails: () => <PersonalDetails data={data.privateProfile} />,
+      });
 
 const CustomTabView = () => {
+  const [userContextData] = useContext(UserContext);
   const layout = useWindowDimensions();
 
   const [index, setIndex] = React.useState(0);
 
-  const [routes] = React.useState([
-    {key: 'publicProfile', title: 'Public Profile'},
-    {key: 'personalDetails', title: 'Personal Details'},
-    {key: 'skills', title: 'Skills'},
-    {key: 'employeeDetails', title: 'Employee Details'},
-    {key: 'assets', title: 'Asset'},
-    {key: 'deployment', title: 'Deployment'},
-  ]);
+  const [routes] = React.useState(
+    userContextData?.userData.role === 'Manager'
+      ? [
+          {key: 'publicProfile', title: 'Public Profile'},
+          {key: 'personalDetails', title: 'Personal Details'},
+          {key: 'skills', title: 'Skills'},
+          {key: 'employeeDetails', title: 'Employee Details'},
+          {key: 'assets', title: 'Asset'},
+          {key: 'deployment', title: 'Deployment'},
+        ]
+      : [
+          {key: 'publicProfile', title: 'Public Profile'},
+          {key: 'skills', title: 'Skills'},
+          {key: 'assets', title: 'Asset'},
+          {key: 'personalDetails', title: 'Personal Details'},
+        ],
+  );
 
   const {data, refetch, isError, isRefetchError, isLoading} = useQuery({
     queryKey: ['user'],
@@ -98,7 +116,12 @@ const CustomTabView = () => {
   if (isLoading) {
     <></>;
   } else if (!isError && data && !isRefetchError) {
-    const renderScene = renderSceneWrapper(data, refetch);
+    const renderScene = renderSceneWrapper(
+      data,
+      refetch,
+      userContextData?.userData.role as string,
+    );
+
     const renderTabBar = (
       props: SceneRendererProps & {
         navigationState: NavigationState<{key: string; title: string}>;
