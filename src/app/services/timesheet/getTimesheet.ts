@@ -5,7 +5,7 @@ import {apiCall} from '../api';
 import {GET_TIMESHEET_ROUTE} from '../../constant/apiRoutes';
 import {Timesheet} from '../../screens/TimesheetScreen/interface';
 
-type SectionListType = {
+export type SectionListType = {
   title: string;
   data: Timesheet[];
 };
@@ -24,16 +24,8 @@ export type GetTimesheetRequestBody = {
 };
 
 export type GetTimesheetResponseBody = {
+  message: string;
   timesheets: TimesheetType[];
-  // total_pages: number;
-  // page_no: number;
-  projects: number;
-  // leaves: number;
-  total_worked_hours: string;
-  data: {
-    title: string;
-    data: Timesheet[];
-  }[];
 };
 
 export const getTimesheetRequest = async (payload: GetTimesheetRequestBody) => {

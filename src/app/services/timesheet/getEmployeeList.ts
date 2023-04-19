@@ -6,13 +6,16 @@ import {GET_EMPLOYEE_LIST_ROUTE} from '../../constant/apiRoutes';
 import {Employee} from '../../screens/TimesheetScreen/interface';
 
 export type GetEmployeeListRequestBody = {
-  user_id: string;
-  start_date: string;
-  end_date: string;
+  from_date: string;
+  to_date: string;
   // user_name_initials: string;
 };
 
-export type GetEmployeeListResponseBody = Employee[];
+export type GetEmployeeListResponseBody = {
+  status: string;
+  code: number;
+  body: Employee[];
+};
 
 export const getEmployeeListRequest = async (
   payload: GetEmployeeListRequestBody,

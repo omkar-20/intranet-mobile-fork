@@ -3,19 +3,30 @@ import {AxiosResponse} from 'axios';
 import {apiCall} from '../api';
 
 import {POST_TIMESHEET_ROUTE} from '../../constant/apiRoutes';
+import {SectionListType} from './getTimesheet';
+
+export type CreateTimesheetType = {
+  project_id: string;
+  date: string;
+  duration: string;
+  description: string;
+};
 
 export type CreateTimesheetRequestBody = {
-  data: {
-    date: Date;
-    project_name: string;
-    Project_id: number;
-    description: string;
-    Work_in_hours: number;
-  }[];
+  user: {
+    time_sheets_attributes: any;
+    user_id: string;
+    current_user: string;
+    from_date: string;
+    to_date: string;
+  };
 };
 
 export type CreateTimesheetResponseBody = {
+  code: number;
   message: string;
+  status: string;
+  timesheet: SectionListType[];
 };
 
 export const createTimesheetRequest = async (

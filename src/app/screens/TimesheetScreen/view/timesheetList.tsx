@@ -1,5 +1,12 @@
-import React, {Fragment, useCallback, useMemo, useState} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import React, {
+  Fragment,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
+import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {useMutation, useQuery} from 'react-query';
 
 import DateRange from '../../../components/pickers/dateRange';
 import SectionListTimesheet from '../component/sectionListTimesheet';
@@ -7,9 +14,16 @@ import EditTimesheetModal from '../component/editTimesheetModal';
 import EmployeeCard from '../component/employeeCard';
 import Typography from '../../../components/typography';
 import Header from '../../../components/header';
+import CreateTimesheet from './createTimesheet';
+import FloatingActionButton from '../../../components/button/floatingActionButton';
+import ErrorMessage from '../../../components/errorMessage';
 
 import {dateFormater} from '../../../utils/dateFormater';
-import {Employee, Timesheet, TimesheetFormData} from '../interface';
+import {Employee, Timesheet} from '../interface';
+
+import {getTimesheetRequest} from '../../../services/timesheet/getTimesheet';
+import UserContext from '../../../context/user.context';
+import {deleteTimesheetRequest} from '../../../services/timesheet/deleteTimesheet';
 
 import strings from '../../../constant/strings';
 import sizes from '../../../constant/sizes';
@@ -18,8 +32,6 @@ import {Calendar} from '../../../constant/icons';
 import colors from '../../../constant/colors';
 
 import {borderStyles, flexStyles} from '../../../../styles';
-import {useQuery} from 'react-query';
-import {getTimesheetRequest} from '../../../services/timesheet/getTimesheet';
 
 type Props = {
   route?: {
@@ -33,40 +45,66 @@ const TimesheetList = ({route}: Props) => {
     () => new Date(newDate.getFullYear(), newDate.getMonth(), 1),
     [newDate],
   );
+
+  const [userContextData] = useContext(UserContext);
+
   const [isDateRangeVisible, setIsDateRangeVisible] = useState(false);
-  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-  const [editTimesheetData, setEditTimesheetData] =
-    useState<TimesheetFormData>();
-
   const [isDateRangeApplied, setIsDateRangeApplied] = useState(false);
-
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [editTimesheetData, setEditTimesheetData] = useState<Timesheet>();
+  const [isCreateModalvisible, setisCreateModalvisible] = useState(false);
   const [dateRange, setDateRange] = useState<{
     start_date: string;
     end_date: string;
   }>({start_date: dateFormater(startOfMonth), end_date: dateFormater(newDate)});
-
   // const [page, setPage] = useState(0);
 
-  const {data} = useQuery(
-    ['timesheet/list', route?.params.user_id, dateRange],
+  const {data, isFetching, refetch, isRefetching} = useQuery(
+    [
+      'timesheet/list',
+      userContextData?.userData.userId,
+      route?.params.user_id,
+      dateRange,
+    ],
     () =>
       getTimesheetRequest({
-        user_id: route ? route.params.user_id : '',
+        user_id: route
+          ? route.params.user_id
+          : userContextData?.userData.userId + '',
         // page_number: 1,
         from_date: dateRange.start_date,
         to_date: dateRange.end_date,
       }),
   );
 
-  const toggleModal = () => setIsEditModalVisible(v => !v);
+  const mutation = useMutation({
+    mutationFn: (deleteData: Timesheet) =>
+      deleteTimesheetRequest({
+        time_sheet_date: deleteData.date,
+        project_id: deleteData.project + '',
+        user_id: route
+          ? route.params.user_id
+          : userContextData?.userData.userId + '',
+      }),
+    onSuccess: () => {
+      Alert.alert('Timesheet Deleted');
+      refetch();
+    },
+    onError: () => Alert.alert('Something went wrong', 'Delete Request failed'),
+  });
 
-  const toggelDatePicker = () => setIsDateRangeVisible(v => !v);
-
-  const onEditSave = (editData?: TimesheetFormData) => {
-    console.log(editData);
-    // TO DO API CALL
-    toggleModal();
-  };
+  const toggleEditModal = useCallback(() => {
+    setIsEditModalVisible(v => !v);
+    refetch();
+  }, [refetch]);
+  const toggelDatePicker = useCallback(
+    () => setIsDateRangeVisible(v => !v),
+    [],
+  );
+  const toggleCreateModal = useCallback(() => {
+    setisCreateModalvisible(v => !v);
+    refetch();
+  }, [refetch]);
 
   // const increasePage = () => {
   //   setPage(p => p + 1);
@@ -93,24 +131,23 @@ const TimesheetList = ({route}: Props) => {
     [newDate, startOfMonth],
   );
 
-  const workHoursTrim = (workHours?: string) =>
-    workHours?.slice(0, workHours.indexOf('('));
+  const workHoursTrim = useCallback(
+    (workHours?: string) => workHours?.slice(0, workHours.indexOf('(')),
+    [],
+  );
 
-  const timesheetDeleteCall = (timesheetData: Timesheet) => {
-    // TO DO API CALL
-    console.log(timesheetData);
-  };
+  const timesheetDeleteCall = useCallback(
+    (timesheetData: Timesheet) => mutation.mutate(timesheetData),
+    [mutation],
+  );
 
-  const timesheetEditCall = (timesheetData: Timesheet) => {
-    setEditTimesheetData({
-      project: timesheetData.project ? timesheetData.project : strings.SELECT,
-      project_id: timesheetData.project_id,
-      date: new Date(timesheetData.date),
-      workHours: timesheetData.work_in_hours,
-      description: timesheetData.description,
-    });
-    toggleModal();
-  };
+  const timesheetEditCall = useCallback(
+    (timesheetData: Timesheet) => {
+      setEditTimesheetData(timesheetData);
+      toggleEditModal();
+    },
+    [toggleEditModal],
+  );
 
   return (
     <Fragment>
@@ -126,7 +163,7 @@ const TimesheetList = ({route}: Props) => {
             styles.filter,
           ]}>
           <Typography
-            type={isDateRangeApplied ? 'description' : 'subheader'}
+            type={isDateRangeApplied ? 'subheader' : 'description'}
             style={styles.filterText}>
             {isDateRangeApplied
               ? `${dateRange.start_date} to ${dateRange.end_date}`
@@ -139,13 +176,11 @@ const TimesheetList = ({route}: Props) => {
           />
         </TouchableOpacity>
         {route ? (
-          <>
-            <EmployeeCard
-              name={route?.params?.name + ''}
-              email={route?.params?.email + ''}
-              isArrowVisible={false}
-            />
-          </>
+          <EmployeeCard
+            name={route?.params?.name + ''}
+            email={route?.params?.email + ''}
+            isArrowVisible={false}
+          />
         ) : (
           <></>
         )}
@@ -175,22 +210,46 @@ const TimesheetList = ({route}: Props) => {
         </View>
 
         <SectionListTimesheet
+          sections={data ? data?.data.timesheets[0].data : []}
           timesheetListData={data ? data?.data.timesheets[0].data : []}
           onDelete={timesheetDeleteCall}
           onEdit={timesheetEditCall}
+          refreshing={isFetching || isRefetching}
+          onRefresh={refetch}
+          emptyListMessage={strings.NO_TIMESHEET_PRESENT}
+          isDeleteVisible={userContextData?.userData.role === 'Manager'}
           // onEndReached={increasePage}
         />
+
+        {data?.data.message && <ErrorMessage message={data?.data.message} />}
 
         {isEditModalVisible ? (
           <EditTimesheetModal
             isVisible={isEditModalVisible}
-            toggleModal={toggleModal}
+            toggleModal={toggleEditModal}
             formData={editTimesheetData}
-            onSave={onEditSave}
+            userId={
+              route
+                ? route.params.user_id
+                : userContextData?.userData.userId + ''
+            }
+            current_user={userContextData?.userData.userId + ''}
           />
         ) : (
           <></>
         )}
+
+        <FloatingActionButton onPress={toggleCreateModal} />
+
+        <CreateTimesheet
+          toggleModal={toggleCreateModal}
+          isVisible={isCreateModalvisible}
+          userId={
+            route ? route.params.user_id : userContextData?.userData.userId + ''
+          }
+          current_user={userContextData?.userData.userId + ''}
+          dateRange={dateRange}
+        />
       </View>
     </Fragment>
   );
@@ -212,6 +271,7 @@ const styles = StyleSheet.create({
   filter: {
     justifyContent: 'space-between',
     paddingVertical: 10,
+    marginBottom: 10,
     marginHorizontal: sizes.CONTAINER_HORIZONTAL_MARGIN,
   },
   filterText: {

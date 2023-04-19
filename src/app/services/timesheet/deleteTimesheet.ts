@@ -5,7 +5,9 @@ import {apiCall} from '../api';
 import {DELETE_TIMESHEET_ROUTE} from '../../constant/apiRoutes';
 
 export type DeleteTimesheetRequestBody = {
-  timesheet_id: number;
+  time_sheet_date: string;
+  user_id: string;
+  project_id: string;
 };
 
 export type DeleteTimesheetResponseBody = {

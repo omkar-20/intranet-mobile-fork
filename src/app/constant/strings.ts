@@ -15,4 +15,7 @@ export default {
   DUBLICATE_ENTRY_ERROR: 'You have previous same timesheet entry',
   EMPTY_TIMESHEET: 'Empty Timesheet',
   EMPTY_TIMESHEET_MSG: 'Add timesheet before saving',
+  NO_TIMESHEET_PRESENT: 'No Timesheet Present for current filter',
+  NO_TIMESHEET_ADDED: 'No timesheet Added',
+  WORK_HOURS_ERROR: 'Work Hours is a required field',
 };

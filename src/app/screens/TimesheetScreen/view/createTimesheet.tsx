@@ -1,4 +1,4 @@
-import React, {memo, useCallback, useEffect, useState} from 'react';
+import React, {memo, useCallback, useState} from 'react';
 import {
   Alert,
   Keyboard,
@@ -6,16 +6,18 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {useMutation} from 'react-query';
 
+import {useIsKeyboardShown} from '../../../hooks/useIsKeyboardShown';
 import Modal from '../../../components/modal';
 import TimesheetForm from '../component/timesheetForm';
 import Typography from '../../../components/typography';
 import SectionListTimesheet from '../component/sectionListTimesheet';
 import Button from '../../../components/button';
 
-import {dateFormater} from '../../../utils/dateFormater';
+import {createTimesheetRequest} from '../../../services/timesheet/createTimesheet';
 
-import {TimesheetFormData, Timesheet} from '../interface';
+import {Timesheet} from '../interface';
 
 import colors from '../../../constant/colors';
 import fonts from '../../../constant/fonts';
@@ -23,25 +25,40 @@ import strings from '../../../constant/strings';
 import {Arrow} from '../../../constant/icons';
 
 import {flexStyles} from '../../../../styles';
+import {timeConversion} from '../../../constant/timesheet';
 
 type Props = {
   isVisible: boolean;
   toggleModal: () => void;
+  userId: string;
+  current_user: string;
+  dateRange: {
+    start_date: string;
+    end_date: string;
+  };
 };
 
-const CreateTimesheet = ({toggleModal, isVisible}: Props) => {
+type CreateTimesheetDataprop = {
+  title: string;
+  data: Timesheet[];
+}[];
+
+const CreateTimesheet = ({
+  toggleModal,
+  isVisible,
+  userId,
+  current_user,
+  dateRange,
+}: Props) => {
   const [addedTimesheet, setAddedTimesheet] = useState<
     Array<{
       title: string;
       data: Timesheet[];
     }>
   >([]);
-
-  const [keyboardIsVisible, setKeyboardIsVisible] = useState<boolean>(false);
-
-  const [formDefaultData, setFormDefaultData] = useState<TimesheetFormData>();
-
+  const [formDefaultData, setFormDefaultData] = useState<Timesheet>();
   const [isFormVisible, setIsFormVisible] = useState<boolean>(true);
+  const isKeyboardVisible = useIsKeyboardShown();
 
   const handlePress = useCallback(
     (value?: boolean) =>
@@ -49,87 +66,106 @@ const CreateTimesheet = ({toggleModal, isVisible}: Props) => {
     [],
   );
 
-  useEffect(() => {
-    const showListener = Keyboard.addListener('keyboardDidShow', () => {
-      setKeyboardIsVisible(true);
-    });
-    const hideListener = Keyboard.addListener('keyboardDidHide', () => {
-      setKeyboardIsVisible(false);
-    });
+  const mutationFunc = useCallback(
+    (data: CreateTimesheetDataprop) => {
+      const time_sheets_data: any = {};
+      data.forEach(section =>
+        section.data.map((value, index) => {
+          time_sheets_data[index + value.project_id] = {
+            project_id: value.project_id,
+            date: value.date,
+            duration:
+              timeConversion[
+                value.work_in_hours as keyof typeof timeConversion
+              ],
+            description: value.description,
+          };
+        }),
+      );
 
-    return () => {
-      showListener.remove();
-      hideListener.remove();
-    };
-  }, []);
-
-  const onAdd = (data?: TimesheetFormData, resetField?: Function) => {
-    const reset = () => {
-      setFormDefaultData(undefined);
-
-      if (typeof resetField !== 'undefined') {
-        resetField('project');
-        resetField('date');
-        resetField('workHours');
-        resetField('description');
-      }
-      handlePress(false);
-
-      Keyboard.dismiss();
-    };
-
-    if (data) {
-      let isCategoryFound = false;
-      setAddedTimesheet(sections => {
-        sections.forEach(section => {
-          if (section.title === data.project) {
-            let isPresent = false;
-            isCategoryFound = true;
-
-            section.data.forEach(item => {
-              if (
-                item.timesheet_id ===
-                data.project + dateFormater(data.date)
-              ) {
-                isPresent = true;
-              }
-            });
-            if (isPresent) {
-              Alert.alert(strings.NOT_ALLOWED, strings.DUBLICATE_ENTRY_ERROR);
-            } else {
-              section.data.push({
-                timesheet_id: data.project + dateFormater(data.date),
-                date: dateFormater(data.date),
-                work_in_hours: data.workHours,
-                description: data.description,
-              });
-
-              reset();
-            }
-          }
-        });
-
-        if (!isCategoryFound) {
-          sections.push({
-            title: data.project,
-            data: [
-              {
-                timesheet_id: data.project + dateFormater(data.date),
-                date: dateFormater(data.date),
-                work_in_hours: data.workHours,
-                description: data.description,
-              },
-            ],
-          });
-
-          reset();
-        }
-        return sections;
+      return createTimesheetRequest({
+        user: {
+          time_sheets_attributes: time_sheets_data,
+          user_id: userId,
+          current_user: current_user,
+          from_date: dateRange.start_date,
+          to_date: dateRange.end_date,
+        },
       });
-    }
+    },
+    [current_user, dateRange.end_date, dateRange.start_date, userId],
+  );
+
+  const mutation = useMutation({
+    mutationFn: mutationFunc,
+    onSuccess: data => {
+      Alert.alert(data.data.message);
+      setAddedTimesheet(data.data.timesheet ? data.data.timesheet : []);
+      if (!data.data.timesheet) {
+        toggleModal();
+      }
+    },
+    onError: ({data}) => {
+      Alert.alert(data.data.message);
+    },
+  });
+
+  const onSave = () => {
+    mutation.mutate(addedTimesheet);
   };
 
-  const onDelete = (timesheetData: Timesheet) => {
+  const onAdd = useCallback(
+    (data: Timesheet, resetField?: Function) => {
+      const reset = () => {
+        setFormDefaultData(undefined);
+
+        if (typeof resetField !== 'undefined') {
+          resetField('project');
+          resetField('date');
+          resetField('work_in_hours');
+          resetField('description');
+        }
+        handlePress(false);
+
+        Keyboard.dismiss();
+      };
+      if (data) {
+        let isCategoryFound = false;
+        setAddedTimesheet(sections => {
+          sections.forEach(section => {
+            if (section.title === data.project) {
+              let isPresent = false;
+              isCategoryFound = true;
+
+              section.data.forEach(item => {
+                if (item.timesheet_id === data.timesheet_id) {
+                  isPresent = true;
+                }
+              });
+              if (isPresent) {
+                Alert.alert(strings.NOT_ALLOWED, strings.DUBLICATE_ENTRY_ERROR);
+              } else {
+                section.data.push(data);
+                reset();
+              }
+            }
+          });
+
+          if (!isCategoryFound) {
+            sections.push({
+              title: data.project + '',
+              data: [data],
+            });
+            reset();
+          }
+          return sections;
+        });
+      }
+    },
+    [handlePress],
+  );
+
+  const onDelete = useCallback((timesheetData: Timesheet) => {
     const list: {title: string; data: Timesheet[]}[] = [];
     setAddedTimesheet(sections =>
       sections.reduce((prevVal, currVal) => {
@@ -143,7 +179,7 @@ const CreateTimesheet = ({toggleModal, isVisible}: Props) => {
         return prevVal;
       }, list),
     );
-  };
+  }, []);
 
   const onEdit = (timesheetData: Timesheet) => {
     const list: {title: string; data: Timesheet[]}[] = [];
@@ -155,10 +191,11 @@ const CreateTimesheet = ({toggleModal, isVisible}: Props) => {
             return true;
           } else {
             setFormDefaultData({
-              project: currVal.title,
-              date: new Date(item.date),
-              workHours: item.work_in_hours,
+              ...item,
+              project: item.project_id,
+              work_in_hours: item.work_in_hours,
               description: item.description,
+              date: item.date,
             });
             handlePress(true);
             return false;
@@ -171,12 +208,6 @@ const CreateTimesheet = ({toggleModal, isVisible}: Props) => {
         return prevVal;
       }, list),
     );
-  };
-
-  const onSave = () => {
-    // TO DO API CALL
-    setAddedTimesheet([]);
-    toggleModal();
   };
 
   return (
@@ -196,6 +227,7 @@ const CreateTimesheet = ({toggleModal, isVisible}: Props) => {
           onSubmit={onAdd}
           isFormVisible={isFormVisible}
           defaultData={formDefaultData}
+          userId={userId}
         />
       </View>
       <TouchableOpacity onPress={() => handlePress()} style={styles.arrow}>
@@ -203,20 +235,24 @@ const CreateTimesheet = ({toggleModal, isVisible}: Props) => {
       </TouchableOpacity>
 
       <SectionListTimesheet
+        sections={addedTimesheet}
         timesheetListData={addedTimesheet}
         onEdit={onEdit}
         onDelete={onDelete}
         style={styles.horizontalPad}
+        emptyListMessage={strings.NO_TIMESHEET_ADDED}
       />
 
-      {!keyboardIsVisible && (
+      {!isKeyboardVisible && (
         <View
           style={[flexStyles.horizontal, styles.btns, styles.horizontalPad]}>
           <Button title="Cancel" type="secondary" onPress={toggleModal} />
+
           <Button
             title="Save"
             type="primary"
             onPress={onSave}
+            isLoading={mutation.isLoading}
             disabled={addedTimesheet.length === 0}
           />
         </View>
@@ -245,6 +281,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.WHITE,
     borderRadius: 24,
     zIndex: 1,
+    marginRight: 2,
     position: 'relative',
     top: -24,
     alignItems: 'center',

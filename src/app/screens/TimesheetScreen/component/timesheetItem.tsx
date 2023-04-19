@@ -13,6 +13,7 @@ type Props = {
   title: string;
   onEdit?: Function;
   onDelete?: Function;
+  isDeleteVisible?: boolean;
 };
 
 const TimesheetItem = ({
@@ -20,11 +21,20 @@ const TimesheetItem = ({
   title,
   onEdit,
   onDelete,
+  isDeleteVisible = true,
   style,
 }: Props) => {
-  const handleEdit = () => onEdit?.({...timesheetData, project: title});
+  const handleEdit = () =>
+    onEdit?.({
+      ...timesheetData,
+      project_title: title,
+    });
 
-  const handleDelete = () => onDelete?.({...timesheetData, project: title});
+  const handleDelete = () =>
+    onDelete?.({
+      ...timesheetData,
+      project_title: title,
+    });
 
   return (
     <View style={style}>
@@ -39,7 +49,7 @@ const TimesheetItem = ({
             <Edit width={20} height={20} />
           </TouchableOpacity>
         )}
-        {onDelete && (
+        {onDelete && isDeleteVisible && (
           <TouchableOpacity onPress={handleDelete}>
             <Delete width={20} height={20} />
           </TouchableOpacity>

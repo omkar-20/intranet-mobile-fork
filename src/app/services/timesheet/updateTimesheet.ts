@@ -5,11 +5,21 @@ import {apiCall} from '../api';
 import {PUT_TIMESHEET_ROUTE} from '../../constant/apiRoutes';
 
 export type UpdateTimesheetRequestBody = {
-  date: Date;
-  project_name: string;
-  Project_id: number;
-  description: string;
-  Work_in_hours: number;
+  user: {
+    time_sheets_attributes: {
+      1: {
+        project_id: number;
+        date: string;
+        duration: string;
+        description: string;
+        id: string;
+      };
+    };
+  };
+
+  user_id: string;
+  current_user: string;
+  time_sheet_date: string;
 };
 
 export type UpdateTimesheetResponseBody = {

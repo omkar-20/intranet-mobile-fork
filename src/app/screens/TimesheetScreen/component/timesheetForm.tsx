@@ -3,6 +3,7 @@ import {StyleSheet, View} from 'react-native';
 
 import {useForm, Controller} from 'react-hook-form';
 import * as yup from 'yup';
+import {useQuery} from 'react-query';
 import {yupResolver} from '@hookform/resolvers/yup';
 
 import Typography from '../../../components/typography';
@@ -11,27 +12,31 @@ import DatePicker from '../../../components/pickers/datePicker';
 import Input from '../../../components/input';
 import Button from '../../../components/button';
 
-import {TimesheetFormData} from '../interface';
+import {dateFormater} from '../../../utils/dateFormater';
+import {getProjectListRequest} from '../../../services/timesheet/getProjectList';
+import {Timesheet} from '../interface';
 
 import colors from '../../../constant/colors';
 import strings from '../../../constant/strings';
-import {workHoursData, projectListData} from '../../../constant/timesheet';
+import {workHoursData} from '../../../constant/timesheet';
 
 import {flexStyles} from '../../../../styles';
 
 const timesheetFormSchema = yup.object().shape({
   project: yup.string().required(),
   date: yup.date().required(),
-  workHours: yup.string().required(),
+  work_in_hours: yup.string().required(),
   description: yup.string().required(),
 });
 
 type Props = {
-  defaultData?: TimesheetFormData;
-  onSubmit: (data?: TimesheetFormData, resetField?: Function) => void;
+  defaultData?: Timesheet;
+  onSubmit: (data: Timesheet, resetField?: Function) => void;
   onCancel?: () => void;
   isFormVisible?: boolean;
   isAddButtonVisible?: boolean;
+  isLoading?: boolean;
+  userId: string;
 };
 
 const TimesheetForm = ({
@@ -40,6 +45,8 @@ const TimesheetForm = ({
   onCancel,
   isFormVisible = true,
   isAddButtonVisible = true,
+  isLoading,
+  userId,
 }: Props) => {
   const {
     handleSubmit,
@@ -53,13 +60,19 @@ const TimesheetForm = ({
       : {
           project: undefined,
           date: undefined,
-          workHours: undefined,
+          work_in_hours: undefined,
           description: undefined,
         },
     resolver: yupResolver(timesheetFormSchema),
   });
 
-  const todayDate = new Date();
+  const newDate = new Date();
+
+  const {data: queryData} = useQuery(['timesheet/projectList', userId], () =>
+    getProjectListRequest({
+      user_id: userId,
+    }),
+  );
 
   return (
     <>
@@ -79,7 +92,7 @@ const TimesheetForm = ({
                   }}
                   onValueChange={onChange}
                   value={value ? value : strings.SELECT}
-                  items={projectListData}
+                  items={queryData ? queryData.data.emp_projects : []}
                   style={styles.item}
                 />
               )}
@@ -101,12 +114,12 @@ const TimesheetForm = ({
                 control={control}
                 render={({field: {onChange, value}}) => (
                   <DatePicker
-                    value={value ? value : todayDate}
+                    value={value ? new Date(value) : newDate}
                     onDateChange={onChange}
                     hideIcon={false}
-                    selectedDate={value}
+                    selectedDate={value ? new Date(value) : undefined}
                     placeholder={strings.SELECT}
-                    maximumDate={todayDate}
+                    maximumDate={newDate}
                   />
                 )}
                 name="date"
@@ -136,11 +149,11 @@ const TimesheetForm = ({
                     style={styles.item}
                   />
                 )}
-                name="workHours"
+                name="work_in_hours"
               />
-              {errors.workHours && (
+              {errors.work_in_hours && (
                 <Typography style={styles.error} type="description">
-                  {errors.workHours.message}
+                  {strings.WORK_HOURS_ERROR}
                 </Typography>
               )}
             </View>
@@ -177,7 +190,21 @@ const TimesheetForm = ({
           <Button
             type="tertiary"
             title="Add Timesheet"
-            onPress={handleSubmit((data: any) => onSubmit(data, resetField))}
+            onPress={handleSubmit((data: any) => {
+              let label = queryData?.data.emp_projects.find(value => {
+                return data.project === value.value;
+              });
+              onSubmit(
+                {
+                  ...data,
+                  timesheet_id: data.project + dateFormater(data.date),
+                  project: label?.label + '',
+                  project_id: data.project,
+                  date: dateFormater(data.date),
+                },
+                resetField,
+              );
+            })}
           />
         </View>
       ) : (
@@ -186,7 +213,13 @@ const TimesheetForm = ({
           <Button
             title="Update"
             type="primary"
-            onPress={handleSubmit((data: any) => onSubmit(data, resetField))}
+            isLoading={isLoading}
+            onPress={handleSubmit((data: any) =>
+              onSubmit({
+                ...data,
+                date: dateFormater(data.date),
+              }),
+            )}
           />
         </View>
       )}

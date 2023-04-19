@@ -1,13 +1,20 @@
 import React, {memo, useCallback} from 'react';
-import {SectionList, StyleSheet, View, ViewStyle} from 'react-native';
+import {
+  SectionList,
+  SectionListProps,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
 
 import Typography from '../../../components/typography';
 import TimesheetItem from './timesheetItem';
 import Linear from '../../../components/seperator/linear';
+import EmptyList from './emptyList';
 
 import {Timesheet} from '../interface';
 
-type Props = {
+type Props = SectionListProps<any, any> & {
   style?: ViewStyle;
   timesheetListData: Array<{
     title: string;
@@ -15,6 +22,8 @@ type Props = {
   }>;
   onEdit: Function;
   onDelete: Function;
+  emptyListMessage?: string;
+  isDeleteVisible?: boolean;
 };
 
 const seperator = () => <Linear style={styles.seperator} />;
@@ -30,6 +39,9 @@ const SectionListTimesheet = ({
   onEdit,
   onDelete,
   style,
+  isDeleteVisible = true,
+  emptyListMessage,
+  ...props
 }: Props) => {
   const renderItem = useCallback(
     ({item, section}: {item: Timesheet; section: {title: string}}) => (
@@ -38,13 +50,20 @@ const SectionListTimesheet = ({
         onEdit={onEdit}
         onDelete={onDelete}
         title={section.title}
+        isDeleteVisible={isDeleteVisible}
       />
     ),
-    [onDelete, onEdit],
+    [isDeleteVisible, onDelete, onEdit],
+  );
+
+  const listEmptyComponent = useCallback(
+    () => <EmptyList message={emptyListMessage} />,
+    [emptyListMessage],
   );
 
   return (
     <SectionList
+      {...props}
       sections={timesheetListData}
       keyExtractor={(item, index) => item.timesheet_id + index}
       renderItem={renderItem}
@@ -55,6 +74,7 @@ const SectionListTimesheet = ({
       ListFooterComponent={footer}
       ItemSeparatorComponent={seperator}
       showsVerticalScrollIndicator={false}
+      ListEmptyComponent={listEmptyComponent}
     />
   );
 };
