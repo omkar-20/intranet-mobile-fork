@@ -8,11 +8,12 @@ import {MainScreenNavigationProp} from '../../navigation/types';
 import {USER_PROFILE_SCREEN} from '../../constant/screenNames';
 
 interface Props {
-  type: 'primary' | 'secondary' | 'ternary';
+  type: 'primary' | 'secondary';
   title?: string;
+  isRightButtonClickable?: boolean;
 }
 
-const Header = ({type, title}: Props) => {
+const Header = ({type, title, isRightButtonClickable}: Props) => {
   const navigation = useNavigation<MainScreenNavigationProp>();
 
   const navigateToProfile = () => {
@@ -36,26 +37,6 @@ const Header = ({type, title}: Props) => {
     case 'secondary':
       return (
         <View style={styles.container}>
-          <TouchableOpacity
-            activeOpacity={0.5}
-            style={styles.backButton}
-            onPress={goBack}>
-            <Arrow
-              height={20}
-              width={20}
-              style={styles.arrow}
-              fill={colors.WHITE}
-            />
-            <Text style={styles.backText}>{title}</Text>
-          </TouchableOpacity>
-
-          <Profile height={18} width={18} fill={colors.WHITE} />
-        </View>
-      );
-
-    case 'ternary':
-      return (
-        <View style={styles.container}>
           <View style={styles.backButton}>
             <TouchableOpacity activeOpacity={0.5} onPress={goBack}>
               <Arrow
@@ -69,7 +50,9 @@ const Header = ({type, title}: Props) => {
             <Text style={styles.backText}>{title}</Text>
           </View>
 
-          <TouchableOpacity activeOpacity={0.5} onPress={navigateToProfile}>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={isRightButtonClickable ? navigateToProfile : undefined}>
             <Profile height={18} width={18} fill={colors.WHITE} />
           </TouchableOpacity>
         </View>

@@ -4,23 +4,25 @@ import {useForm, Controller} from 'react-hook-form';
 import * as yup from 'yup';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {useMutation, useQuery} from 'react-query';
-import Toast from 'react-native-simple-toast';
 
 import Typography from '../../../components/typography';
 import PickerSelect from '../../../components/pickers/pickerSelect';
 import Input from '../../../components/input';
+import CustomChip from '../../customChip';
 import Button from '../../../components/button';
 
-import colors from '../../../constant/colors';
-import strings from '../../../constant/strings';
-import {skillsType, updateSkillFormDataType} from '../../../types';
-import {flexStyles} from '../../../../styles';
-import CustomChip from '../../customChip';
+import bottomToast from '../../../utils/toast';
 import skillsFormatter from '../../../utils/userProfile/skillsFormatter';
 import {
   getAllSkillRequest,
   updateSkillRequest,
 } from '../../../services/api/userProfile';
+
+import colors from '../../../constant/colors';
+import strings from '../../../constant/strings';
+import {skillsType, updateSkillFormDataType} from '../../../types';
+
+import {flexStyles} from '../../../../styles';
 
 type Props = {
   defaultData?: skillsType;
@@ -42,7 +44,7 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
           .required()
           .test(
             'unique',
-            'unique Skills required',
+            'Unique Skills required.',
             value => !value || !otherSkillsStore.has(value),
           ),
         secondaryTechnicalSkill: yup
@@ -52,7 +54,7 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
             ([primaryTechnicalSkill], schema) => {
               return schema
 
-                .test('unique', 'unique skills required', value => {
+                .test('unique', 'Unique skills required.', value => {
                   return (
                     !value ||
                     (!otherSkillsStore.has(value) &&
@@ -61,7 +63,7 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
                 })
                 .test(
                   'priamary skill exist',
-                  'please fill primary skills first',
+                  'Please fill primary skills first.',
                   value => primaryTechnicalSkill || !value,
                 );
             },
@@ -72,7 +74,7 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
             ['secondaryTechnicalSkill', 'primaryTechnicalSkill'],
             ([secondaryTechnicalSkill, primaryTechnicalSkill], schema) => {
               return schema
-                .test('unique', 'unique skills required', value => {
+                .test('unique', 'Unique skills required.', value => {
                   return (
                     !value ||
                     (value !== primaryTechnicalSkill &&
@@ -82,7 +84,7 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
                 })
                 .test(
                   'ternary must exist',
-                  'please fill secondary skills first',
+                  'Please fill secondary skills first.',
                   value => secondaryTechnicalSkill || !value,
                 );
             },
@@ -104,7 +106,7 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
               schema,
             ) => {
               return schema
-                .test('unique', 'unique skills required', value => {
+                .test('unique', 'Unique skills required.', value => {
                   return (
                     !value ||
                     (!otherSkillsStore.has(value) &&
@@ -115,7 +117,7 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
                 })
                 .test(
                   'ternary must exist',
-                  'please fill ternary skills first',
+                  'Please fill ternary skills first.',
                   () => ternaryTechnicalSkill || !otherSkillsStore.size,
                 );
             },
@@ -138,21 +140,13 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
       resetField('ternaryTechnicalSkill');
       resetField('otherSkills');
       refresh();
-      Toast.showWithGravity(
-        'Skills updated Successfully',
-        Toast.SHORT,
-        Toast.CENTER,
-      );
+      bottomToast(strings.UPDATE_SKILLS_SUCCESS);
     },
     retry: false,
     onError: error => {
       if (error) {
         toggleModal();
-        Toast.showWithGravity(
-          'Something went wrong',
-          Toast.SHORT,
-          Toast.CENTER,
-        );
+        bottomToast(strings.UPDATE_SKILLS_ERROR, true);
       }
     },
   });
@@ -214,27 +208,27 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
   }, []);
 
   const onDeleteOtherSkills = useCallback((skill: string) => {
-    setOtherSkillsStore(otherSkillsStore => {
-      const temperoryStore = new Set(otherSkillsStore);
+    setOtherSkillsStore(otherSkillsStoreInstance => {
+      const temperoryStore = new Set(otherSkillsStoreInstance);
       temperoryStore.delete(skill);
       return temperoryStore;
     });
   }, []);
 
-  const setToSkill = (data: setType): string => {
-    return Array.from(data).toString();
+  const setToSkill = (skillData: setType): string => {
+    return Array.from(skillData).toString();
   };
-  const onSave = (data: updateSkillFormDataType) => {
+  const onSave = (formData: updateSkillFormDataType) => {
     const otherSkills = setToSkill(otherSkillsStore as setType);
     const resData: skillsType = {
-      primarySkill: data.primaryTechnicalSkill
-        ? data.primaryTechnicalSkill
+      primarySkill: formData.primaryTechnicalSkill
+        ? formData.primaryTechnicalSkill
         : '',
-      secondarySkill: data.secondaryTechnicalSkill
-        ? data.secondaryTechnicalSkill
+      secondarySkill: formData.secondaryTechnicalSkill
+        ? formData.secondaryTechnicalSkill
         : '',
-      ternarySkill: data.ternaryTechnicalSkill
-        ? data.ternaryTechnicalSkill
+      ternarySkill: formData.ternaryTechnicalSkill
+        ? formData.ternaryTechnicalSkill
         : '',
       otherSkills: otherSkills ? otherSkills : '',
     };
@@ -246,7 +240,8 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
     if (value === undefined || errors.otherSkills || value.length < 1) {
     } else {
       setOtherSkillsStore(
-        otherSkillsStore => new Set(otherSkillsStore.add(value)),
+        otherSkillsStoreInstance =>
+          new Set(otherSkillsStoreInstance.add(value)),
       );
     }
     resetField('otherSkills');

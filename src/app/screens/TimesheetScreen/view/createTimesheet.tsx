@@ -16,6 +16,7 @@ import SectionListTimesheet from '../component/sectionListTimesheet';
 import Button from '../../../components/button';
 
 import {createTimesheetRequest} from '../../../services/timesheet/createTimesheet';
+import bottomToast from '../../../utils/toast';
 
 import {Timesheet} from '../interface';
 
@@ -23,9 +24,9 @@ import colors from '../../../constant/colors';
 import fonts from '../../../constant/fonts';
 import strings from '../../../constant/strings';
 import {Arrow} from '../../../constant/icons';
+import {timeConversion} from '../../../constant/timesheet';
 
 import {flexStyles} from '../../../../styles';
-import {timeConversion} from '../../../constant/timesheet';
 
 type Props = {
   isVisible: boolean;
@@ -99,15 +100,13 @@ const CreateTimesheet = ({
   const mutation = useMutation({
     mutationFn: mutationFunc,
     onSuccess: data => {
-      Alert.alert(data.data.message);
+      bottomToast(data.data.message);
       setAddedTimesheet(data.data.timesheet ? data.data.timesheet : []);
       if (!data.data.timesheet) {
         toggleModal();
       }
     },
-    onError: ({data}) => {
-      Alert.alert(data.data.message);
-    },
+    onError: () => bottomToast(strings.CREATE_ERROR, true),
   });
 
   const onSave = () => {
@@ -134,14 +133,11 @@ const CreateTimesheet = ({
         setAddedTimesheet(sections => {
           sections.forEach(section => {
             if (section.title === data.project) {
-              let isPresent = false;
               isCategoryFound = true;
 
-              section.data.forEach(item => {
-                if (item.timesheet_id === data.timesheet_id) {
-                  isPresent = true;
-                }
-              });
+              const isPresent = section.data.find(
+                item => item.timesheet_id === data.timesheet_id,
+              );
               if (isPresent) {
                 Alert.alert(strings.NOT_ALLOWED, strings.DUBLICATE_ENTRY_ERROR);
               } else {
@@ -226,6 +222,7 @@ const CreateTimesheet = ({
         <TimesheetForm
           onSubmit={onAdd}
           isFormVisible={isFormVisible}
+          toggleForm={handlePress}
           defaultData={formDefaultData}
           userId={userId}
         />

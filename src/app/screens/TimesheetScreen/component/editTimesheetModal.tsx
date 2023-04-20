@@ -1,18 +1,20 @@
 import React, {memo} from 'react';
-import {Alert, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {useMutation} from 'react-query';
 
 import Modal from '../../../components/modal';
 import TimesheetForm from '../component/timesheetForm';
 import Typography from '../../../components/typography';
 
-import {timeConversion} from '../../../constant/timesheet';
 import {updateTimesheetRequest} from '../../../services/timesheet/updateTimesheet';
 
 import {Timesheet} from '../interface';
 
 import colors from '../../../constant/colors';
 import fonts from '../../../constant/fonts';
+import {timeConversion} from '../../../constant/timesheet';
+import strings from '../../../constant/strings';
+import bottomToast from '../../../utils/toast';
 
 type Props = {
   isVisible: boolean;
@@ -34,7 +36,7 @@ const EditTimesheetModal = ({
       user: {
         time_sheets_attributes: {
           1: {
-            project_id: parseInt(formData?.project + '', 10),
+            project_id: parseInt(data?.project + '', 10),
             date: data.date,
             duration:
               timeConversion[data.work_in_hours as keyof typeof timeConversion],
@@ -51,12 +53,12 @@ const EditTimesheetModal = ({
 
   const mutation = useMutation({
     mutationFn: mutationFunc,
-    onSuccess: () => {
+    onSuccess: data => {
       toggleModal();
-      Alert.alert('Updated Timesheet');
+      bottomToast(data.data.message);
     },
     onError: () => {
-      Alert.alert('Something went wrong', 'Problem in updating timesheet');
+      bottomToast(strings.EDIT_ERROR, true);
     },
   });
 

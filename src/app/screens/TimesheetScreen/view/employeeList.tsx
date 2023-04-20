@@ -1,6 +1,5 @@
 import React, {useCallback, useMemo, useState} from 'react';
 import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
-
 import {useQuery} from 'react-query';
 import {useNavigation} from '@react-navigation/native';
 
@@ -9,9 +8,11 @@ import Input from '../../../components/input';
 import DateRange from '../../../components/pickers/dateRange';
 import Linear from '../../../components/seperator/linear';
 import EmptyList from '../component/emptyList';
+import ErrorMessage from '../../../components/errorMessage';
 
 import {getEmployeeListRequest} from '../../../services/timesheet/getEmployeeList';
 import {dateFormater} from '../../../utils/dateFormater';
+
 import {Employee} from '../interface';
 import {MainScreenNavigationProp} from '../../../navigation/types';
 
@@ -19,6 +20,8 @@ import {Calendar, Search} from '../../../constant/icons';
 import sizes from '../../../constant/sizes';
 import {USER_TIMESHEET} from '../../../constant/screenNames';
 import colors from '../../../constant/colors';
+
+import {flexStyles} from '../../../../styles';
 
 type Props = {
   item: Employee;
@@ -101,7 +104,11 @@ const EmployeeList = () => {
     [navigation],
   );
 
-  return (
+  return data?.data.code === 401 ? (
+    <View style={flexStyles.center}>
+      <ErrorMessage message={data?.data.message} />
+    </View>
+  ) : (
     <View style={styles.main}>
       <DateRange
         onSubmit={onDateRangeSubmit}

@@ -11,6 +11,11 @@ const flexStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
   },
+  center: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 
 const borderStyles = StyleSheet.create({

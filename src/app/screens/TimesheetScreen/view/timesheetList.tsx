@@ -24,6 +24,7 @@ import {Employee, Timesheet} from '../interface';
 import {getTimesheetRequest} from '../../../services/timesheet/getTimesheet';
 import UserContext from '../../../context/user.context';
 import {deleteTimesheetRequest} from '../../../services/timesheet/deleteTimesheet';
+import bottomToast from '../../../utils/toast';
 
 import strings from '../../../constant/strings';
 import sizes from '../../../constant/sizes';
@@ -86,11 +87,11 @@ const TimesheetList = ({route}: Props) => {
           ? route.params.user_id
           : userContextData?.userData.userId + '',
       }),
-    onSuccess: () => {
-      Alert.alert('Timesheet Deleted');
+    onSuccess: successData => {
+      bottomToast(successData.data.message);
       refetch();
     },
-    onError: () => Alert.alert('Something went wrong', 'Delete Request failed'),
+    onError: () => bottomToast(strings.DELETE_ERROR, true),
   });
 
   const toggleEditModal = useCallback(() => {
@@ -137,7 +138,22 @@ const TimesheetList = ({route}: Props) => {
   );
 
   const timesheetDeleteCall = useCallback(
-    (timesheetData: Timesheet) => mutation.mutate(timesheetData),
+    (timesheetData: Timesheet) => {
+      Alert.alert(
+        'Delete Timesheet',
+        `Do you want to delete timesheet on ${timesheetData.date}?`,
+        [
+          {
+            text: 'No',
+            style: 'cancel',
+          },
+          {
+            text: 'Confirm',
+            onPress: () => mutation.mutate(timesheetData),
+          },
+        ],
+      );
+    },
     [mutation],
   );
 
@@ -149,9 +165,21 @@ const TimesheetList = ({route}: Props) => {
     [toggleEditModal],
   );
 
-  return (
+  return data?.data.code === 401 ? (
+    <View style={flexStyles.center}>
+      <ErrorMessage message={data?.data.message} />
+    </View>
+  ) : (
     <Fragment>
-      {route ? <Header title={TIMESHEET_SCREEN} type="ternary" /> : <></>}
+      {route ? (
+        <Header
+          title={TIMESHEET_SCREEN}
+          type="secondary"
+          isRightButtonClickable={true}
+        />
+      ) : (
+        <></>
+      )}
 
       <View style={styles.background}>
         <TouchableOpacity

@@ -18,4 +18,11 @@ export default {
   NO_TIMESHEET_PRESENT: 'No Timesheet Present for current filter',
   NO_TIMESHEET_ADDED: 'No timesheet Added',
   WORK_HOURS_ERROR: 'Work Hours is a required field',
+  EDIT_SUCCESS: 'Timesheet Updated!',
+  EDIT_ERROR: 'Problem in Updating Timesheet, Please Try again!',
+  DELETE_SUCCESS: 'Timesheet Deleted!',
+  DELETE_ERROR: 'Delete Request failed!',
+  UPDATE_SKILLS_SUCCESS: 'Skills updated Successfully',
+  UPDATE_SKILLS_ERROR: 'Something Went Wrong!',
+  CREATE_ERROR: 'Problem in creating timesheet!',
 };

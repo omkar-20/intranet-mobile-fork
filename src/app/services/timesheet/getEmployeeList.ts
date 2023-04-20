@@ -14,6 +14,7 @@ export type GetEmployeeListRequestBody = {
 export type GetEmployeeListResponseBody = {
   status: string;
   code: number;
+  message: string;
   body: Employee[];
 };
 

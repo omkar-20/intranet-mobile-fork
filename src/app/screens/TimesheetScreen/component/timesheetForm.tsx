@@ -37,6 +37,7 @@ type Props = {
   isAddButtonVisible?: boolean;
   isLoading?: boolean;
   userId: string;
+  toggleForm?: (value: boolean) => void;
 };
 
 const TimesheetForm = ({
@@ -47,6 +48,7 @@ const TimesheetForm = ({
   isAddButtonVisible = true,
   isLoading,
   userId,
+  toggleForm,
 }: Props) => {
   const {
     handleSubmit,
@@ -88,7 +90,7 @@ const TimesheetForm = ({
                 <PickerSelect
                   placeholder={{
                     label: strings.SELECT,
-                    value: undefined,
+                    value: '',
                   }}
                   onValueChange={onChange}
                   value={value ? value : strings.SELECT}
@@ -141,7 +143,7 @@ const TimesheetForm = ({
                   <PickerSelect
                     placeholder={{
                       label: strings.SELECT,
-                      value: undefined,
+                      value: '',
                     }}
                     onValueChange={onChange}
                     value={value ? value : strings.SELECT}
@@ -190,21 +192,24 @@ const TimesheetForm = ({
           <Button
             type="tertiary"
             title="Add Timesheet"
-            onPress={handleSubmit((data: any) => {
-              let label = queryData?.data.emp_projects.find(value => {
-                return data.project === value.value;
+            onPress={() => {
+              toggleForm?.(true);
+              handleSubmit((data: any) => {
+                let label = queryData?.data.emp_projects.find(value => {
+                  return data.project === value.value;
+                });
+                onSubmit(
+                  {
+                    ...data,
+                    timesheet_id: data.project + dateFormater(data.date),
+                    project: label?.label + '',
+                    project_id: data.project,
+                    date: dateFormater(data.date),
+                  },
+                  resetField,
+                );
               });
-              onSubmit(
-                {
-                  ...data,
-                  timesheet_id: data.project + dateFormater(data.date),
-                  project: label?.label + '',
-                  project_id: data.project,
-                  date: dateFormater(data.date),
-                },
-                resetField,
-              );
-            })}
+            }}
           />
         </View>
       ) : (

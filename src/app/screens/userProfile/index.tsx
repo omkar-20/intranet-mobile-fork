@@ -6,8 +6,7 @@ import Header from '../../components/header';
 const UserProfile = () => {
   return (
     <>
-      <Header type="secondary" />
-      {/* <Header type="primary" title="Profile" isRightButtonClickable={false} /> */}
+      <Header type="secondary" title="Profile" isRightButtonClickable={false} />
       <CustomTabView />
     </>
   );

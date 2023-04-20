@@ -25,6 +25,7 @@ export type GetTimesheetRequestBody = {
 
 export type GetTimesheetResponseBody = {
   message: string;
+  code: number;
   timesheets: TimesheetType[];
 };
 
