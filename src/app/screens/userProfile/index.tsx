@@ -7,6 +7,7 @@ const UserProfile = () => {
   return (
     <>
       <Header type="secondary" />
+      {/* <Header type="primary" title="Profile" isRightButtonClickable={false} /> */}
       <CustomTabView />
     </>
   );

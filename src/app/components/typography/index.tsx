@@ -6,7 +6,7 @@ import fonts from '../../constant/fonts';
 
 type Props = PropsWithChildren & {
   style?: TextStyle;
-  type?: 'title' | 'header' | 'subheader' | 'description';
+  type?: 'title' | 'header' | 'subheader' | 'description' | 'label';
 };
 
 const Typography = ({children, type = 'title', style}: Props) => (

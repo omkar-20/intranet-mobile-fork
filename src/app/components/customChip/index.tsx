@@ -1,5 +1,5 @@
 import React, {memo} from 'react';
-import {View, StyleSheet, ViewStyle} from 'react-native';
+import {View, StyleSheet, ViewStyle, TouchableOpacity} from 'react-native';
 
 import Typography from '../typography';
 
@@ -9,17 +9,20 @@ type Props = {
   label: string;
   mode?: 'view' | 'edit';
   style?: ViewStyle;
+  onDeleteOtherSkills?: (skill: string) => void;
 };
-const CustomChip = ({label, mode, style}: Props) => {
+const CustomChip = ({label, mode, style, onDeleteOtherSkills}: Props) => {
+  const handlePress = () =>
+    onDeleteOtherSkills ? onDeleteOtherSkills(label) : null;
   return (
     <View style={[styles.containerStyle, style]}>
       <Typography type="header" style={styles.textStyle}>
         {label}
       </Typography>
       {mode === 'edit' && (
-        <View style={styles.iconStyle}>
+        <TouchableOpacity onPress={handlePress} style={styles.iconStyle}>
           <Cross />
-        </View>
+        </TouchableOpacity>
       )}
     </View>
   );
@@ -34,6 +37,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 5,
     backgroundColor: '#D0DDFF',
+    marginLeft: 10,
+    marginBottom: 10,
   },
   textStyle: {
     textAlign: 'center',
