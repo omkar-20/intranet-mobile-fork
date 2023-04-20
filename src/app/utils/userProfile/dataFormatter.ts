@@ -8,7 +8,7 @@ const dataFormatter = (
   } else if (typeof data === 'boolean') {
     return data ? strings.YES : strings.NO;
   } else if (Array.isArray(data)) {
-    return data.toString();
+    return data.length ? data.toString() : '-';
   } else {
     return data;
   }

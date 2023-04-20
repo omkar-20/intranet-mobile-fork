@@ -19,7 +19,7 @@ const CardDetailsRow = ({label, data}: Props) => {
       <Typography style={styles.labelFlex} type="label">
         {labelFormatter(label)}
       </Typography>
-      <Typography style={[styles.contentStyle]} type="header">
+      <Typography style={styles.contentStyle} type="header">
         {formattedData}
       </Typography>
     </View>
