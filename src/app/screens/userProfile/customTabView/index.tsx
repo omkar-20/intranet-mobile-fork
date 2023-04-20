@@ -1,5 +1,10 @@
 import React, {useContext} from 'react';
-import {useWindowDimensions, StyleSheet, View} from 'react-native';
+import {
+  useWindowDimensions,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+} from 'react-native';
 import {
   TabView,
   SceneMap,
@@ -78,9 +83,9 @@ const renderSceneWrapper = (data: dataType, refetch: () => {}, role: string) =>
       })
     : SceneMap({
         publicProfile: () => <PublicProfile data={data.publicProfile} />,
+        personalDetails: () => <PersonalDetails data={data.privateProfile} />,
         skills: () => <Skills data={data.skills} refresh={refetch} />,
         assets: () => <Asset data={data.assets} />,
-        personalDetails: () => <PersonalDetails data={data.privateProfile} />,
       });
 
 const CustomTabView = () => {
@@ -113,7 +118,11 @@ const CustomTabView = () => {
   });
 
   if (isLoading) {
-    <></>;
+    return (
+      <View style={styles.errorMessageContainer}>
+        <ActivityIndicator size="large" color={colors.PRIMARY} />
+      </View>
+    );
   } else if (!isError && data && !isRefetchError) {
     const renderScene = renderSceneWrapper(
       data,
