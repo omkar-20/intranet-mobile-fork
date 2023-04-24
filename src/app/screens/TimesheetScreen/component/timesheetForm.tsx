@@ -26,7 +26,7 @@ const timesheetFormSchema = yup.object().shape({
   project: yup.string().required(),
   date: yup.date().required(),
   work_in_hours: yup.string().required(),
-  description: yup.string().required(),
+  description: yup.string().required().min(3),
 });
 
 type Props = {
@@ -76,6 +76,33 @@ const TimesheetForm = ({
     }),
   );
 
+  const addTimesheet = () => {
+    toggleForm?.(true);
+    handleSubmit((data: any) => {
+      let label = queryData?.data.data.find(value => {
+        return data.project === value.value;
+      });
+      onSubmit(
+        {
+          ...data,
+          timesheet_id: data.project + dateFormater(data.date),
+          project: label?.label + '',
+          project_id: data.project,
+          date: dateFormater(data.date),
+        },
+        resetField,
+      );
+    })();
+  };
+
+  const updateTimesheet = () =>
+    handleSubmit((data: any) =>
+      onSubmit({
+        ...data,
+        date: dateFormater(data.date),
+      }),
+    )();
+
   return (
     <>
       {isFormVisible && (
@@ -94,7 +121,7 @@ const TimesheetForm = ({
                   }}
                   onValueChange={onChange}
                   value={value ? value : strings.SELECT}
-                  items={queryData ? queryData.data.emp_projects : []}
+                  items={queryData ? queryData.data.data : []}
                   style={styles.item}
                 />
               )}
@@ -192,24 +219,7 @@ const TimesheetForm = ({
           <Button
             type="tertiary"
             title="Add Timesheet"
-            onPress={() => {
-              toggleForm?.(true);
-              handleSubmit((data: any) => {
-                let label = queryData?.data.emp_projects.find(value => {
-                  return data.project === value.value;
-                });
-                onSubmit(
-                  {
-                    ...data,
-                    timesheet_id: data.project + dateFormater(data.date),
-                    project: label?.label + '',
-                    project_id: data.project,
-                    date: dateFormater(data.date),
-                  },
-                  resetField,
-                );
-              });
-            }}
+            onPress={addTimesheet}
           />
         </View>
       ) : (
@@ -219,12 +229,7 @@ const TimesheetForm = ({
             title="Update"
             type="primary"
             isLoading={isLoading}
-            onPress={handleSubmit((data: any) =>
-              onSubmit({
-                ...data,
-                date: dateFormater(data.date),
-              }),
-            )}
+            onPress={updateTimesheet}
           />
         </View>
       )}

@@ -57,6 +57,8 @@ const Header = ({type, title, isRightButtonClickable}: Props) => {
           </TouchableOpacity>
         </View>
       );
+    default:
+      return <></>;
   }
 };
 
