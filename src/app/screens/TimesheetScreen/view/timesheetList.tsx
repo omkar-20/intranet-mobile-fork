@@ -227,19 +227,19 @@ const TimesheetList = ({route}: Props) => {
             {strings.PROJECTS}
           </Typography>
           <Typography type="subheader" style={styles.text}>
-            {data?.data.timesheets[0].projects}
+            {data?.data.data[0].projects}
           </Typography>
           <Typography type="description" style={styles.text}>
             {strings.WORK_HOURS}
           </Typography>
           <Typography type="subheader" style={styles.text}>
-            {workHoursTrim(data?.data.timesheets[0].total_work)}
+            {workHoursTrim(data?.data.data[0].total_work)}
           </Typography>
         </View>
 
         <SectionListTimesheet
-          sections={data ? data?.data.timesheets[0].data : []}
-          timesheetListData={data ? data?.data.timesheets[0].data : []}
+          sections={data ? data?.data.data[0].data : []}
+          timesheetListData={data ? data?.data.data[0].data : []}
           onDelete={timesheetDeleteCall}
           onEdit={timesheetEditCall}
           refreshing={isFetching || isRefetching}

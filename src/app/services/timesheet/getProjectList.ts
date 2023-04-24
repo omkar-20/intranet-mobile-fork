@@ -9,7 +9,7 @@ export type GetProjectListRequestBody = {
 };
 
 export type GetProjectListResponseBody = {
-  emp_projects: {
+  data: {
     label: string;
     value: string;
   }[];

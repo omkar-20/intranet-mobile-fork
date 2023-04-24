@@ -20,6 +20,7 @@ import {Calendar, Search} from '../../../constant/icons';
 import sizes from '../../../constant/sizes';
 import {USER_TIMESHEET} from '../../../constant/screenNames';
 import colors from '../../../constant/colors';
+import strings from '../../../constant/strings';
 
 import {flexStyles} from '../../../../styles';
 
@@ -29,7 +30,9 @@ type Props = {
 
 const seperator = () => <Linear />;
 const footer = () => <Linear />;
-const emptyComponent = () => <EmptyList />;
+const emptyComponent = () => (
+  <EmptyList message={strings.EMPLOYEE_LIST_ERROR} />
+);
 const searchIcon = () => <Search style={styles.icon} />;
 
 const EmployeeList = () => {
@@ -80,7 +83,7 @@ const EmployeeList = () => {
 
   const filterEmployee = useCallback(
     (text: string) => {
-      const newData = data?.data.body.filter(
+      const newData = data?.data.data.filter(
         value =>
           value.email.toLowerCase().startsWith(text.toLowerCase()) ||
           value.name.toLowerCase().startsWith(text.toLowerCase()),
@@ -135,7 +138,7 @@ const EmployeeList = () => {
       </View>
 
       <FlatList
-        data={filterData ? filterData : data?.data.body}
+        data={filterData ? filterData : data?.data.data}
         renderItem={renderItem}
         keyExtractor={item => item.user_id}
         ItemSeparatorComponent={seperator}

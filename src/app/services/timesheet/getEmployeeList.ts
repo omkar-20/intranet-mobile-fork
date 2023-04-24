@@ -15,7 +15,7 @@ export type GetEmployeeListResponseBody = {
   status: string;
   code: number;
   message: string;
-  body: Employee[];
+  data: Employee[];
 };
 
 export const getEmployeeListRequest = async (

@@ -26,7 +26,7 @@ export type CreateTimesheetResponseBody = {
   code: number;
   message: string;
   status: string;
-  timesheet: SectionListType[];
+  data: SectionListType[];
 };
 
 export const createTimesheetRequest = async (

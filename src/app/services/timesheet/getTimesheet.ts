@@ -26,7 +26,7 @@ export type GetTimesheetRequestBody = {
 export type GetTimesheetResponseBody = {
   message: string;
   code: number;
-  timesheets: TimesheetType[];
+  data: TimesheetType[];
 };
 
 export const getTimesheetRequest = async (payload: GetTimesheetRequestBody) => {

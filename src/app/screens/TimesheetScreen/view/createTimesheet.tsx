@@ -101,8 +101,8 @@ const CreateTimesheet = ({
     mutationFn: mutationFunc,
     onSuccess: data => {
       bottomToast(data.data.message);
-      setAddedTimesheet(data.data.timesheet ? data.data.timesheet : []);
-      if (!data.data.timesheet) {
+      setAddedTimesheet(data.data.data ? data.data.data : []);
+      if (!data.data.data) {
         toggleModal();
       }
     },
