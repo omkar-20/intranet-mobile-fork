@@ -7,7 +7,6 @@ import {
 import LoginScreen from '../screens/LoginScreen';
 import SplashScreen from '../screens/SplashScreen';
 import UserProfile from '../screens/userProfile';
-import MainNavigator from './MainNavigator';
 
 import UserContext from '../context/user.context';
 import AsyncStore from '../services/asyncStorage';
@@ -17,8 +16,11 @@ import {RootStackParamList} from './types';
 import {
   LOGIN_SCREEN,
   MAIN_SCREEN,
+  USER_TIMESHEET,
   USER_PROFILE_SCREEN,
 } from '../constant/screenNames';
+import TimesheetList from '../screens/TimesheetScreen/view/timesheetList';
+import MainNavigator from './MainNavigator';
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 
@@ -65,6 +67,7 @@ const RootNavigator = () => {
             name={USER_PROFILE_SCREEN}
             component={UserProfile}
           />
+          <RootStack.Screen name={USER_TIMESHEET} component={TimesheetList} />
         </>
       ) : (
         <RootStack.Screen name={LOGIN_SCREEN} component={LoginScreen} />

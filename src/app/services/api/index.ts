@@ -22,7 +22,6 @@ export const apiCall = async <T, D>(config: AxiosRequestConfig<T>) => {
       auth_key: authorizationHeader,
     };
   }
-
   const response = await axiosInstance.request<D>(config);
   return response;
 };
