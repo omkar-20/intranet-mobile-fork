@@ -22,16 +22,15 @@ const AssetLabel = ({containerStyle, labels, textColor}: Props) => {
         if (index === labels.length - 1) {
           value = 20;
         }
+        const customStyle: TextStyle = {
+          color: colors.LABEL_COLOR_SECONDARY,
+          ...textColor,
+          flexBasis: `${value}%`,
+          textAlign: index !== 0 ? 'center' : 'left',
+        };
 
         return (
-          <Typography
-            style={{
-              color: colors.LABEL_COLOR_SECONDARY,
-              ...textColor,
-              flexBasis: `${value}%`,
-              textAlign: index !== 0 ? 'center' : 'left',
-            }}
-            key={index}>
+          <Typography style={customStyle} key={index}>
             {label}
           </Typography>
         );

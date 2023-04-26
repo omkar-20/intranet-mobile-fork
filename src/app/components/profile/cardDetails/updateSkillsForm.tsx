@@ -262,6 +262,7 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
                   label: strings.SELECT,
                   value: '',
                 }}
+                disabled={mutation.isLoading}
                 onValueChange={onChange}
                 value={value ? value : strings.SELECT}
                 items={skillsListData}
@@ -289,6 +290,7 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
                   label: strings.SELECT,
                   value: '',
                 }}
+                disabled={mutation.isLoading}
                 onValueChange={onChange}
                 value={value ? value : strings.SELECT}
                 items={skillsListData}
@@ -316,6 +318,7 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
                   label: strings.SELECT,
                   value: '',
                 }}
+                disabled={mutation.isLoading}
                 onValueChange={onChange}
                 value={value ? value : strings.SELECT}
                 items={skillsListData}

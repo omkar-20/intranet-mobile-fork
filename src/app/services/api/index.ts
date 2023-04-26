@@ -19,9 +19,10 @@ export const apiCall = async <T, D>(config: AxiosRequestConfig<T>) => {
     config.headers.Authorization = authorizationHeader;
   } else {
     config.headers = {
-      auth_key: authorizationHeader,
+      Authorization: authorizationHeader,
     };
   }
   const response = await axiosInstance.request<D>(config);
+
   return response;
 };

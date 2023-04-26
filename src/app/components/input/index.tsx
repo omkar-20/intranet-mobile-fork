@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     color: colors.SECONDARY,
+    width: '100%',
   },
 });
 
