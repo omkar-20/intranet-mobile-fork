@@ -213,6 +213,8 @@ const CreateTimesheet = ({
       animationOut={'slideOutDown'}
       animationInTiming={500}
       animationOutTiming={500}
+      onBackButtonPress={toggleModal}
+      onBackdropPress={toggleModal}
       contentStyle={styles.main}>
       <View style={[styles.horizontalPad, styles.form]}>
         <Typography type="title" style={styles.title}>
