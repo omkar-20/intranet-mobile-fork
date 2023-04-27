@@ -6,21 +6,15 @@ import {
 
 import LoginScreen from '../screens/LoginScreen';
 import SplashScreen from '../screens/SplashScreen';
-import UserProfile from '../screens/userProfile';
 
 import UserContext from '../context/user.context';
 import AsyncStore from '../services/asyncStorage';
 import {initNotificationService} from '../services/firebase/messaging';
+import DrawerNavigator from './DrawerNavigation';
 
 import {RootStackParamList} from './types';
-import {
-  LOGIN_SCREEN,
-  MAIN_SCREEN,
-  USER_TIMESHEET,
-  USER_PROFILE_SCREEN,
-} from '../constant/screenNames';
+import {DRAWER, LOGIN_SCREEN, USER_TIMESHEET} from '../constant/screenNames';
 import TimesheetList from '../screens/TimesheetScreen/view/timesheetList';
-import MainNavigator from './MainNavigator';
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 
@@ -39,7 +33,6 @@ const RootNavigator = () => {
 
       const authToken = await AsyncStore.getItem(AsyncStore.AUTH_TOKEN_KEY);
       const userData = await AsyncStore.getItem(AsyncStore.USER_DATA);
-
       if (authToken === null || authToken === '' || userData === null) {
         setUserContextData(null);
       } else {
@@ -47,7 +40,6 @@ const RootNavigator = () => {
       }
 
       await new Promise<void>(resolve => setTimeout(resolve, 1000));
-
       setLoading(false);
     };
 
@@ -59,14 +51,13 @@ const RootNavigator = () => {
   }
 
   return (
-    <RootStack.Navigator screenOptions={screenOptions}>
+    <RootStack.Navigator
+      screenOptions={screenOptions}
+      initialRouteName={DRAWER}>
       {userContextData ? (
         <>
-          <RootStack.Screen name={MAIN_SCREEN} component={MainNavigator} />
-          <RootStack.Screen
-            name={USER_PROFILE_SCREEN}
-            component={UserProfile}
-          />
+          <RootStack.Screen name={DRAWER} component={DrawerNavigator} />
+
           <RootStack.Screen name={USER_TIMESHEET} component={TimesheetList} />
         </>
       ) : (

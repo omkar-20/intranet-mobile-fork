@@ -20,8 +20,7 @@ const skillsFormatter = (skills: string): string[] =>
 
 const Skills = ({data, refresh}: Props) => {
   const [shouldShowModal, setShouldShowModal] = useState<boolean>(false);
-  const toggleModal = () =>
-    setShouldShowModal(shouldShowModal => !shouldShowModal);
+  const toggleModal = () => setShouldShowModal(v => !v);
   return (
     <>
       <ScrollView>

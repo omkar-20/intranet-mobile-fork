@@ -16,23 +16,25 @@ type Props = {
 const AssetItem = ({asset, count}: Props) => {
   return (
     <View style={styles.assetContainer}>
-      <Typography style={[styles.leftText, {flexBasis: '25%'}]} type="header">
+      <Typography
+        style={{...styles.leftText, ...styles.flexStyle}}
+        type="header">
         {dataFormatter(asset.name)}
       </Typography>
 
       <Typography
-        style={[styles.text, {flexBasis: `${55 / (count - 2)}%`}]}
+        style={{...styles.text, flexBasis: `${55 / (count - 2)}%`}}
         type="header">
         {dataFormatter(asset.startDate)}
       </Typography>
       {count === 4 && (
         <Typography
-          style={[styles.text, {flexBasis: `${55 / (count - 2)}%`}]}
+          style={{...styles.text, flexBasis: `${55 / (count - 2)}%`}}
           type="header">
           {dataFormatter(asset.endDate)}
         </Typography>
       )}
-      <Typography style={[styles.text, {flexBasis: '20%'}]}>
+      <Typography style={{...styles.text, ...styles.flexItemStyle}}>
         {dataFormatter(asset.isActive)}
       </Typography>
     </View>
@@ -53,6 +55,12 @@ const styles = StyleSheet.create({
   text: {
     color: colors.TERNARY_TEXT_COLOR,
     textAlign: 'center',
+  },
+  flexItemStyle: {
+    flexBasis: '20%',
+  },
+  flexStyle: {
+    flexBasis: '25%',
   },
 });
 

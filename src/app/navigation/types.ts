@@ -3,9 +3,8 @@ import {Employee} from '../../app/screens/TimesheetScreen/interface';
 
 export type RootStackParamList = {
   Login: undefined;
-  Main: undefined;
-  UserProfile: undefined;
   UserTimesheet: Employee;
+  Drawer: undefined;
 };
 
 export type MainTabParamList = {
@@ -14,9 +13,14 @@ export type MainTabParamList = {
   Timesheet: undefined;
 };
 
+export type DrawerParamList = {
+  Main: undefined;
+  UserProfile: undefined;
+};
+
 export type MainScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
-  'Main'
+  'Drawer'
 >;
 
 export type Navigation = {

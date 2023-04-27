@@ -1,11 +1,11 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {DrawerActions, useNavigation} from '@react-navigation/native';
+
+import {MainScreenNavigationProp} from '../../navigation/types';
 
 import {Arrow, JoshLogo, Profile} from '../../constant/icons';
 import colors from '../../constant/colors';
-import {MainScreenNavigationProp} from '../../navigation/types';
-import {USER_PROFILE_SCREEN} from '../../constant/screenNames';
 
 interface Props {
   type: 'primary' | 'secondary';
@@ -13,11 +13,11 @@ interface Props {
   isRightButtonClickable?: boolean;
 }
 
-const Header = ({type, title, isRightButtonClickable}: Props) => {
+const Header = ({type, title}: Props) => {
   const navigation = useNavigation<MainScreenNavigationProp>();
 
-  const navigateToProfile = () => {
-    navigation.navigate(USER_PROFILE_SCREEN);
+  const toggleDrawer = () => {
+    navigation.dispatch(DrawerActions.openDrawer());
   };
 
   const goBack = () => {
@@ -29,7 +29,7 @@ const Header = ({type, title, isRightButtonClickable}: Props) => {
       return (
         <View style={styles.container}>
           <JoshLogo height={18} width={85} fill={colors.WHITE} />
-          <TouchableOpacity activeOpacity={0.5} onPress={navigateToProfile}>
+          <TouchableOpacity activeOpacity={0.5} onPress={toggleDrawer}>
             <Profile height={18} width={18} fill={colors.WHITE} />
           </TouchableOpacity>
         </View>
@@ -46,13 +46,10 @@ const Header = ({type, title, isRightButtonClickable}: Props) => {
                 fill={colors.WHITE}
               />
             </TouchableOpacity>
-
             <Text style={styles.backText}>{title}</Text>
           </View>
 
-          <TouchableOpacity
-            activeOpacity={0.5}
-            onPress={isRightButtonClickable ? navigateToProfile : undefined}>
+          <TouchableOpacity activeOpacity={0.5} onPress={toggleDrawer}>
             <Profile height={18} width={18} fill={colors.WHITE} />
           </TouchableOpacity>
         </View>
@@ -66,23 +63,24 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingTop: 20,
+    alignItems: 'center',
+    paddingTop: 10,
     paddingBottom: 13,
     paddingLeft: 16,
     paddingRight: 23,
     backgroundColor: colors.PRIMARY,
+    height: 52,
   },
   backButton: {
     flexDirection: 'row',
-    alignItems: 'center',
   },
   backText: {
     color: colors.WHITE,
     fontSize: 15,
     marginStart: 20,
-    paddingBottom: 5,
   },
   arrow: {
+    marginTop: 2,
     transform: [{rotate: '180 deg'}],
   },
 });

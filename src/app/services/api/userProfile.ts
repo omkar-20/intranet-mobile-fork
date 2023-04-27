@@ -17,7 +17,7 @@ export const getUserRequest = async (payload: GetUserRequestBody) => {
     data: payload,
   });
 
-  return response.data.record as any;
+  return response.data.data as any;
 };
 
 export type GetAllSkillRequestBody = {};
@@ -31,7 +31,7 @@ export const getAllSkillRequest = async (payload: GetAllSkillRequestBody) => {
     data: payload,
   });
 
-  return response.data.record as any;
+  return response.data.data as any;
 };
 
 export type UpdateSkillRequestBody = {
@@ -41,14 +41,16 @@ export type UpdateSkillRequestBody = {
   otherSkills: string | null;
 };
 
-export type UpdateSkillResponseBody = {};
+export type UpdateSkillResponseBody = {
+  message: any;
+};
 
 export const updateSkillRequest = async (payload: UpdateSkillRequestBody) => {
-  const response = await apiCall<any, any>({
+  const response = await apiCall<any, UpdateSkillResponseBody>({
     method: 'POST',
     url: UPDATE_SKILL_ROUTE,
     data: payload,
   });
 
-  return response.data as any;
+  return response.data.message as any;
 };

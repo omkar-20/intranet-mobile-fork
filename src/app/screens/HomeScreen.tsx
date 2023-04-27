@@ -1,10 +1,12 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet, Text} from 'react-native';
+import {SafeAreaView, StyleSheet} from 'react-native';
+import Typography from '../components/typography';
+import fonts from '../constant/fonts';
 
 const HomeScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.text}>Home Screen</Text>
+      <Typography style={styles.text}>Comming soon...</Typography>
     </SafeAreaView>
   );
 };
@@ -17,7 +19,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   text: {
-    color: '#707070',
+    fontFamily: fonts.ARIAL_BOLD,
   },
 });
 

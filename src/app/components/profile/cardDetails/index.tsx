@@ -14,10 +14,7 @@ type Props = PropsWithChildren & {
 const CardDetails = ({children, title, cardStyle}: Props) => {
   return (
     <View style={[styles.detailContainer, cardStyle]}>
-      <Typography
-        style={styles.title}
-        type="header"
-        fontFamily={fonts.ARIAL_AND_BOLD}>
+      <Typography style={styles.title} type="header">
         {title}
       </Typography>
       {children}
@@ -34,6 +31,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   title: {
+    fontFamily: fonts.ARIAL_BOLD,
     paddingBottom: 21.5,
     textTransform: 'capitalize',
   },
