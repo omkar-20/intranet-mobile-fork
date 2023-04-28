@@ -54,7 +54,7 @@ const CustomAccordian = ({data, headerContainerStyle}: Props) => {
 
   return (
     <>
-      {data.length === 0 ? (
+      {!data || data.length === 0 ? (
         <ErrorMessage message={NO_DETAILS_FOUND} />
       ) : (
         <Accordion

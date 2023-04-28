@@ -151,7 +151,7 @@ const UpdateSkillForm = ({defaultData, toggleModal, refresh}: Props) => {
     },
   });
 
-  const skillsListData = data.map((item: string) => ({
+  const skillsListData = data?.map((item: string) => ({
     label: item,
     value: item,
   }));

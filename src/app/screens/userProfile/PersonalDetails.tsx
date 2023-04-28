@@ -27,7 +27,7 @@ const PersonalDetails = ({data}: Props) => {
     <ScrollView style={{backgroundColor: colors.WHITE}}>
       {Object.entries(data).map(([key, content], index: number) => {
         if (key === 'address') {
-          return (content as addressType[]).map(
+          return (content as addressType[])?.map(
             (ele: addressType, indexOfAddress: number) => {
               return (
                 <CardDetails

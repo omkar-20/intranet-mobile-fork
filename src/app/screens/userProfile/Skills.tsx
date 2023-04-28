@@ -35,18 +35,19 @@ const Skills = ({data, refresh}: Props) => {
         </CardDetails>
         <CardDetails title="Other Skills">
           <View style={styles.containerStyle}>
-            {skillsFormatter(data.otherSkills as string).map(
-              (skill: string, index: number) =>
-                skill ? (
+            {data.otherSkills && data.otherSkills.length ? (
+              skillsFormatter(data.otherSkills as string).map(
+                (skill: string, index: number) => (
                   <CustomChip
                     key={index}
                     label={skill}
                     style={styles.chipStyle}
                     mode="view"
                   />
-                ) : (
-                  <ErrorMessage key={index} message={NO_OTHER_SKILLS} />
                 ),
+              )
+            ) : (
+              <ErrorMessage message={NO_OTHER_SKILLS} />
             )}
           </View>
         </CardDetails>
