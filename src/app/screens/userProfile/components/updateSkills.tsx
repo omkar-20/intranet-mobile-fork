@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 
 import Modal from '../../../components/modal';
 import Typography from '../../../components/typography';
@@ -9,6 +9,7 @@ import colors from '../../../constant/colors';
 import fonts from '../../../constant/fonts';
 
 import {skillsType} from '../../../types';
+import {ScrollView} from 'react-native-gesture-handler';
 
 type Props = {
   isVisible: boolean;
@@ -26,20 +27,19 @@ const UpdateSkills = ({toggleModal, isVisible, data, refresh}: Props) => {
       animationInTiming={500}
       animationOutTiming={500}
       contentStyle={styles.modal}
+      onBackButtonPress={toggleModal}
       onBackdropPress={toggleModal}>
-      <View style={styles.main}>
-        <View>
-          <Typography type="title" style={styles.title}>
-            Update Skills
-          </Typography>
+      <ScrollView>
+        <Typography type="title" style={styles.title}>
+          Update Skills
+        </Typography>
 
-          <UpdateSkillForm
-            toggleModal={toggleModal}
-            defaultData={data}
-            refresh={refresh}
-          />
-        </View>
-      </View>
+        <UpdateSkillForm
+          toggleModal={toggleModal}
+          defaultData={data}
+          refresh={refresh}
+        />
+      </ScrollView>
     </Modal>
   );
 };
@@ -47,17 +47,13 @@ const UpdateSkills = ({toggleModal, isVisible, data, refresh}: Props) => {
 const styles = StyleSheet.create({
   modal: {
     justifyContent: 'flex-end',
-    height: '60%',
-  },
-  main: {
-    width: '100%',
-    backgroundColor: colors.WHITE,
     borderTopEndRadius: 30,
     borderTopStartRadius: 30,
     paddingHorizontal: 16,
     paddingVertical: 16,
-    marginTop: '10%',
-    justifyContent: 'space-between',
+  },
+  main: {
+    backgroundColor: colors.PRIMARY,
   },
   title: {
     color: colors.SECONDARY,

@@ -175,7 +175,7 @@ const TimesheetList = ({route}: Props) => {
         <Header
           title={TIMESHEET_SCREEN}
           type="secondary"
-          isRightButtonClickable={true}
+          isRightButtonVisible={false}
         />
       ) : (
         <></>
