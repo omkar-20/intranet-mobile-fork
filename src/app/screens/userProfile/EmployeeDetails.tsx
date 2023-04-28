@@ -1,9 +1,11 @@
 import React from 'react';
-import {ScrollView} from 'react-native';
+import {ScrollView, View} from 'react-native';
 
 import DetailsView from '../../components/profile/cardDetails/detailsView';
 import CardDetails from '../../components/profile/cardDetails';
 import CustomAccordian from '../../components/customAccordian';
+import Typography from '../../components/typography';
+import ErrorMessage from '../../components/errorMessage';
 
 import labelFormatter from '../../utils/userProfile/labelFormatter';
 
@@ -15,6 +17,7 @@ import {
   projectType,
 } from '../../types';
 import colors from '../../constant/colors';
+import {NO_DETAILS_FOUND} from '../../constant/message';
 
 type dataType = {
   employeeDetail: employeeDetailsType;
@@ -38,9 +41,24 @@ const EmployeeDetails = ({data}: Props) => {
             <CustomAccordian data={content as projectType[]} />
           </CardDetails>
         ) : (
-          <CardDetails title={labelFormatter(key)} key={index}>
-            <DetailsView data={content} />
-          </CardDetails>
+          <View key={index}>
+            <CardDetails title={labelFormatter(key)}>
+              <DetailsView data={content} />
+            </CardDetails>
+            {key === 'otherDetails' && (
+              <CardDetails title={'Description'} key="describe">
+                <View>
+                  {(content as otherDetailsType)?.description ? (
+                    <Typography type="header">
+                      {(content as otherDetailsType).description}
+                    </Typography>
+                  ) : (
+                    <ErrorMessage message={NO_DETAILS_FOUND} />
+                  )}
+                </View>
+              </CardDetails>
+            )}
+          </View>
         );
       })}
     </ScrollView>

@@ -73,6 +73,7 @@ export type otherDetailsType = {
   defaultLeaveApprover: string | null;
   source: string | null;
   project: string | null;
+  description: string;
 };
 
 export type projectType = {
