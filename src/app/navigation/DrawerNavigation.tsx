@@ -3,7 +3,6 @@ import {
   DrawerNavigationOptions,
   createDrawerNavigator,
 } from '@react-navigation/drawer';
-import {NavigationContainer} from '@react-navigation/native';
 
 import UserProfile from '../screens/userProfile';
 import MainNavigator from './MainNavigator';
@@ -38,16 +37,14 @@ const renderDrawerContent = (props: any) => <DrawerContent {...props} />;
 
 const DrawerNavigator = () => {
   return (
-    <NavigationContainer independent={true}>
-      <Drawer.Navigator
-        useLegacyImplementation
-        initialRouteName={MAIN_SCREEN}
-        screenOptions={screenOptions}
-        drawerContent={renderDrawerContent}>
-        <Drawer.Screen name={MAIN_SCREEN} component={MainNavigator} />
-        <Drawer.Screen name={USER_PROFILE_SCREEN} component={UserProfile} />
-      </Drawer.Navigator>
-    </NavigationContainer>
+    <Drawer.Navigator
+      useLegacyImplementation
+      initialRouteName={MAIN_SCREEN}
+      screenOptions={screenOptions}
+      drawerContent={renderDrawerContent}>
+      <Drawer.Screen name={MAIN_SCREEN} component={MainNavigator} />
+      <Drawer.Screen name={USER_PROFILE_SCREEN} component={UserProfile} />
+    </Drawer.Navigator>
   );
 };
 

@@ -10,14 +10,14 @@ import colors from '../../constant/colors';
 interface Props {
   type: 'primary' | 'secondary';
   title?: string;
-  isRightButtonClickable?: boolean;
+  isRightButtonVisible?: boolean;
 }
 
-const Header = ({type, title}: Props) => {
+const Header = ({type, title, isRightButtonVisible}: Props) => {
   const navigation = useNavigation<MainScreenNavigationProp>();
 
   const toggleDrawer = () => {
-    navigation.dispatch(DrawerActions.openDrawer());
+    navigation.dispatch(DrawerActions.toggleDrawer());
   };
 
   const goBack = () => {
@@ -48,10 +48,13 @@ const Header = ({type, title}: Props) => {
             </TouchableOpacity>
             <Text style={styles.backText}>{title}</Text>
           </View>
-
-          <TouchableOpacity activeOpacity={0.5} onPress={toggleDrawer}>
-            <Profile height={18} width={18} fill={colors.WHITE} />
-          </TouchableOpacity>
+          {isRightButtonVisible ? (
+            <TouchableOpacity activeOpacity={0.5} onPress={toggleDrawer}>
+              <Profile height={18} width={18} fill={colors.WHITE} />
+            </TouchableOpacity>
+          ) : (
+            <></>
+          )}
         </View>
       );
     default:

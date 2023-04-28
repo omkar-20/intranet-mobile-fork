@@ -6,7 +6,7 @@ import fonts from '../constant/fonts';
 const HomeScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <Typography style={styles.text}>Comming soon...</Typography>
+      <Typography style={styles.text}>Coming soon...</Typography>
     </SafeAreaView>
   );
 };
