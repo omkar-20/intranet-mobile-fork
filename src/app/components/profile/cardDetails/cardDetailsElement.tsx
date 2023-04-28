@@ -16,7 +16,8 @@ const CardDetailsElement = ({data, style}: Props) => {
     <View style={[styles.elementStyle, style]}>
       {dataArray.map(
         ([key, content], index: number) =>
-          key !== 'typeOfAddress' && (
+          key !== 'typeOfAddress' &&
+          key !== 'description' && (
             <CardDetailsRow key={index} label={key} data={content} />
           ),
       )}

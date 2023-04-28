@@ -20,7 +20,7 @@ const AssetView = ({labels, assets}: Props) => {
         labels={labels}
       />
 
-      {assets.map((asset, index) => (
+      {assets?.map((asset, index) => (
         <AssetItem asset={asset} key={index} count={labels.length} />
       ))}
     </View>
