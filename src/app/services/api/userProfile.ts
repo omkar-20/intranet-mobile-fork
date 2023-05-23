@@ -5,33 +5,41 @@ import {
   UPDATE_SKILL_ROUTE,
   USER_PROFILE_ROUTE,
 } from '../../constant/apiRoutes';
+import {IUserProfileData} from '../../screens/ProfileScreen/interface';
 
 export type GetUserRequestBody = {};
 
-export type GetUserResponseBody = {};
+export type GetUserResponseBody = {
+  data: IUserProfileData;
+};
 
 export const getUserRequest = async (payload: GetUserRequestBody) => {
-  const response = await apiCall<any, any>({
+  const response = await apiCall<GetUserRequestBody, GetUserResponseBody>({
     method: 'GET',
     url: USER_PROFILE_ROUTE,
     data: payload,
   });
 
-  return response.data.data as any;
+  return response;
 };
 
 export type GetAllSkillRequestBody = {};
 
-export type GetAllSkillResponseBody = {};
+export type GetAllSkillResponseBody = {
+  data: string[];
+};
 
 export const getAllSkillRequest = async (payload: GetAllSkillRequestBody) => {
-  const response = await apiCall<any, any>({
+  const response = await apiCall<
+    GetAllSkillRequestBody,
+    GetAllSkillResponseBody
+  >({
     method: 'GET',
     url: GET_ALL_SKILL_ROUTE,
     data: payload,
   });
 
-  return response.data.data as any;
+  return response;
 };
 
 export type UpdateSkillRequestBody = {
@@ -52,5 +60,5 @@ export const updateSkillRequest = async (payload: UpdateSkillRequestBody) => {
     data: payload,
   });
 
-  return response.data.message as any;
+  return response;
 };
