@@ -18,7 +18,7 @@ import {ITimesheetSectionListItem, Timesheet} from '../interface';
 import colors from '../../../constant/colors';
 import fonts from '../../../constant/fonts';
 import strings from '../../../constant/strings';
-import {Arrow} from '../../../constant/icons';
+import {ArrowUp, ArrowDown} from '../../../constant/icons';
 import {ISO_DATE_FROMAT} from '../../../constant/date';
 
 type Props = {
@@ -217,7 +217,11 @@ const CreateTimesheet = ({toggleModal, isVisible, userId, userName}: Props) => {
         />
       </View>
       <Touchable type="opacity" onPress={toggleForm} style={styles.arrow}>
-        <Arrow width={22} height={22} />
+        {isFormVisible ? (
+          <ArrowUp width={22} height={22} />
+        ) : (
+          <ArrowDown width={22} height={22} />
+        )}
       </Touchable>
 
       {isPartiallyFailed && (
@@ -264,7 +268,6 @@ const styles = StyleSheet.create({
     marginVertical: 24,
   },
   arrow: {
-    transform: [{rotate: '-90 deg'}],
     width: 48,
     height: 48,
     elevation: 3,
