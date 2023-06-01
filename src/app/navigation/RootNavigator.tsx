@@ -6,21 +6,23 @@ import {
 
 import LoginScreen from '../screens/LoginScreen';
 import SplashScreen from '../screens/SplashScreen';
+import TimesheetList from '../screens/TimesheetScreen/view/timesheetList';
+import ProfileScreen from '../screens/ProfileScreen';
+import LeaveDetailScreen from '../screens/LeaveScreen/ManagementLeaveScreen/LeaveDetailScreen';
+import DrawerNavigator from './DrawerNavigation';
 
 import UserContext from '../context/user.context';
 import AsyncStore from '../services/asyncStorage';
 import {initNotificationService} from '../services/firebase/messaging';
-import DrawerNavigator from './DrawerNavigation';
 
 import {RootStackParamList} from './types';
 import {
   DRAWER,
+  LEAVE_DETAIL_SCREEN,
   LOGIN_SCREEN,
   USER_PROFILE_SCREEN,
   USER_TIMESHEET,
 } from '../constant/screenNames';
-import TimesheetList from '../screens/TimesheetScreen/view/timesheetList';
-import ProfileScreen from '../screens/ProfileScreen';
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 
@@ -68,6 +70,10 @@ const RootNavigator = () => {
           <RootStack.Screen
             name={USER_PROFILE_SCREEN}
             component={ProfileScreen}
+          />
+          <RootStack.Screen
+            name={LEAVE_DETAIL_SCREEN}
+            component={LeaveDetailScreen}
           />
         </>
       ) : (
