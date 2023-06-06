@@ -61,6 +61,13 @@ function TabScreen({route}: Props) {
     setShowFilterModal(value => !value);
   }, []);
 
+  const resetDateRange = () => {
+    setDateRange({
+      startDate: startOfMonth,
+      endDate: endOfMonth,
+    });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.row}>
@@ -79,8 +86,8 @@ function TabScreen({route}: Props) {
             onSubmit={onDateRangeSubmit}
             isVisible={isDateRangeVisible}
             toggleModal={toggelDatePicker}
-            initialStartDateValue={startOfMonth}
-            initialEndDateValue={endOfMonth}
+            initialStartDateValue={dateRange.startDate}
+            initialEndDateValue={dateRange.endDate}
           />
         </View>
         {isManagementRole && (
@@ -100,6 +107,7 @@ function TabScreen({route}: Props) {
           isPendingRoute={route === 'pending'}
           startDate={dateRange.startDate}
           endDate={dateRange.endDate}
+          resetDateRange={resetDateRange}
         />
       ) : (
         <EmployeeLeaveScreen

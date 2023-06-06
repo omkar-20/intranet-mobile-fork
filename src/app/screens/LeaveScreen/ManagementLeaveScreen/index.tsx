@@ -23,6 +23,7 @@ type Props = {
   isPendingRoute: boolean;
   startDate: Date;
   endDate: Date;
+  resetDateRange: () => void;
 };
 
 const leaveListRenderItem = ({
@@ -35,9 +36,12 @@ const ManagementLeaveScreen: React.FC<Props> = ({
   isPendingRoute,
   startDate,
   endDate,
+  resetDateRange,
 }) => {
   const [filters, setFilters] = useState<ILeaveFilters>({
     leave_type: '',
+    project_id: null,
+    user_id: null,
     pending_flag: isPendingRoute,
     active_or_all_flags: 'active',
     from: startDate,
@@ -150,6 +154,7 @@ const ManagementLeaveScreen: React.FC<Props> = ({
         closeModal={toggleFilterModal}
         filters={filters}
         changeFilters={changeFilters}
+        resetDateRange={resetDateRange}
       />
     </>
   );

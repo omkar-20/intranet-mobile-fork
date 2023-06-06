@@ -12,6 +12,8 @@ import {useIsKeyboardShown} from '../../../hooks/useIsKeyboardShown';
 import {useProjectList, useUserList} from '../leave.hooks';
 import UserTypeButton from './UserTypeButton';
 
+import {endOfMonth, startOfMonth} from '../../../utils/date';
+
 import strings from '../../../constant/strings';
 import colors from '../../../constant/colors';
 import {
@@ -28,11 +30,12 @@ interface Props {
   closeModal: () => void;
   filters: ILeaveFilters;
   changeFilters: (filters: Partial<ILeaveFilters>) => void;
+  resetDateRange: () => void;
 }
 
 interface IFormValues {
-  projectId?: number;
-  userId?: number;
+  projectId: number | null;
+  userId: number | null;
   userType: 'active' | 'all';
   leave: boolean;
   wfh: boolean;
@@ -41,7 +44,13 @@ interface IFormValues {
   unpaid: boolean;
 }
 
-function FilterModal({isVisible, closeModal, filters, changeFilters}: Props) {
+function FilterModal({
+  isVisible,
+  closeModal,
+  filters,
+  changeFilters,
+  resetDateRange,
+}: Props) {
   const keyboardIsVisible = useIsKeyboardShown();
 
   const [isSelectAll, setIsSelectAll] = useState(false);
@@ -64,6 +73,7 @@ function FilterModal({isVisible, closeModal, filters, changeFilters}: Props) {
   }, [filters]);
 
   const {
+    reset,
     control,
     setValue,
     handleSubmit,
@@ -138,14 +148,29 @@ function FilterModal({isVisible, closeModal, filters, changeFilters}: Props) {
   };
 
   const handleClearAll = () => {
-    setValue('projectId', undefined);
-    setValue('userId', undefined);
-    setValue('userType', 'active');
-    setValue('leave', false);
-    setValue('wfh', false);
-    setValue('optionalHoliday', false);
-    setValue('spl', false);
-    setValue('unpaid', false);
+    reset({
+      projectId: null,
+      userId: null,
+      userType: 'active',
+      leave: false,
+      wfh: false,
+      optionalHoliday: false,
+      spl: false,
+      unpaid: false,
+    });
+
+    changeFilters({
+      project_id: null,
+      user_id: null,
+      active_or_all_flags: 'active',
+      from: startOfMonth,
+      leave_type: '',
+      pending_flag: filters.pending_flag,
+      to: endOfMonth,
+    });
+
+    resetDateRange();
+
     setIsSelectAll(false);
   };
 
@@ -199,7 +224,7 @@ function FilterModal({isVisible, closeModal, filters, changeFilters}: Props) {
           </Typography>
           <Touchable type="opacity" onPress={handleClearAll}>
             <Typography type="title" style={styles.clearAll}>
-              Clear All
+              Clear Filters
             </Typography>
           </Touchable>
         </View>
