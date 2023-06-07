@@ -1,7 +1,9 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
-import Typography from '../components/typography';
-import fonts from '../constant/fonts';
+
+import Typography from '../../components/typography';
+
+import fonts from '../../constant/fonts';
 
 const HomeScreen = () => {
   return (
