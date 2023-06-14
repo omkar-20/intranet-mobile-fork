@@ -112,8 +112,11 @@ export function useUserList() {
 
   return {
     data:
-      users.map(({name, user_id}) => ({
-        label: name,
+      users.map(({name, email, user_id}) => ({
+        label:
+          !name || name === ' ' // Due to inconsistent response from staging backend
+            ? email
+            : name,
         value: user_id,
       })) || [],
     refetch,
