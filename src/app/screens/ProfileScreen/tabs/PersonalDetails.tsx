@@ -4,6 +4,8 @@ import ScreenWrapper from '../component/ScreenWrapper';
 import Card from '../component/Card';
 import DetailRow from '../../../components/DetailRow';
 
+import {dateFormate} from '../../../utils/date';
+
 import {IPersonalDetailsData} from '../interface/personalDetails';
 
 const PersonalDetails = (props: IPersonalDetailsData) => {
@@ -18,6 +20,7 @@ const PersonalDetails = (props: IPersonalDetailsData) => {
     workExperience,
     previousCompany,
     tshirtSize,
+    end_of_probation: probationEndDate,
   } = personalDetail || {};
 
   const addressCards = address
@@ -54,8 +57,11 @@ const PersonalDetails = (props: IPersonalDetailsData) => {
         />
         <DetailRow label="Work Experience" value={workExperience} />
         <DetailRow label="Previous Company" value={previousCompany} />
-        <DetailRow label="Bonusly Auth Token" value={'-'} />
         <DetailRow label="Tshirt Size" value={tshirtSize} />
+        <DetailRow
+          label="Probation End Date"
+          value={dateFormate(probationEndDate)}
+        />
       </Card>
 
       <Card title="Emergency Contact Details">
