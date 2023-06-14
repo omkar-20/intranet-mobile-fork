@@ -1,7 +1,10 @@
 import {useQuery} from 'react-query';
 import {AxiosError} from 'axios';
 
-import {getTimesheetCalendar} from '../../services/home';
+import {
+  getTimesheetCalendar,
+  getTeamMembersUpcomingLeaves,
+} from '../../services/home';
 import toast from '../../utils/toast';
 
 import {GetHomeTimesheetDataResponse} from '../../services/home/types';
@@ -27,4 +30,13 @@ export const useHomeCalendar = (month: string, year: number) => {
     holidays: data?.data.data.holidays || [],
     isLoading,
   };
+};
+
+export const useTeamMembersLeaves = () => {
+  const {data, isLoading} = useQuery(
+    ['teamMembersLeaves'],
+    getTeamMembersUpcomingLeaves,
+  );
+
+  return {data: data?.data.data ?? [], isLoading};
 };

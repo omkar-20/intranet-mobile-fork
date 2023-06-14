@@ -2,6 +2,7 @@ import React from 'react';
 import {SafeAreaView, StyleSheet, ScrollView} from 'react-native';
 
 import Calendar from './Calendar';
+import TeamMembersLeaves from './teamMembersLeaves';
 
 import colors from '../../constant/colors';
 
@@ -10,6 +11,7 @@ const HomeScreen = () => {
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <Calendar />
+        <TeamMembersLeaves />
       </ScrollView>
     </SafeAreaView>
   );
