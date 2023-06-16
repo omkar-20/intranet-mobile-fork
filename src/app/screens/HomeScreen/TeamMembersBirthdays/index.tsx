@@ -3,12 +3,12 @@ import {StyleSheet} from 'react-native';
 import Animated, {FadeInDown} from 'react-native-reanimated';
 
 import Linear from '../../../components/seperator/linear';
-import LeaveCard from './leaveCard';
 import Typography from '../../../components/typography';
-import {useTeamMembersLeaves} from '../dashboard.hooks';
+import BirthdayCard from './BirthdayCard';
+import {useTeamMembersBirthdays} from '../dashboard.hooks';
 
-const TeamMembersLeaves = () => {
-  const {data, isLoading} = useTeamMembersLeaves();
+const TeamMembersBirthdays = () => {
+  const {data, isLoading} = useTeamMembersBirthdays();
 
   if (isLoading || !data.length) {
     return null;
@@ -17,15 +17,12 @@ const TeamMembersLeaves = () => {
   return (
     <Animated.View entering={FadeInDown} style={styles.container}>
       <Typography type="header" style={styles.title}>
-        Upcoming Leaves of Team Members
-      </Typography>
-      <Typography type="secondaryText" style={styles.subTitle}>
-        Next 20 days
+        Upcoming Birthdays of Team Members
       </Typography>
       {data.map((item, index) => (
         <Fragment key={index}>
           {Boolean(index) && <Linear />}
-          <LeaveCard {...item} />
+          <BirthdayCard {...item} />
         </Fragment>
       ))}
     </Animated.View>
@@ -39,13 +36,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: '700',
-  },
-  subTitle: {
-    fontSize: 13,
-    fontStyle: 'italic',
-    fontWeight: '100',
     marginBottom: 5,
   },
 });
 
-export default TeamMembersLeaves;
+export default TeamMembersBirthdays;
