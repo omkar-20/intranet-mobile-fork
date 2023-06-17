@@ -1,6 +1,6 @@
 import colors from '../../constant/colors';
 
-const dateTypes = {
+const dateTypes: Record<string, {color: string; type: string}> = {
   filled: {
     color: colors.LIGHT_GREEN_BACKGROUND,
     type: 'filled',
@@ -26,13 +26,51 @@ const dateTypes = {
 export const generateMarkedDates = (data: Record<string, string[]>) => {
   let result: Record<string, any> = {};
 
-  Object.entries(dateTypes).forEach(([dateType, value]) => {
-    const {color, type} = value;
+  ['holidays', 'leaves'].forEach(dateType => {
+    const {color, type} = dateTypes[dateType];
 
-    data[dateType].forEach((date: string) => {
+    data[dateType].forEach(date => {
       result[date] = {
         customStyles: {
           container: {
+            backgroundColor: color,
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+        },
+        type,
+      };
+    });
+  });
+
+  ['filled', 'notFilled', 'incompleteFilled'].forEach(dateType => {
+    const {color, type} = dateTypes[dateType];
+
+    data[dateType].forEach(date => {
+      let borderColor = 'transparent';
+      let borderWidth = 0;
+
+      if (result[date]) {
+        borderWidth = 4;
+
+        switch (result[date].type) {
+          case 'leave':
+            borderColor = dateTypes.leaves.color;
+            break;
+          case 'holiday':
+            borderColor = dateTypes.holidays.color;
+            break;
+
+          default:
+            break;
+        }
+      }
+
+      result[date] = {
+        customStyles: {
+          container: {
+            borderWidth: borderWidth,
+            borderColor: borderColor,
             backgroundColor: color,
             justifyContent: 'center',
             alignItems: 'center',
