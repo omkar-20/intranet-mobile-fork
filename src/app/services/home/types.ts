@@ -15,6 +15,15 @@ export type GetTeamMembersLeavesResponse = {
     name: string;
     from: string;
     to: string;
+    leave_type: string;
     days: number;
+  }[];
+};
+
+export type GetTeamMembersBirthdaysResponse = {
+  message?: string;
+  data: {
+    name: string;
+    date: string;
   }[];
 };

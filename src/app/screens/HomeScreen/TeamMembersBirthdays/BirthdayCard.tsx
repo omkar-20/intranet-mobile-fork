@@ -7,19 +7,13 @@ import {dateFormate} from '../../../utils/date';
 
 type ItemProps = {
   name: string;
-  from: string;
-  to: string;
-  days: number;
+  date: string;
 };
 
-const LeaveCard = ({name, from, to, days}: ItemProps) => (
+const BirthdayCard = ({name, date}: ItemProps) => (
   <View style={styles.item}>
     <Typography type="header">{name}</Typography>
-    <Typography type="label">
-      {days === 1
-        ? `Leave on ${dateFormate(from, 'll')}`
-        : `Leave From: ${dateFormate(from, 'll')} To: ${dateFormate(to, 'll')}`}
-    </Typography>
+    <Typography type="label">On {dateFormate(date, 'MMMM DD')}</Typography>
   </View>
 );
 
@@ -31,4 +25,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default memo(LeaveCard);
+export default memo(BirthdayCard);
