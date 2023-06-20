@@ -20,7 +20,7 @@ const TeamMembersLeaves = () => {
         Upcoming Leaves Of Your Team Members
       </Typography>
       <Typography type="secondaryText" style={styles.subTitle}>
-        For next 20 days
+        For next 30 days
       </Typography>
       {data.map((item, index) => (
         <Fragment key={index}>
