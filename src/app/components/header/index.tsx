@@ -21,24 +21,22 @@ const Header = ({type, title}: Props) => {
   switch (type) {
     case 'primary':
       return (
-        <View style={styles.container}>
+        <View style={[styles.container, styles.primaryHeader]}>
           <JoshLogo height={18} width={85} fill={colors.WHITE} />
         </View>
       );
     case 'secondary':
       return (
         <View style={styles.container}>
-          <View style={styles.backButton}>
-            <TouchableOpacity activeOpacity={0.5} onPress={goBack}>
-              <Arrow
-                height={20}
-                width={20}
-                style={styles.arrow}
-                fill={colors.WHITE}
-              />
-            </TouchableOpacity>
-            <Text style={styles.backText}>{title}</Text>
-          </View>
+          <TouchableOpacity activeOpacity={0.5} onPress={goBack}>
+            <Arrow
+              height={20}
+              width={20}
+              style={styles.arrow}
+              fill={colors.WHITE}
+            />
+          </TouchableOpacity>
+          <Text style={styles.backText}>{title}</Text>
         </View>
       );
     default:
@@ -49,7 +47,6 @@ const Header = ({type, title}: Props) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     paddingTop: 10,
     paddingBottom: 13,
@@ -58,16 +55,17 @@ const styles = StyleSheet.create({
     backgroundColor: colors.PRIMARY,
     height: 52,
   },
-  backButton: {
-    flexDirection: 'row',
+  primaryHeader: {
+    justifyContent: 'center',
   },
   backText: {
     color: colors.WHITE,
-    fontSize: 15,
+    fontSize: 16,
     marginStart: 20,
+    fontWeight: 'bold',
   },
   arrow: {
-    marginTop: 2,
+    marginTop: 5,
     transform: [{rotate: '180 deg'}],
   },
 });

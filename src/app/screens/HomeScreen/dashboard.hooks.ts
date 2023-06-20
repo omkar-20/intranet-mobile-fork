@@ -4,8 +4,10 @@ import {AxiosError} from 'axios';
 import {
   getTimesheetCalendar,
   getTeamMembersUpcomingLeaves,
+  getTeamMembersUpcomingBirthdays,
 } from '../../services/home';
 import toast from '../../utils/toast';
+import {filterWFHFromLeaves} from '../../utils/home';
 
 import {GetHomeTimesheetDataResponse} from '../../services/home/types';
 
@@ -36,6 +38,15 @@ export const useTeamMembersLeaves = () => {
   const {data, isLoading} = useQuery(
     ['teamMembersLeaves'],
     getTeamMembersUpcomingLeaves,
+  );
+
+  return {data: filterWFHFromLeaves(data?.data.data ?? []), isLoading};
+};
+
+export const useTeamMembersBirthdays = () => {
+  const {data, isLoading} = useQuery(
+    ['teamMembersBirthdays'],
+    getTeamMembersUpcomingBirthdays,
   );
 
   return {data: data?.data.data ?? [], isLoading};

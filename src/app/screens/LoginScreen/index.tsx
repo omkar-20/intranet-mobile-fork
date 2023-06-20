@@ -1,40 +1,45 @@
-import React, {useEffect} from 'react';
-import {SafeAreaView, StyleSheet, View} from 'react-native';
+import React, {useEffect, useCallback} from 'react';
+import {ImageBackground, SafeAreaView, StyleSheet, View} from 'react-native';
 
-// import LoginForm from './LoginForm';
 import Button from '../../components/button';
 import {useLogin} from './login.hooks';
 
-// import colors from '../../constant/colors';
+import {googleSignIn} from '../../services/auth/google.auth';
+
 import {JoshLogo} from '../../constant/icons';
+import boxBackgroundImage from '../../../assets/images/boxBackground.png';
 
 const LoginScreen = () => {
-  const {googleSignInHandler, isLoading} = useLogin();
+  const {mutate, isLoading} = useLogin();
+
+  const googleSignInHandler = useCallback(async () => {
+    const response = await googleSignIn();
+    if (response) {
+      mutate(response);
+    }
+  }, [mutate]);
 
   useEffect(() => {
     googleSignInHandler();
   }, [googleSignInHandler]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.logoContainer}>
-        <JoshLogo />
-      </View>
-
-      {/* <Text style={styles.loginText}>LOGIN</Text> */}
-      {/* <LoginForm signIn={emailPasswordSignInHandler} isLoading={isLoading} /> */}
-      {/* <Text style={styles.orText}>Or</Text> */}
-
-      <View>
-        <Button
-          type="primary"
-          title="Login With Google"
-          disabled={isLoading}
-          onPress={googleSignInHandler}
-          isLoading={isLoading}
-        />
-      </View>
-    </SafeAreaView>
+    <ImageBackground source={boxBackgroundImage} style={styles.imageContainer}>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.logoContainer}>
+          <JoshLogo />
+        </View>
+        <View>
+          <Button
+            type="primary"
+            title="Login With Google"
+            disabled={isLoading}
+            onPress={googleSignInHandler}
+            isLoading={isLoading}
+          />
+        </View>
+      </SafeAreaView>
+    </ImageBackground>
   );
 };
 
@@ -45,23 +50,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 90,
   },
+  imageContainer: {
+    flex: 1,
+  },
   logoContainer: {
     paddingVertical: 90,
     alignItems: 'center',
   },
-  // loginText: {
-  //   fontSize: 22,
-  //   fontWeight: 'bold',
-  //   color: colors.TERTIARY_TEXT,
-  //   paddingVertical: 20,
-  // },
-  // orText: {
-  //   fontSize: 12,
-  //   color: colors.QUATERNARY_TEXT,
-  //   fontWeight: 'bold',
-  //   marginVertical: 14,
-  //   alignSelf: 'center',
-  // },
 });
 
 export default LoginScreen;

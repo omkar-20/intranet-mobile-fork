@@ -7,7 +7,7 @@
     "android-dev-release": "react-native run-android --variant=devrelease --appIdSuffix=dev",
     "android-stage-debug": "react-native run-android --variant=stagedebug --appIdSuffix=stage",
     "android-stage-release": "react-native run-android --variant=stagerelease --appIdSuffix=stage",
-    "android-prod-debug": "react-native run-android --variant=prodbebug",
+    "android-prod-debug": "react-native run-android --variant=proddebug",
     "android-prod-release": "react-native run-android --variant=prodrelease",
     "ios": "react-native run-ios",
     "lint": "eslint .",
