@@ -52,7 +52,11 @@ const TimesheetList = () => {
     dateRange.endDate,
   );
 
-  const {mutate} = useDeleteTimesheet();
+  // user_id can be either string or number type
+  // using == to check only value
+  const {mutate} = useDeleteTimesheet(
+    params?.user_id == userContextData?.userData.userId,
+  );
 
   const toggleEditModal = useCallback(() => {
     setIsEditModalVisible(v => !v);
@@ -91,6 +95,7 @@ const TimesheetList = () => {
             text: 'Confirm',
             onPress: () =>
               mutate({
+                time_sheet_date: timesheetData?.date,
                 timesheet_id: timesheetData?.timesheet_id,
               }),
           },
