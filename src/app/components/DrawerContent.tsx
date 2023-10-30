@@ -1,9 +1,8 @@
 import React from 'react';
-import {Linking, StyleSheet, TouchableOpacity} from 'react-native';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
-import Config from 'react-native-config';
 
 import AsyncStore from '../services/asyncStorage';
 import UserContext from '../context/user.context';
@@ -13,7 +12,6 @@ import {Cross} from '../constant/icons';
 import colors from '../constant/colors';
 import {RootStackParamList} from '../navigation/types';
 import {USER_PROFILE_SCREEN} from '../constant/screenNames';
-import {PRIVACY_POLICY_ROUTE} from '../constant/apiRoutes';
 
 const DrawerContent = (props: any) => {
   const navigation =
@@ -33,14 +31,6 @@ const DrawerContent = (props: any) => {
     setUserContextData(null);
   };
 
-  const onPrivacyPrivacyPress = async () => {
-    const url = Config.API_BASE_URL + PRIVACY_POLICY_ROUTE;
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      await Linking.openURL(url);
-      closeDrawer();
-    }
-  };
-
   const closeDrawer = () => {
     props.navigation.closeDrawer();
   };
@@ -54,12 +44,6 @@ const DrawerContent = (props: any) => {
         label="Profile"
         labelStyle={styles.label}
         onPress={goToProfile}
-        style={styles.border}
-      />
-      <DrawerItem
-        label="Privacy Policy"
-        labelStyle={styles.label}
-        onPress={onPrivacyPrivacyPress}
         style={styles.border}
       />
       <DrawerItem
@@ -86,5 +70,4 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
 });
-
 export default DrawerContent;
