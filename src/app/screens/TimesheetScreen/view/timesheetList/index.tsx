@@ -1,59 +1,87 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
-import {Alert, StyleSheet, View} from 'react-native';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import {Alert, StyleSheet, View, TextInput} from 'react-native';
 
-import CreateTimesheetButton from './createTimesheetButton';
-import SectionListTimesheet from '../../component/sectionListTimesheet';
 import EditTimesheetModal from '../../component/editTimesheetModal';
 import Typography from '../../../../components/typography';
 import Header from '../../../../components/header';
 import DateRangePicker from '../../../../components/pickers/DateRangePicker';
-import {useDeleteTimesheet, useTimesheets} from '../../timesheet.hooks';
+import TimesheetItem from '../../component/timesheetItem';
+import StatusFilterList from '../../component/StatusFilterList';
+import TimesheetListEmptyComponent from '../../component/TimesheetListEmptyComponent';
+import CreateTimesheetButton from '../../component/CreateTimesheetButton';
+import ManagerActionBar from '../../component/ManagerActionBar';
+import LoadingSpinner from '../../../../components/LoadingSpinner';
+import {
+  useDeleteTimesheet,
+  useTimesheetAction,
+  useTimesheets,
+} from '../../timesheet.hooks';
+import useUserData from '../../../../hooks/useUserData';
 
 import {getParams} from '../../../../navigation';
-import {startOfMonth, todaysDate} from '../../../../utils/date';
-import UserContext from '../../../../context/user.context';
+import {
+  dateFormate,
+  getTimesheetCycleStartDate,
+  todaysDate,
+} from '../../../../utils/date';
+import {IGetTimesheetsResponse} from '../../../../services/timesheet/types';
+import {filterTimesheetBySearch, toTimesheetFilterStatus} from '../../utils';
 import {isManagement} from '../../../../utils/user';
 
-import strings from '../../../../constant/strings';
 import {TIMESHEET_SCREEN} from '../../../../constant/screenNames';
 import colors from '../../../../constant/colors';
-import {Timesheet} from '../../interface';
+import {Search} from '../../../../constant/icons';
+import {Timesheet, TimesheetAction, TimesheetStatus} from '../../interface';
 import {TDateRange} from '../../../../../types';
 
 const TimesheetList = () => {
   const params: any = getParams();
-  const [userContextData] = useContext(UserContext);
+  const userData = useUserData();
 
-  const isManager = isManagement(userContextData?.userData.role);
+  const isManager = isManagement(userData.role);
   const userId = useMemo(
-    () => params?.user_id ?? userContextData?.userData.userId ?? '',
-    [params?.user_id, userContextData?.userData.userId],
+    () => params?.user_id ?? userData.userId ?? '',
+    [params?.user_id, userData.userId],
   );
 
+  const [projectSearchText, setProjectSearchText] = useState(
+    params?.projectFilter || '',
+  );
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [editTimesheetData, setEditTimesheetData] = useState<Timesheet>();
   const [dateRange, setDateRange] = useState<TDateRange>({
-    startDate: params?.startDate ? new Date(params.startDate) : startOfMonth,
+    startDate: params?.startDate
+      ? new Date(params.startDate)
+      : getTimesheetCycleStartDate(),
     endDate: params?.endDate ? new Date(params.endDate) : todaysDate,
   });
 
-  const {data, isFetching, refetch, isLoading} = useTimesheets(
+  const {data, isRefetching, refetch, isLoading} = useTimesheets(
     userId ?? '',
     dateRange.startDate,
     dateRange.endDate,
   );
 
+  const {
+    isLoading: isActionLoading,
+    isApproved,
+    isRejected,
+    isActionMode,
+    checkedTimesheets,
+    erroredTimesheets,
+    isTimesheetChecked,
+    toggleCheckTimesheet,
+    performAction,
+    clearAllChecked,
+  } = useTimesheetAction();
+
   // user_id can be either string or number type
   // using == to check only value
-  const {mutate} = useDeleteTimesheet(
-    params?.user_id == userContextData?.userData.userId,
-  );
+  const isSelf =
+    !params?.user_id ||
+    params?.user_id.toString() === userData.userId.toString();
+
+  const {mutate} = useDeleteTimesheet(isSelf);
 
   const toggleEditModal = useCallback(() => {
     setIsEditModalVisible(v => !v);
@@ -65,16 +93,11 @@ const TimesheetList = () => {
       setDateRange({startDate, endDate});
     } else {
       setDateRange({
-        startDate: startOfMonth,
+        startDate: getTimesheetCycleStartDate(),
         endDate: todaysDate,
       });
     }
   }, []);
-
-  const workHoursTrim = useCallback(
-    (workHours?: string) => workHours?.slice(0, workHours.indexOf('(')),
-    [],
-  );
 
   const timesheetDeleteCall = useCallback(
     (timesheetData: Timesheet) => {
@@ -91,7 +114,7 @@ const TimesheetList = () => {
             onPress: () =>
               mutate({
                 time_sheet_date: timesheetData?.date,
-                timesheet_id: timesheetData?.timesheet_id,
+                timesheet_id: timesheetData?.time_sheet_id,
               }),
           },
         ],
@@ -116,11 +139,80 @@ const TimesheetList = () => {
       });
     } else {
       setDateRange({
-        startDate: startOfMonth,
+        startDate: getTimesheetCycleStartDate(),
         endDate: todaysDate,
       });
     }
   }, [params?.endDate, params?.startDate]);
+
+  const handleApprove = () => {
+    performAction({
+      from_date: dateFormate(dateRange.startDate),
+      to_date: dateFormate(dateRange.endDate),
+      timesheet_ids: checkedTimesheets,
+      action_type: TimesheetAction.Approve,
+    });
+  };
+
+  const handleReject = (reason: string) => {
+    performAction({
+      from_date: dateFormate(dateRange.startDate),
+      to_date: dateFormate(dateRange.endDate),
+      timesheet_ids: checkedTimesheets,
+      action_type: TimesheetAction.Reject,
+      reject_reason: reason,
+    });
+  };
+
+  const renderItem = useCallback(
+    (item: Timesheet, superSection: string) => {
+      const isChecked = isTimesheetChecked(item.time_sheet_id);
+      const errorMessage = erroredTimesheets[item.time_sheet_id];
+      const toggleChecked = () => {
+        toggleCheckTimesheet(item.time_sheet_id);
+      };
+
+      const canDelete =
+        superSection === TimesheetStatus.Pending ||
+        superSection === TimesheetStatus.ReviewPending ||
+        superSection === TimesheetStatus.RejectedPending;
+
+      const canEdit =
+        canDelete || (isSelf && superSection === TimesheetStatus.Rejected);
+
+      return (
+        <TimesheetItem
+          timesheetData={item}
+          onEdit={timesheetEditCall}
+          onDelete={timesheetDeleteCall}
+          isEditVisible={canEdit}
+          isDeleteVisible={isManager && canDelete}
+          showCheckbox={!isSelf && isManager}
+          isChecked={isChecked}
+          error={errorMessage}
+          toggleCheckbox={toggleChecked}
+        />
+      );
+    },
+    [
+      isSelf,
+      isManager,
+      erroredTimesheets,
+      timesheetDeleteCall,
+      timesheetEditCall,
+      isTimesheetChecked,
+      toggleCheckTimesheet,
+    ],
+  );
+
+  let timesheetData = useMemo(
+    () => processTimesheetData(data?.time_sheet_data || []),
+    [data],
+  );
+  timesheetData = useMemo(
+    () => filterTimesheetBySearch(timesheetData, projectSearchText),
+    [timesheetData, projectSearchText],
+  );
 
   return (
     <>
@@ -144,48 +236,66 @@ const TimesheetList = () => {
         )}
       </View>
 
-      <View style={styles.view}>
-        <View style={styles.headerData}>
-          <View style={styles.headerContent}>
-            <Typography type="description" style={styles.title}>
-              {strings.PROJECTS}
-            </Typography>
-            <Typography type="subheader">{data?.projects}</Typography>
-          </View>
-          <View style={styles.headerContent}>
-            <Typography type="description" style={styles.title}>
-              {strings.WORK_HOURS}
-            </Typography>
-            <Typography type="subheader">
-              {workHoursTrim(data?.total_work)}
-            </Typography>
-          </View>
-        </View>
-
-        <SectionListTimesheet
-          isLoading={isLoading}
-          sections={data?.data ?? []}
-          onDelete={timesheetDeleteCall}
-          onEdit={timesheetEditCall}
-          refreshing={isFetching}
-          onRefresh={refetch}
-          showEmptyListIcon={true}
-          emptyListMessage={strings.NO_TIMESHEET_PRESENT}
-          isDeleteVisible={isManager}
+      <View style={styles.projectSearchBox}>
+        <Search />
+        <TextInput
+          placeholder="Search Project"
+          value={projectSearchText}
+          onChangeText={setProjectSearchText}
         />
-
-        <EditTimesheetModal
-          isVisible={isEditModalVisible}
-          toggleModal={toggleEditModal}
-          formData={editTimesheetData}
-          userId={userId}
-        />
-        {params?.user_id && (
-          <CreateTimesheetButton userId={params?.user_id} name={params?.name} />
-        )}
       </View>
+
+      {isLoading && <LoadingSpinner />}
+
+      {data && (
+        <StatusFilterList
+          data={timesheetData}
+          defaultStatus={toTimesheetFilterStatus(params?.status)}
+          refreshing={isRefetching}
+          ListEmptyComponent={TimesheetListEmptyComponent}
+          renderItem={renderItem}
+          onRefresh={refetch}
+        />
+      )}
+
+      {!isActionMode && (
+        <CreateTimesheetButton
+          userId={params?.user_id}
+          userName={params?.name}
+        />
+      )}
+
+      {isActionMode && (
+        <ManagerActionBar
+          disabled={isActionLoading}
+          isApproved={isApproved}
+          isRejected={isRejected}
+          onApprove={handleApprove}
+          onReject={handleReject}
+          onCancel={clearAllChecked}
+        />
+      )}
+
+      <EditTimesheetModal
+        isVisible={isEditModalVisible}
+        toggleModal={toggleEditModal}
+        formData={editTimesheetData}
+        userId={userId}
+      />
     </>
   );
+};
+
+const processTimesheetData = (
+  data: IGetTimesheetsResponse['data']['time_sheet_data'],
+) => {
+  return data.map(statusObj => ({
+    title: statusObj.status,
+    data: statusObj.projects.map(projectObj => ({
+      title: projectObj.project,
+      data: projectObj.timesheets,
+    })),
+  }));
 };
 
 const styles = StyleSheet.create({
@@ -230,6 +340,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 10,
     paddingBottom: 16,
+  },
+  buttonContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 5,
+  },
+  projectSearchBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginHorizontal: 16,
+    borderBottomColor: colors.TEXT_INPUT_BORDER,
+    borderBottomWidth: 1,
   },
 });
 

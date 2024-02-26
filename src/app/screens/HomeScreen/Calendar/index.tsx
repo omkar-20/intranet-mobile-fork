@@ -45,7 +45,7 @@ function Calendar() {
   );
   const [year, setYear] = useState(todaysDate.getFullYear());
 
-  const {filled, notFilled, incompleteFilled, leaves, holidays, isLoading} =
+  const {approved, pending, not_filled, rejected, leaves, holidays, isLoading} =
     useHomeCalendar(month, year);
 
   const handleMonthChange = (date: DateData) => {
@@ -57,16 +57,22 @@ function Calendar() {
 
   const markedDates = useMemo(() => {
     return generateMarkedDates({
-      filled,
-      notFilled,
-      incompleteFilled,
+      approved,
+      pending,
+      rejected,
+      not_filled,
       leaves,
       holidays,
     });
-  }, [filled, notFilled, incompleteFilled, leaves, holidays]);
+  }, [approved, pending, rejected, not_filled, leaves, holidays]);
 
   const onDatePress = useCallback(
-    ({dateString}: DateData) => {
+    ({
+      dateString,
+      day: selected_day,
+      month: selected_month,
+      year: selected_year,
+    }: DateData) => {
       const commonParams = {startDate: dateString, endDate: dateString};
 
       const screen = isManager ? USER_TIMESHEET : TIMESHEET_SCREEN;
@@ -74,19 +80,34 @@ function Calendar() {
         ? {...commonParams, user_id: userData?.userData.userId}
         : commonParams;
 
+      const today = new Date();
+
+      if (
+        selected_day === today.getDate() &&
+        selected_month === today.getMonth() + 1 &&
+        selected_year === today.getFullYear()
+      ) {
+        navigation.navigate(screen, params);
+        return;
+      }
+
       switch (markedDates[dateString]?.type) {
-        case 'filled':
+        case 'approved':
           navigation.navigate(screen, params);
           return;
 
-        case 'unfilled':
+        case 'not_filled':
           navigation.navigate(screen, {
             ...params,
             isAddModalOpen: true,
           });
           return;
 
-        case 'partiallyFilled':
+        case 'pending':
+          navigation.navigate(screen, params);
+          return;
+
+        case 'rejected':
           navigation.navigate(screen, params);
           return;
 
@@ -105,18 +126,18 @@ function Calendar() {
 
       <View style={styles.labelContainer}>
         <Label
-          count={filled.length}
-          text="Filled"
+          count={approved.length}
+          text="Approved"
           color={colors.LIGHT_GREEN_BACKGROUND}
         />
         <Label
-          count={notFilled.length}
-          text="Not Filled"
+          count={not_filled.length + rejected.length}
+          text="Action Required"
           color={colors.LIGHT_RED_BACKGROUND}
         />
         <Label
-          count={incompleteFilled.length}
-          text="< 8hrs"
+          count={pending.length}
+          text="Pending"
           color={colors.YELLOW_BACKGROUND}
         />
         <Label

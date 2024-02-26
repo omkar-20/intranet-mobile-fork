@@ -1,5 +1,5 @@
 import React, {memo, useEffect, useMemo, useRef} from 'react';
-import {Platform, StyleSheet, View} from 'react-native';
+import {Platform, StyleSheet, Text, View} from 'react-native';
 import {useForm, Controller} from 'react-hook-form';
 import * as yup from 'yup';
 import {yupResolver} from '@hookform/resolvers/yup';
@@ -10,7 +10,7 @@ import PickerSelect from '../../../components/pickers/pickerSelect';
 import DatePicker from '../../../components/pickers/datePicker';
 import Input from '../../../components/input';
 import Button from '../../../components/button';
-import {useAssignedProjects} from '../timesheet.hooks';
+import {useAssignedProjects, useTimesheetWarning} from '../timesheet.hooks';
 
 import {todaysDate} from '../../../utils/date';
 import {dateFormater} from '../../../utils/dateFormater';
@@ -21,9 +21,9 @@ import strings from '../../../constant/strings';
 import {workHoursData} from '../../../constant/timesheet';
 
 const timesheetFormSchema = yup.object().shape({
-  project: yup.string().required('Project is a required field'),
+  project_id: yup.string().required('Project is a required field'),
   date: yup.date().required('Date is a required field'),
-  work_in_hours: yup.string().required('Work hours is a required field'),
+  worked_minutes: yup.number().required('Work hours is a required field'),
   description: yup
     .string()
     .required('Description is a required field')
@@ -57,19 +57,23 @@ const TimesheetForm = ({
     handleSubmit,
     control,
     reset,
+    watch,
     formState: {errors, isSubmitted, isSubmitSuccessful},
   } = useForm({
     mode: 'onSubmit',
     values: defaultData ?? {
-      project: undefined,
+      project_id: undefined,
       date: defaultDate ?? undefined,
-      work_in_hours: undefined,
+      worked_minutes: undefined,
       description: undefined,
     },
     resolver: yupResolver(timesheetFormSchema),
   });
 
+  const watchFields = watch(['project_id', 'worked_minutes']);
+
   const {data: projects} = useAssignedProjects(userId);
+  const {warningMessage} = useTimesheetWarning(userId, watchFields);
 
   // Workaround for issue: https://github.com/facebook/react-native/issues/36494
   const iOSTextInputWorkaroundRef = useRef(false);
@@ -87,13 +91,14 @@ const TimesheetForm = ({
     () =>
       handleSubmit((data: any) => {
         let project = projects?.find(value => {
-          return data.project === value.value;
+          return data.project_id === value.value;
         });
+
         onSubmit({
           ...data,
           timesheet_id: data.project + dateFormater(data.date),
           project: project?.label,
-          project_id: data.project,
+          project_id: data.project_id,
         });
       }),
     [handleSubmit, onSubmit, projects],
@@ -123,10 +128,10 @@ const TimesheetForm = ({
                 onValueChange={onChange}
                 value={value}
                 items={projects}
-                error={errors?.project?.message}
+                error={errors?.project_id?.message}
               />
             )}
-            name="project"
+            name="project_id"
           />
         </View>
 
@@ -162,10 +167,10 @@ const TimesheetForm = ({
                   onValueChange={onChange}
                   value={value}
                   items={workHoursData}
-                  error={errors?.work_in_hours?.message}
+                  error={errors?.worked_minutes?.message}
                 />
               )}
-              name="work_in_hours"
+              name="worked_minutes"
             />
           </View>
         </View>
@@ -198,6 +203,10 @@ const TimesheetForm = ({
             name="description"
           />
         </View>
+
+        {warningMessage && (
+          <Text style={styles.warningStyle}>{warningMessage}</Text>
+        )}
       </Collapsible>
       {!isEditForm ? (
         <View style={styles.addButton}>
@@ -278,6 +287,10 @@ const styles = StyleSheet.create({
   },
   save: {
     width: '45%',
+  },
+  warningStyle: {
+    textAlign: 'center',
+    color: colors.PRIMARY,
   },
 });
 

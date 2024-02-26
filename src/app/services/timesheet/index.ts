@@ -8,8 +8,11 @@ import {
   GET_TIMESHEET_ROUTE,
   POST_TIMESHEET_ROUTE,
   PUT_TIMESHEET_ROUTE,
+  TIMESHEET_WARNING_ROUTE,
 } from '../../constant/apiRoutes';
 import {
+  EmployeeTimesheetActionPayload,
+  EmployeeTimesheetActionRequestBody,
   IGetTimesheetsResponse,
   ITimesheetResponse,
   TAssignedProjectList,
@@ -18,8 +21,12 @@ import {
   TDeleteTimesheetRequest,
   TEditTimesheetRquestBody,
   TEmpListTSResponse,
+  TimesheetActionRequestBody,
   TimesheetRequestBody,
+  TimesheetWarningParams,
+  TimesheetWarningResponseBody,
 } from './types';
+import {dateFormate} from '../../utils/date';
 
 export const createTimesheetRequest = async (payload: TimesheetRequestBody) => {
   const response = await apiCall<TimesheetRequestBody, TCerateTimsheetResponse>(
@@ -86,6 +93,76 @@ export const updateTimesheetRequest = async (
     method: 'PUT',
     url: PUT_TIMESHEET_ROUTE,
     data: payload,
+  });
+
+  return response;
+};
+
+export const employeeTimesheetAction = async (
+  payload: EmployeeTimesheetActionPayload,
+) => {
+  const body: EmployeeTimesheetActionRequestBody = {
+    from_date: dateFormate(payload.from_date),
+    to_date: dateFormate(payload.to_date),
+    action_type: payload.action,
+    reject_reason: payload.reject_reason,
+    users: [],
+  };
+
+  body.users = payload.users.reduce((acc, obj) => {
+    let statusObj = acc.find(o => o.status === obj.status);
+
+    if (!statusObj) {
+      statusObj = {status: obj.status, projects: []};
+      acc.push(statusObj);
+    }
+
+    let projectObj = statusObj.projects.find(
+      o => o.project_id === obj.projectId,
+    );
+
+    if (!projectObj) {
+      projectObj = {project_id: obj.projectId, user_ids: []};
+      statusObj.projects.push(projectObj);
+    }
+
+    if (projectObj.user_ids.findIndex(o => o === obj.userId) === -1) {
+      projectObj.user_ids.push(obj.userId);
+    }
+
+    return acc;
+  }, body.users);
+
+  const response = await apiCall<
+    EmployeeTimesheetActionRequestBody,
+    ITimesheetResponse
+  >({
+    method: 'PATCH',
+    url: GET_EMPLOYEE_LIST_ROUTE,
+    data: body,
+  });
+
+  return response;
+};
+
+export const timesheetAction = async (payload: TimesheetActionRequestBody) => {
+  const response = await apiCall<
+    TimesheetActionRequestBody,
+    ITimesheetResponse
+  >({
+    method: 'PATCH',
+    url: GET_TIMESHEET_ROUTE,
+    data: payload,
+  });
+
+  return response;
+};
+
+export const timesheetWarning = async (payload: TimesheetWarningParams) => {
+  const response = await apiCall<void, TimesheetWarningResponseBody>({
+    method: 'GET',
+    url: TIMESHEET_WARNING_ROUTE,
+    params: payload,
   });
 
   return response;

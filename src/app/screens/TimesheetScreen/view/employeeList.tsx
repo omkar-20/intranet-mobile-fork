@@ -1,40 +1,62 @@
-import React, {useCallback, useMemo, useState} from 'react';
-import {FlatList, ListRenderItemInfo, StyleSheet, View} from 'react-native';
+import React, {useCallback, useState, useMemo} from 'react';
+import {StyleSheet, View} from 'react-native';
 
-import EmployeeCard from '../component/employeeCard';
-import Input from '../../../components/input';
-import Linear from '../../../components/seperator/linear';
-import {useEmployees} from '../timesheet.hooks';
-
-import {startOfMonth, todaysDate} from '../../../utils/date';
-
-import {Search} from '../../../constant/icons';
 import DateRangePicker from '../../../components/pickers/DateRangePicker';
-import EmptyList from '../component/emptyList';
+import EmployeeCard from '../component/employeeCard';
+import LoadingSpinner from '../../../components/LoadingSpinner';
+import StatusFilterList from '../component/StatusFilterList';
+import CreateTimesheetButton from '../component/CreateTimesheetButton';
+import ManagerActionBar from '../component/ManagerActionBar';
+import UserProjectSearchBox from '../component/UserProjectSearchBox';
+import EmployeeListEmptyComponent from '../component/EmployeeListEmptyComponent';
+import {useEmployees, useEmployeeTimesheetAction} from '../timesheet.hooks';
+
+import {getTimesheetCycleStartDate, todaysDate} from '../../../utils/date';
+import {TEmpListTSResponse} from '../../../services/timesheet/types';
+import {
+  Employee,
+  TimesheetAction,
+  TimesheetStatus,
+  TimesheetStatusFilter,
+} from '../interface';
+import {filterDataBySearch} from '../utils';
 
 type DateRangeProps = {
   startDate: Date;
   endDate: Date;
 };
 
-type RenderItemProps = {
-  name: string;
-  email: string;
-  user_id: string;
-};
-
-const searchIcon = () => <Search style={styles.icon} />;
-
 const EmployeeList = () => {
-  const [searchText, setSearchText] = useState<string>('');
+  const [userText, setUserText] = useState('');
+  const [projectText, setProjectText] = useState('');
+
   const [dateRange, setDateRange] = useState<DateRangeProps>({
-    startDate: startOfMonth,
+    startDate: getTimesheetCycleStartDate(),
     endDate: todaysDate,
   });
 
-  const {data, isLoading, refetch} = useEmployees(
+  const {data, isLoading, refetch, isRefetching} = useEmployees(
     dateRange.startDate,
     dateRange.endDate,
+  );
+
+  const {
+    isLoading: isActionLoading,
+    isApproved,
+    isRejected,
+    checkedEmployees,
+    isEmployeeChecked,
+    isErroredEmployee,
+    isActionMode,
+    toggleCheckEmployee,
+    performAction,
+    clearAllChecked,
+  } = useEmployeeTimesheetAction();
+
+  const userData = prepareFlatSectionListData(data?.user_data || []);
+  const searchFilterUserData = useMemo(
+    () => filterDataBySearch(userData, userText, projectText),
+    [userData, userText, projectText],
   );
 
   // on date range change
@@ -43,23 +65,51 @@ const EmployeeList = () => {
       setDateRange({startDate, endDate});
     } else {
       setDateRange({
-        startDate: startOfMonth,
+        startDate: getTimesheetCycleStartDate(),
         endDate: todaysDate,
       });
     }
   }, []);
 
-  // filter out employee list basis of searched text
-  const employeeList = useMemo(() => {
-    if (searchText) {
-      const text = searchText.toLowerCase();
-      return data?.filter(({name}) => name.toLowerCase().includes(text));
-    }
-    return data;
-  }, [data, searchText]);
+  const handleApprove = () => {
+    performAction({
+      from_date: dateRange.startDate,
+      to_date: dateRange.endDate,
+      users: checkedEmployees,
+      action: TimesheetAction.Approve,
+    });
+  };
+
+  const handleReject = (reason: string) => {
+    performAction({
+      from_date: dateRange.startDate,
+      to_date: dateRange.endDate,
+      users: checkedEmployees,
+      action: TimesheetAction.Reject,
+      reject_reason: reason,
+    });
+  };
 
   const renderItem = useCallback(
-    ({item: {name, email, user_id}}: ListRenderItemInfo<RenderItemProps>) => {
+    (
+      item: Employee,
+      superSection: string,
+      subSectionId?: number,
+      subSection?: string,
+    ) => {
+      const {name, email, user_id, worked_minutes} = item;
+      const status = superSection as TimesheetStatus;
+
+      if (!subSectionId) {
+        return <></>;
+      }
+
+      const isChecked = isEmployeeChecked(user_id, subSectionId, status);
+      const isErrored = isErroredEmployee(user_id, subSectionId, status);
+      const toggleCheckbox = () => {
+        toggleCheckEmployee(user_id, subSectionId, status);
+      };
+
       return (
         <EmployeeCard
           name={name}
@@ -67,10 +117,23 @@ const EmployeeList = () => {
           userId={user_id}
           startDate={dateRange.startDate}
           endDate={dateRange.endDate}
+          worked_minutes={worked_minutes}
+          status={status}
+          showCheckbox={true}
+          isChecked={isChecked}
+          isErrored={isErrored}
+          projectFilter={subSection}
+          toggleCheckbox={toggleCheckbox}
         />
       );
     },
-    [dateRange.startDate, dateRange.endDate],
+    [
+      isErroredEmployee,
+      dateRange.startDate,
+      dateRange.endDate,
+      isEmployeeChecked,
+      toggleCheckEmployee,
+    ],
   );
 
   return (
@@ -81,26 +144,75 @@ const EmployeeList = () => {
           startDate={dateRange.startDate}
           endDate={dateRange.endDate}
           maximumDate={todaysDate}
-        />
-        <Input
-          onChangeText={setSearchText}
-          StartIcon={searchIcon}
-          placeholder="Search"
-          value={searchText}
+          disabled={isActionMode}
         />
       </View>
 
-      <FlatList
-        data={employeeList}
-        renderItem={renderItem}
-        keyExtractor={item => item.user_id}
-        ItemSeparatorComponent={Linear}
-        refreshing={isLoading}
-        onRefresh={refetch}
-        ListEmptyComponent={<EmptyList message="No User for current filters" />}
-      />
+      <View style={styles.main}>
+        {isLoading && <LoadingSpinner />}
+
+        {data && (
+          <UserProjectSearchBox
+            userText={userText}
+            projectText={projectText}
+            onUserTextChange={setUserText}
+            onProjectTextChange={setProjectText}
+          />
+        )}
+
+        {data && (
+          <EmployeeCard
+            name={data.name}
+            email={data.email}
+            userId={data.user_id}
+            worked_minutes={data.worked_minutes}
+            startDate={dateRange.startDate}
+            endDate={dateRange.endDate}
+            showCheckbox={false}
+            isChecked={false}
+            toggleCheckbox={() => {}}
+          />
+        )}
+
+        {data && (
+          <StatusFilterList
+            data={searchFilterUserData}
+            defaultStatus={TimesheetStatusFilter.Pending}
+            refreshing={isRefetching}
+            renderItem={renderItem}
+            onRefresh={refetch}
+            ListEmptyComponent={EmployeeListEmptyComponent}
+          />
+        )}
+      </View>
+
+      {isActionMode ? (
+        <ManagerActionBar
+          isApproved={isApproved}
+          isRejected={isRejected}
+          disabled={isActionLoading}
+          onApprove={handleApprove}
+          onReject={handleReject}
+          onCancel={clearAllChecked}
+        />
+      ) : (
+        <CreateTimesheetButton />
+      )}
     </View>
   );
+};
+
+const prepareFlatSectionListData = (
+  data: TEmpListTSResponse['data']['user_data'],
+) => {
+  return data.map(statusObj => ({
+    title: statusObj.status,
+    data: statusObj.projects.map(projectObj => ({
+      title: projectObj.title,
+      id: projectObj.id,
+      data: projectObj.users,
+    })),
+  }));
 };
 
 const styles = StyleSheet.create({
@@ -117,6 +229,10 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 6,
+  },
+  buttonContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
   },
 });
 

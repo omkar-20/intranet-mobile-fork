@@ -5,7 +5,10 @@ import {
 } from '@react-navigation/native-stack';
 
 import {AuthType, IntranetErrorCode} from '../services/api/login';
-import {Employee} from '../../app/screens/TimesheetScreen/interface';
+import {
+  Employee,
+  TimesheetStatus,
+} from '../../app/screens/TimesheetScreen/interface';
 
 export type RootStackParamList = {
   Login: undefined;
@@ -13,6 +16,8 @@ export type RootStackParamList = {
     startDate: string;
     endDate: string;
     isAddModalOpen?: boolean;
+    status?: TimesheetStatus;
+    projectFilter?: string;
   };
   Drawer: NavigatorScreenParams<DrawerParamList>;
   Profile: undefined;
