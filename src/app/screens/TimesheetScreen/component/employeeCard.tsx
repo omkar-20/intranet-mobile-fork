@@ -2,7 +2,6 @@ import React, {memo} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 
-import Touchable from '../../../components/touchable';
 import Typography from '../../../components/typography';
 
 import {navigate} from '../../../navigation';
@@ -13,6 +12,7 @@ import {USER_TIMESHEET} from '../../../constant/screenNames';
 import {ISO_DATE_FROMAT} from '../../../constant/date';
 import {TimesheetStatus} from '../interface';
 import colors from '../../../constant/colors';
+import Touchable from '../../../components/touchable';
 
 type Props = {
   name: string;
@@ -62,43 +62,48 @@ const EmployeeCard = (props: Props) => {
   const minutes = Math.floor(worked_minutes % 60);
 
   return (
-    <Touchable type="native" onPress={handleNavigation}>
-      <View style={styles.container}>
-        {showCheckbox && !isFreezed && (
-          <View style={styles.checkBoxContainer}>
-            <CheckBox
-              value={isChecked}
-              onChange={toggleCheckbox}
-              tintColors={{
-                true: isErrored ? colors.ERROR_RED : colors.PRIMARY,
-              }}
-            />
-          </View>
-        )}
-        <View
-          style={[
-            styles.main,
-            showCheckbox && !isFreezed ? styles.mainWithCheckbox : {},
-          ]}>
-          <View>
+    <View style={styles.container}>
+      {showCheckbox && !isFreezed && (
+        <View style={styles.checkBoxContainer}>
+          <CheckBox
+            value={isChecked}
+            onTintColor={isErrored ? colors.ERROR_RED : colors.PRIMARY}
+            onCheckColor={isErrored ? colors.ERROR_RED : colors.PRIMARY}
+            onChange={toggleCheckbox}
+            tintColors={{
+              true: isErrored ? colors.ERROR_RED : colors.PRIMARY,
+            }}
+          />
+        </View>
+      )}
+
+      <View
+        style={[
+          styles.main,
+          showCheckbox && !isFreezed ? styles.mainWithCheckbox : {},
+        ]}>
+        <View style={styles.infoContainer}>
+          <Touchable type="opacity" onPress={handleNavigation}>
             <Typography type="header" style={styles.empName}>
               {name} {formatTimeString(hours, minutes)}
             </Typography>
             <Typography type="description">{email}</Typography>
-          </View>
-          {isFreezed ? (
-            <View style={styles.freezedContainer}>
-              <Lock height={18} fill={colors.PRIMARY} />
-              <Text style={styles.freezedText}>Freezed</Text>
-            </View>
-          ) : (
-            <View style={styles.arrowContainer}>
-              <Arrow />
-            </View>
-          )}
+          </Touchable>
         </View>
+        {isFreezed ? (
+          <View style={styles.freezedContainer}>
+            <Lock height={18} fill={colors.PRIMARY} />
+            <Text style={styles.freezedText}>Freezed</Text>
+          </View>
+        ) : (
+          <View style={styles.arrowContainer}>
+            <Touchable type="opacity" onPress={handleNavigation}>
+              <Arrow />
+            </Touchable>
+          </View>
+        )}
       </View>
-    </Touchable>
+    </View>
   );
 };
 
@@ -121,7 +126,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingVertical: 16,
-    gap: 16,
     paddingHorizontal: 16,
   },
   mainWithCheckbox: {
@@ -133,6 +137,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 16,
     paddingHorizontal: 10,
+  },
+  infoContainer: {
+    flex: 1,
   },
   arrowContainer: {
     alignItems: 'center',
