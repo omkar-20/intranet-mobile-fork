@@ -50,6 +50,23 @@ const theme = {
   },
 };
 
+const linking: any = {
+  prefixes: ['intranet://'],
+  config: {
+    screens: {
+      Drawer: {
+        screens: {
+          Dashboard: {
+            screens: {
+              Timesheet: 'timesheet',
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
 const RootNavigator = () => {
   const [userContextData, setUserContextData] = useContext(UserContext);
   const [loading, setLoading] = useState(true);
@@ -85,6 +102,7 @@ const RootNavigator = () => {
 
   return (
     <NavigationContainer
+      linking={userContextData ? linking : undefined}
       theme={theme}
       ref={navigationRef}
       onReady={() => RNBootSplash.hide({fade: true})}>
