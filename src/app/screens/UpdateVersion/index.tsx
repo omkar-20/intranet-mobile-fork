@@ -28,8 +28,9 @@ const UpdateVersionScreen = () => {
       <View style={styles.container}>
         <View style={styles.contentContainer}>
           <Text style={styles.title}>Update Needed</Text>
+          <Text style={styles.text}>New update available!</Text>
           <Text style={styles.text}>
-            New update available! update now to continue using Intranet app
+            Update now to continue using Intranet app
           </Text>
         </View>
 

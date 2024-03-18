@@ -1,30 +1,39 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {ImageBackground, StyleSheet, View, Text} from 'react-native';
 import {checkVersion} from 'react-native-check-version';
 
 import Button from '../../components/button';
-import UserContext from '../../context/user.context';
+import VersionContext from '../../context/version.context';
 
+import toast from '../../utils/toast';
 import colors from '../../constant/colors';
-import {NoVersionScreenNavigationProp} from '../../navigation/types';
-import {DRAWER, LOGIN_SCREEN, UPDATE_VERSION} from '../../constant/screenNames';
+import {BUNDLE_ID} from '../../constant';
 
 import boxBackgroundImage from '../../../assets/images/boxBackground.png';
 
-const NoVersionScreen = (props: NoVersionScreenNavigationProp) => {
-  const {navigation} = props;
+const NoVersionScreen = () => {
+  const [, setVersionContextData] = useContext(VersionContext);
 
-  const [userContextData] = useContext(UserContext);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleRetry = async () => {
-    const version = await checkVersion();
+    try {
+      setIsLoading(true);
 
-    if (version.needsUpdate) {
-      navigation.navigate(UPDATE_VERSION);
-    } else if (userContextData) {
-      navigation.navigate(DRAWER);
-    } else {
-      navigation.navigate(LOGIN_SCREEN);
+      const version = await checkVersion({
+        bundleId: BUNDLE_ID,
+      });
+
+      setIsLoading(false);
+
+      if (version.version === null) {
+        toast('Could not fetch version info!', 'error');
+      } else {
+        setVersionContextData(version);
+      }
+    } catch {
+      toast('Could not fetch version info!', 'error');
+      setIsLoading(false);
     }
   };
 
@@ -33,14 +42,19 @@ const NoVersionScreen = (props: NoVersionScreenNavigationProp) => {
       <View style={styles.container}>
         <View style={styles.contentContainer}>
           <Text style={styles.title}>Network Error</Text>
+          <Text style={styles.text}>Could not fetch version info!</Text>
           <Text style={styles.text}>
-            Could not fetch version info! Check network connection and try
-            again.
+            Check network connection and try again.
           </Text>
         </View>
 
         <View>
-          <Button title="Retry" type="primary" onPress={handleRetry} />
+          <Button
+            title="Retry"
+            type="primary"
+            isLoading={isLoading}
+            onPress={handleRetry}
+          />
         </View>
       </View>
     </ImageBackground>
