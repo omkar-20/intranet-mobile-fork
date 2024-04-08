@@ -419,5 +419,9 @@ export const useTimesheetWarning = (
     }
   }, [userId, projectId, workedMinutes, getTimesheetWarning]);
 
-  return {warningMessage};
+  const resetWarning = () => {
+    setWarningMessage('');
+  };
+
+  return {warningMessage, resetWarning};
 };

@@ -73,7 +73,10 @@ const TimesheetForm = ({
   const watchFields = watch(['project_id', 'worked_minutes']);
 
   const {data: projects} = useAssignedProjects(userId);
-  const {warningMessage} = useTimesheetWarning(userId, watchFields);
+  const {warningMessage, resetWarning} = useTimesheetWarning(
+    userId,
+    watchFields,
+  );
 
   // Workaround for issue: https://github.com/facebook/react-native/issues/36494
   const iOSTextInputWorkaroundRef = useRef(false);
@@ -90,6 +93,8 @@ const TimesheetForm = ({
   const addTimesheet = useMemo(
     () =>
       handleSubmit((data: any) => {
+        resetWarning();
+
         let project = projects?.find(value => {
           return data.project_id === value.value;
         });
