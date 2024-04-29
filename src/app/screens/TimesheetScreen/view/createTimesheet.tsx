@@ -44,6 +44,7 @@ const CreateTimesheet = ({
   );
   const [isFormVisible, setIsFormVisible] = useState<boolean>(true);
   const [isShowToast, setIsShowToast] = useState<Boolean>(false);
+  const [disableSave, setDisableSave] = useState(false);
   const {isKeyboardShown} = useIsKeyboardShown();
 
   const {
@@ -54,7 +55,7 @@ const CreateTimesheet = ({
     failedTimesheets,
     message,
     reset: resetAddTimesheet,
-  } = useAddTimesheet();
+  } = useAddTimesheet(setDisableSave);
 
   // mutation function
   const mutationFunc = useCallback(
@@ -78,6 +79,7 @@ const CreateTimesheet = ({
 
   // handle on save action and request to create timesheet
   const onSave = () => {
+    setDisableSave(true);
     mutate(mutationFunc(addedTimesheet));
   };
 
@@ -275,7 +277,7 @@ const CreateTimesheet = ({
             type="primary"
             onPress={onSave}
             isLoading={isLoading}
-            disabled={!addedTimesheet.length}
+            disabled={!addedTimesheet.length || disableSave}
           />
         </View>
       )}

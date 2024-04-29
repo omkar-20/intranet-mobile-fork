@@ -131,7 +131,7 @@ export const useEditTimesheet = () => {
   return {mutate, isLoading, isSuccess, message: data?.data.message, reset};
 };
 
-export const useAddTimesheet = () => {
+export const useAddTimesheet = (setDisableSave: (v: boolean) => void) => {
   const queryClient = useQueryClient();
 
   const {mutate, data, isLoading, isSuccess, reset} = useMutation(
@@ -150,10 +150,14 @@ export const useAddTimesheet = () => {
         });
 
         queryClient.invalidateQueries(['timesheet']);
+
+        setDisableSave(false);
       },
       onError: (err: AxiosError) => {
         const error = err.response?.data as TimesheetError;
         toast(error.message || 'Failed to add the timesheet.', 'error');
+
+        setDisableSave(false);
       },
     },
   );
