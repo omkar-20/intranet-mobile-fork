@@ -19,6 +19,7 @@ import DrawerNavigator from './DrawerNavigation';
 import {navigationRef} from '.';
 
 import UserContext from '../context/user.context';
+import VersionContext from '../context/version.context';
 import AsyncStore from '../services/asyncStorage';
 
 import {RootStackParamList} from './types';
@@ -69,8 +70,9 @@ const linking: any = {
 
 const RootNavigator = () => {
   const [userContextData, setUserContextData] = useContext(UserContext);
+  const [versionContextData, setVersionContextData] =
+    useContext(VersionContext);
   const [loading, setLoading] = useState(true);
-  const [needsUpdate, setNeedsUpdate] = useState<boolean | null>(false);
 
   useEffect(() => {
     const run = async () => {
@@ -78,7 +80,8 @@ const RootNavigator = () => {
         const version = await checkVersion({
           bundleId: BUNDLE_ID,
         });
-        setNeedsUpdate(version.needsUpdate);
+
+        setVersionContextData(version);
       } catch {}
 
       const authToken = await AsyncStore.getItem(AsyncStore.AUTH_TOKEN_KEY);
@@ -94,7 +97,7 @@ const RootNavigator = () => {
     };
 
     run();
-  }, [setUserContextData]);
+  }, [setUserContextData, setVersionContextData]);
 
   if (loading) {
     return null;
@@ -109,9 +112,9 @@ const RootNavigator = () => {
       <RootStack.Navigator
         screenOptions={screenOptions}
         initialRouteName={DRAWER}>
-        {needsUpdate === null ? (
+        {versionContextData === null || versionContextData.version === null ? (
           <RootStack.Screen name={NO_VERSION} component={NoVersionScreen} />
-        ) : needsUpdate ? (
+        ) : versionContextData.needsUpdate ? (
           <RootStack.Screen
             name={UPDATE_VERSION}
             component={UpdateVersionScreen}

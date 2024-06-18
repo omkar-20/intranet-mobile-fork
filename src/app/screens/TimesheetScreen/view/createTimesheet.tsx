@@ -44,6 +44,7 @@ const CreateTimesheet = ({
   );
   const [isFormVisible, setIsFormVisible] = useState<boolean>(true);
   const [isShowToast, setIsShowToast] = useState<Boolean>(false);
+  const [disableSave, setDisableSave] = useState(false);
   const {isKeyboardShown} = useIsKeyboardShown();
 
   const {
@@ -54,7 +55,7 @@ const CreateTimesheet = ({
     failedTimesheets,
     message,
     reset: resetAddTimesheet,
-  } = useAddTimesheet();
+  } = useAddTimesheet(setDisableSave);
 
   // mutation function
   const mutationFunc = useCallback(
@@ -78,6 +79,7 @@ const CreateTimesheet = ({
 
   // handle on save action and request to create timesheet
   const onSave = () => {
+    setDisableSave(true);
     mutate(mutationFunc(addedTimesheet));
   };
 
@@ -87,7 +89,9 @@ const CreateTimesheet = ({
   const onAddTimesheet = useCallback((data: Timesheet & {project: string}) => {
     const isDuplicateEntry = (section: ITimesheetSectionListItem) => {
       return section.data.some(
-        item => item.time_sheet_id === data.time_sheet_id,
+        item =>
+          item.project_id === data.project_id &&
+          dateFormate(item.date) === dateFormate(data.date),
       );
     };
 
@@ -188,6 +192,10 @@ const CreateTimesheet = ({
     }
   };
 
+  const timesheetSectionListKeyExtractor = (item: Timesheet) => {
+    return item.project_id + dateFormate(item.date);
+  };
+
   // if add timesheet is succeed then reset all the states
   useEffect(() => {
     if (isSuccess) {
@@ -256,6 +264,7 @@ const CreateTimesheet = ({
           sections={addedTimesheet}
           onEdit={onEdit}
           onDelete={onDelete}
+          keyExtractor={timesheetSectionListKeyExtractor}
           emptyListMessage={strings.NO_TIMESHEET_ADDED}
         />
       </View>
@@ -268,7 +277,7 @@ const CreateTimesheet = ({
             type="primary"
             onPress={onSave}
             isLoading={isLoading}
-            disabled={!addedTimesheet.length}
+            disabled={!addedTimesheet.length || disableSave}
           />
         </View>
       )}

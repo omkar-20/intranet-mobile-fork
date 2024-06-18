@@ -5,6 +5,8 @@ import {
   getTimesheetCalendar,
   getTeamMembersUpcomingLeaves,
   getTeamMembersUpcomingBirthdays,
+  getLiveEvents,
+  getUpcomingEvents,
 } from '../../services/home';
 import toast from '../../utils/toast';
 import {filterWFHFromLeaves} from '../../utils/home';
@@ -51,4 +53,30 @@ export const useTeamMembersBirthdays = () => {
   );
 
   return {data: data?.data.data ?? [], isLoading};
+};
+
+export const useUpcomingEvents = () => {
+  const {data, isLoading, isRefetching, refetch} = useQuery(
+    ['upcoming-events'],
+    getUpcomingEvents,
+  );
+
+  return {
+    events: data?.data?.data || [],
+    isLoading: isLoading || isRefetching,
+    refetch,
+  };
+};
+
+export const useLiveEvents = () => {
+  const {data, isLoading, isRefetching, refetch} = useQuery(
+    ['live-events'],
+    getLiveEvents,
+  );
+
+  return {
+    events: data?.data?.data || [],
+    isLoading: isLoading || isRefetching,
+    refetch,
+  };
 };
