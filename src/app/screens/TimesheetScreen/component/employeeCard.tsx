@@ -69,15 +69,18 @@ const EmployeeCard = (props: Props) => {
         {showCheckbox && !isFreezed && (
           <View style={styles.checkBoxContainer}>
             <Touchable type="none" onPress={e => e.stopPropagation()}>
-              <CheckBox
-                value={isChecked}
-                onTintColor={isErrored ? colors.ERROR_RED : colors.PRIMARY}
-                onCheckColor={isErrored ? colors.ERROR_RED : colors.PRIMARY}
-                onValueChange={toggleCheckbox}
-                tintColors={{
-                  true: isErrored ? colors.ERROR_RED : colors.PRIMARY,
-                }}
-              />
+              <View style={styles.checkBoxWrapper}>
+                <CheckBox
+                  style={styles.checkBox}
+                  value={isChecked}
+                  onTintColor={isErrored ? colors.ERROR_RED : colors.PRIMARY}
+                  onCheckColor={isErrored ? colors.ERROR_RED : colors.PRIMARY}
+                  onValueChange={toggleCheckbox}
+                  tintColors={{
+                    true: isErrored ? colors.ERROR_RED : colors.PRIMARY,
+                  }}
+                />
+              </View>
             </Touchable>
           </View>
         )}
@@ -157,6 +160,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.PRIMARY,
     fontWeight: 'bold',
+  },
+  checkBoxWrapper: {
+    height: 22,
+    width: 22,
+  },
+  checkBox: {
+    height: 20,
+    width: 20,
   },
 });
 
