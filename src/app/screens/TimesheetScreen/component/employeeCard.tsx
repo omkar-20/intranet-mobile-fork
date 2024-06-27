@@ -73,6 +73,7 @@ const EmployeeCard = (props: Props) => {
                 <CheckBox
                   style={styles.checkBox}
                   value={isChecked}
+                  boxType="square"
                   onTintColor={isErrored ? colors.ERROR_RED : colors.PRIMARY}
                   onCheckColor={isErrored ? colors.ERROR_RED : colors.PRIMARY}
                   onValueChange={toggleCheckbox}

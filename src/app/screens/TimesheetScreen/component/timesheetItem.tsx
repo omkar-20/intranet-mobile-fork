@@ -62,6 +62,9 @@ const TimesheetItem = ({
             <CheckBox
               style={styles.checkBox}
               value={isChecked}
+              onCheckColor={error ? colors.ERROR_RED : colors.PRIMARY}
+              boxType="square"
+              onTintColor={error ? colors.ERROR_RED : colors.PRIMARY}
               tintColors={{
                 true: error ? colors.ERROR_RED : colors.PRIMARY,
               }}
