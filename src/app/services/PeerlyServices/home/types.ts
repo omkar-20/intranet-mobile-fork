@@ -78,5 +78,11 @@ export type GetAppreciationListResponse = {
   status_code: number;
   data: {
     appreciations: AppreciationDetails[];
+    next: number;
+    previous: number;
+    record_per_page: number;
+    current_page: number;
+    total_page: number;
+    total_records: number;
   };
 };
