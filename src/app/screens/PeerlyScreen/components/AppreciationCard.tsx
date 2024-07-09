@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import colors from '../../../constant/colors';
-import {StarIcon} from '../../../constant/icons';
+import {BlackStar} from '../../../constant/icons';
 
 const AppreciationCard = () => {
   return (
@@ -14,15 +14,17 @@ const AppreciationCard = () => {
           />
           <Image
             source={require('../../../../assets/images/profile.png')}
-            style={[styles.avatar, styles.smallAvatar]}
+            //style={[styles.avatar, styles.smallAvatar]}
+            style={[styles.smallAvatar]}
           />
+
         </View>
         <View
           style={{
             flexDirection: 'row',
             alignItems: 'center',
           }}>
-          <StarIcon color={colors.SECONDARY} />
+          <BlackStar color={colors.SECONDARY} />
           <Text style={styles.starCount}>30</Text>
         </View>
       </View>
@@ -81,6 +83,12 @@ const styles = StyleSheet.create({
     height: 45,
     borderRadius: 23,
     marginTop: -20,
+    borderColor: colors.WHITE,
+    borderWidth: 2,
+    overflow: 'hidden',
+    position: 'absolute',
+    left: 45,
+    clipPath: '50%',
   },
   icon: {
     marginLeft: 'auto',

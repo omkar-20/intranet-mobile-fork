@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import colors from '../../../constant/colors';
-import {StarIcon} from '../../../constant/icons';
+import {WhiteStar} from '../../../constant/icons';
 
 const LeaderBoardCard = () => {
   return (
@@ -11,9 +11,14 @@ const LeaderBoardCard = () => {
         style={styles.profileImage}
       />
       <View style={styles.starContainer}>
-        <StarIcon color={colors.SECONDARY} />
+        <WhiteStar color={colors.SECONDARY} />
+        <Text style={styles.leadText}>1.5k</Text>
       </View>
-      <Text style={styles.name}>Akshay Doiphode</Text>
+      
+      <View style={styles.nameContainer}>
+      <Text style={styles.firstName}>Akshay</Text>
+      <Text style={styles.lastName}>Doiphode</Text>
+      </View>
     </View>
   );
 };
@@ -22,6 +27,10 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     marginHorizontal: 10,
+    padding: 10
+  },
+  nameContainer :{
+   marginTop:5
   },
   profileImage: {
     width: 60,
@@ -33,13 +42,14 @@ const styles = StyleSheet.create({
   },
   starContainer: {
     position: 'absolute',
-    bottom: 20,
-    right: 5,
-    backgroundColor: '#4a3cff',
+    bottom: 45,
+    //right: 5,
+    backgroundColor: '#FEB333',
     borderRadius: 12,
     paddingHorizontal: 5,
     flexDirection: 'row',
     alignItems: 'center',
+    width: '95%',
   },
   starIcon: {
     width: 12,
@@ -51,10 +61,22 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 12,
   },
-  name: {
+  firstName: {
     fontSize: 14,
-    marginTop: 5,
+    textAlign: "center"
   },
+  lastName: {
+    fontSize: 14,
+    marginTop: 1,
+  },
+  leadText: {
+    fontSize: 14,
+    marginTop: 1,
+    marginLeft: 2,
+    color: colors.WHITE
+  },
+
+  
 });
 
 export default LeaderBoardCard;

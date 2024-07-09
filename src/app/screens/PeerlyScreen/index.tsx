@@ -136,7 +136,7 @@ const PeerlyScreen = () => {
 
       <TextInput style={styles.searchInput} placeholder={'Search Co-Worker'} />
 
-      <View style={{height: layout.height * 0.18}}>
+      <View style={{height: layout.height * 0.2}}>
         <TabView
           navigationState={{index, routes}}
           renderScene={renderScene}
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
 
   labelStyle: {
     color: colors.LABEL_COLOR_SECONDARY,
-    textAlign: 'center',
+    textAlign: 'left',
     fontSize: 14,
     fontFamily: fonts.ARIAL,
     textTransform: 'none',
