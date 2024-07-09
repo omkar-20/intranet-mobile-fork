@@ -9,7 +9,7 @@ import {
   getTopUsersList,
   getActiveUsersList,
   getAppreciationList,
-} from '../../../services/PeerlyServices/home/home';
+} from '../../../services/PeerlyServices/home';
 
 export const loginPeerlySystem = () => {
   const queryClient = useQueryClient();
