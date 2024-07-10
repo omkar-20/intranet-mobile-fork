@@ -1,6 +1,26 @@
-import {useMutation} from 'react-query';
-import {postAppreciationRequest} from '../../../services/PeerlyServices/appreciation';
+import {useMutation, useQuery} from 'react-query';
+import {
+  getCoreValuesList,
+  getCoworkerList,
+  postAppreciationRequest,
+} from '../../../services/PeerlyServices/appreciation';
 import {PostAppreciationRequestBody} from '../../../services/PeerlyServices/appreciation/types';
+
+export function useGetCoworkerList() {
+  const {data, isLoading, isFetching, isSuccess, isError} = useQuery({
+    queryKey: ['profile_icon'],
+    queryFn: getCoworkerList,
+  });
+  return {data, isLoading, isFetching, isSuccess, isError};
+}
+
+export function useGetCoreValuesList() {
+  const {data, isLoading, isFetching, isSuccess, isError} = useQuery({
+    queryKey: ['profile_icon'],
+    queryFn: getCoreValuesList,
+  });
+  return {data, isLoading, isFetching, isSuccess, isError};
+}
 
 export function usePostAppreciation() {
   const {mutate, isLoading, isSuccess, isError, data, reset} = useMutation({
