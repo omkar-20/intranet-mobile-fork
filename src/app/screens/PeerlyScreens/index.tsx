@@ -18,57 +18,6 @@ import fonts from '../../constant/fonts';
 import FloatingGiveAppriciationButton from '../../components/button/floatingGiveAppriciationButton';
 import LeaderBoardCard from './components/LeaderBoardCard';
 
-const top10 = [
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'First Item',
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'Second Item',
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Third Item',
-  },
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'First Item',
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'Second Item',
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Third Item',
-  },
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'First Item',
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'Second Item',
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Third Item',
-  },
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'First Item',
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'Second Item',
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Third Item',
-  },
-];
-
 const PeerlyScreen = () => {
   const layout = useWindowDimensions();
 
@@ -81,7 +30,7 @@ const PeerlyScreen = () => {
   const FirstRoute = () => (
     <View style={{flex: 1, backgroundColor: '#F4F6FF'}}>
       <FlatList
-        data={top10}
+        data={[]}
         renderItem={({item}) => <LeaderBoardCard />}
         keyExtractor={item => item.id}
         horizontal={true}
@@ -92,7 +41,7 @@ const PeerlyScreen = () => {
   const SecondRoute = () => (
     <View style={{flex: 1, backgroundColor: '#F4F6FF', height: 20}}>
       <FlatList
-        data={top10}
+        data={[]}
         renderItem={({item}) => (
           <View>
             <Text>{item.title}</Text>
@@ -148,7 +97,7 @@ const PeerlyScreen = () => {
 
       <View style={{flex: 1, backgroundColor: colors.WHITE}}>
         <FlatList
-          data={top10}
+          data={[]}
           renderItem={({item}) => <AppreciationCard />}
           keyExtractor={item => item.id}
           numColumns={2}
