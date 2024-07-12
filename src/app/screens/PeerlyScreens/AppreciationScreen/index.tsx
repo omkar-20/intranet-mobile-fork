@@ -1,137 +1,178 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Text,
   View,
   StyleSheet,
   TextInput,
   Button,
-  Platform,
   SafeAreaView,
+  Pressable,
 } from 'react-native';
 import {
   useGetCoworkerList,
   useGetCoreValuesList,
   usePostAppreciation,
 } from './appreciation.hooks';
-import {useEffect} from 'react';
 import Typography from '../../../components/typography';
 import {useForm, Controller, SubmitHandler} from 'react-hook-form';
-import PickerSelect from '../../../components/pickers/pickerSelect';
-import RNPickerSelect, {defaultStyles} from 'react-native-picker-select';
 import Select from '../Components/Select';
-import {WebView} from 'react-native-webview';
-interface FormInput {
-  receiver: number;
-  core_value_id: number;
-  description: string;
-}
+import CenteredModal from '../Components/Modal';
+import {ScrollView} from 'react-native-gesture-handler';
+import * as yup from 'yup';
+import {yupResolver} from '@hookform/resolvers/yup';
+import CoreValueInfoModal from '../Components/CoreValueInfoModal';
+import {FormInput} from './types';
+
+import SuccessIcon from '../../../../assets/peerly/svg/Vector.svg';
+import InfoIcon from '../../../../assets/peerly/svg/info.svg';
+
+const paginationData = {
+  page: 1,
+  per_page: 500,
+};
+
+const schema = yup.object().shape({
+  receiver: yup.number().required('Co-worker name is required'),
+  core_value_id: yup.number().required('Core Value is required'),
+  description: yup.string().required('Description is required'),
+});
 
 const AppreciationScreen = () => {
-  // const {data: coreValuesList, isSuccess} = useGetCoworkerList();
-  const {data: coreValuesList} = useGetCoreValuesList();
-  // const {mutate} = usePostAppreciation();
-  console.log('Welcome to Appri', coreValuesList?.data);
-  // useEffect(() => {
-  //   mutate({
-  //     receiver: 'amar',
-  //     core_value_id: '1',
-  //     description: 'Don',
-  //   });
-  // }, [mutate]);
-  console.log('coreValuesList', coreValuesList);
+  const [isCoreValueModalVisible, setCoreValueModalVisible] = useState(false);
+  const {
+    data: coworkerList,
+    isLoading: isCorworkerListLoading,
+    isError: isCorworkerListError,
+  } = useGetCoworkerList(paginationData);
 
-  const {handleSubmit, control} = useForm({
+  const {
+    data: coreValuesDetails,
+    coreKeyValueList,
+    isLoading: isCoreValueListSuccess,
+    isError: isCoreValueListError,
+  } = useGetCoreValuesList();
+
+  const {
+    mutate: postAppriciation,
+    isLoading: isAppreciationLoading,
+    isSuccess: isAppreciationSuccess,
+    reset: resetPostAppreciation,
+  } = usePostAppreciation();
+
+  const {
+    control,
+    handleSubmit,
+    formState: {errors},
+    reset: resetForm,
+  } = useForm({
     defaultValues: {
-      receiver: 0,
-      core_value_id: 0,
-      description: '',
+      receiver: undefined,
+      core_value_id: undefined,
+      description: undefined,
     },
+    resolver: yupResolver(schema),
   });
 
-  // const onSubmit: SubmitHandler<FormInput> = data => {
-  //   console.log('Data', data);
-  // };
-
-  // const placeholder = {
-  //   label: 'Select a sport...',
-  //   value: null,
-  //   color: '#9EA0A4',
-  // };
-
+  const onSubmit: SubmitHandler<FormInput> = data => {
+    postAppriciation(data);
+  };
   return (
-    // <WebView
-    //   source={{uri: 'http://peerly.s3-website.eu-north-1.amazonaws.com/'}}
-    //   style={{flex: 1}}
-    // />
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Appreciation</Text>
-      <View style={styles.fieldWrapper}>
-        <Typography type="header" style={styles.labelText}>
-          Co-worker Name
-        </Typography>
-        <Controller
-          control={control}
-          render={({field: {onChange, value}}) => (
-            <Select
-              placeholder="Select Co-worker"
-              onValueChange={onChange}
-              value={value}
-              items={[
-                {value: 3, label: 'CoWorker1'},
-                {value: 4, label: 'CoWorker1'},
-              ]}
-              // error={errors?.co_worker_name?.message}
-            />
+    <ScrollView>
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.header}>Appreciation</Text>
+        <View style={styles.fieldWrapper}>
+          <Typography type="header" style={styles.labelText}>
+            Co-worker Name
+          </Typography>
+          <Controller
+            control={control}
+            render={({field: {onChange, value}}) => (
+              <Select
+                placeholder="Select Co-worker"
+                onValueChange={onChange}
+                value={value}
+                items={coworkerList}
+                error={errors?.receiver?.message}
+                disabled={isCorworkerListLoading || isCorworkerListError}
+              />
+            )}
+            name="receiver"
+          />
+        </View>
+        <View style={styles.fieldWrapper}>
+          <Typography type="header" style={styles.labelText}>
+            Core Value{' '}
+            <Pressable
+              style={styles.infoIcon}
+              onPress={() => setCoreValueModalVisible(true)}>
+              <InfoIcon width={16} height={16} />
+            </Pressable>
+          </Typography>
+          <Controller
+            control={control}
+            render={({field: {onChange, value}}) => (
+              <Select
+                placeholder="Select Core Value"
+                onValueChange={onChange}
+                value={value}
+                items={coreKeyValueList}
+                disabled={isCoreValueListSuccess || isCoreValueListError}
+                error={errors?.core_value_id?.message}
+              />
+            )}
+            name="core_value_id"
+          />
+        </View>
+        <View style={styles.fieldWrapper}>
+          <Typography type="header" style={styles.labelText}>
+            Description
+          </Typography>
+          <Controller
+            control={control}
+            render={({field: {onChange, onBlur, value}}) => (
+              <TextInput
+                style={styles.description}
+                placeholder="Description"
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                multiline
+              />
+            )}
+            name="description"
+          />
+          {errors.description && (
+            <Typography type="error">{errors.description.message}</Typography>
           )}
-          name="receiver"
+        </View>
+        <Button
+          title="Submit"
+          onPress={handleSubmit(onSubmit)}
+          disabled={isAppreciationLoading}
         />
-      </View>
-      <View style={styles.fieldWrapper}>
-        <Typography type="header" style={styles.labelText}>
-          Core Value
-        </Typography>
-        <Controller
-          control={control}
-          render={({field: {onChange, value}}) => (
-            <Select
-              placeholder="Select Core Value"
-              onValueChange={onChange}
-              value={value}
-              items={[
-                {value: 1, label: 'core1'},
-                {value: 2, label: 'core2'},
-              ]}
-              // error={errors?.co_worker_name?.message}
-            />
-          )}
-          name="core_value_id"
-        />
-      </View>
-      <View style={styles.fieldWrapper}>
-        <Typography type="header" style={styles.labelText}>
-          Description
-        </Typography>
-        <Controller
-          control={control}
-          rules={{
-            required: true,
+      </SafeAreaView>
+      <View>
+        <CenteredModal
+          visible={isAppreciationSuccess}
+          message={
+            'Your appreciation has been submitted successfully. We appreciate your feedback.'
+          }
+          svgImage={SuccessIcon}
+          btnTitle="Confirm"
+          onClose={() => {
+            resetPostAppreciation();
+            resetForm();
           }}
-          render={({field: {onChange, onBlur, value}}) => (
-            <TextInput
-              style={styles.description}
-              placeholder="Description"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              multiline
-            />
-          )}
-          name="description"
         />
       </View>
-      <Button title="Submit" onPress={() => {}} />
-      {/* handleSubmit(onSubmit) */}
-    </SafeAreaView>
+      <View>
+        <CoreValueInfoModal
+          visible={isCoreValueModalVisible && coreValuesDetails.length !== 0}
+          onClose={() => setCoreValueModalVisible(false)}
+          coreValuesDetails={coreValuesDetails}
+        />
+      </View>
+    </ScrollView>
   );
 };
 
@@ -167,6 +208,9 @@ const styles = StyleSheet.create({
     height: 20,
     fontSize: 16,
     borderRadius: 12,
+  },
+  infoIcon: {
+    paddingTop: 10,
   },
 });
 
