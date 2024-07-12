@@ -1,17 +1,14 @@
 export type GetCoworkersListRequest = {
   page: number;
   per_page: number;
-  name: string;
+  name?: string;
 };
 
 export type UserDetails = {
-  employee_id: string;
+  id: number;
   email: string;
   first_name: string;
   last_name: string;
-  grade: string;
-  designation: string;
-  profile_image_url: string;
 };
 
 export type GetCoworkersListResponse = {
@@ -36,6 +33,9 @@ export type CoreValue = {
 };
 
 export type GetCoreValuesResponse = {
+  success: boolean;
+  message: string;
+  status_code: number;
   data: CoreValue[];
 };
 

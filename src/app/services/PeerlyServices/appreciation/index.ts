@@ -12,15 +12,16 @@ import {
   PostAppreciationResponse,
 } from './types';
 
-export const getCoworkerList = async () => {
+export const getCoworkerList = async (payload: GetCoworkersListRequest) => {
   const response = await apiCall<
     GetCoworkersListRequest,
     GetCoworkersListResponse
   >({
     method: 'GET',
     url: GET_COWORKER_LIST,
+    params: payload,
   });
-  return response;
+  return response.data;
 };
 
 export const getCoreValuesList = async () => {
@@ -28,8 +29,7 @@ export const getCoreValuesList = async () => {
     method: 'GET',
     url: GET_CORE_VALUES,
   });
-  console.log('INSIDE SERVICE', response);
-  return response;
+  return response.data;
 };
 
 export const postAppreciationRequest = async (
@@ -43,5 +43,5 @@ export const postAppreciationRequest = async (
     url: POST_APPRECIATION_ROUTE,
     data: payload,
   });
-  return response;
+  return response.data;
 };
