@@ -21,6 +21,9 @@ import Warning from '../../assets/svg/warning.svg';
 import Lock from '../../assets/svg/lock.svg';
 import Employees from '../../assets/svg/employees.svg';
 import DrawerMenuIcon from '../../assets/svg/drawerIcon.svg';
+import StarIcon from '../../assets/svg/star.svg';
+import WhiteStar from '../../assets/svg/whiteStar.svg';
+import BlackStar from '../../assets/svg/blackStar.svg';
 
 export {
   Calendar,
@@ -46,4 +49,7 @@ export {
   Lock,
   Employees,
   DrawerMenuIcon,
+  StarIcon,
+  WhiteStar,
+  BlackStar
 };

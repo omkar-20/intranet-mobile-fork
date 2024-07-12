@@ -11,14 +11,14 @@ import {
   FlatList,
 } from 'react-native';
 
-import colors from '../../../constant/colors';
-import AppreciationCard from '.././Components/AppreciationCard';
+import colors from '../../constant/colors';
+import AppreciationCard from './components/AppreciationCard';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
-import fonts from '../../../constant/fonts';
-import FloatingGiveAppriciationButton from '../../../components/button/floatingGiveAppriciationButton';
-import LeaderBoardCard from '.././Components/LeaderBoardCard';
+import fonts from '../../constant/fonts';
+import FloatingGiveAppriciationButton from '../../components/button/floatingGiveAppriciationButton';
+import LeaderBoardCard from './components/LeaderBoardCard';
 
-const HomeScreen = () => {
+const PeerlyScreen = () => {
   const layout = useWindowDimensions();
 
   const [index, setIndex] = React.useState(0);
@@ -164,4 +164,4 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.PRIMARY,
   },
 });
-export default HomeScreen;
+export default PeerlyScreen;
