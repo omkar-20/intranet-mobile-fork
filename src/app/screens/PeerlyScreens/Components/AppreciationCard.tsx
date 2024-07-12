@@ -1,45 +1,50 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import colors from '../../../constant/colors';
 import {BlackStar} from '../../../constant/icons';
 
-const AppreciationCard = () => {
+type Props = {
+  onPress: () => void;
+};
+
+const AppreciationCard = ({onPress}: Props) => {
   return (
     <View style={styles.card}>
-      <View style={styles.header}>
-        <View style={styles.avatarContainer}>
-          <Image
-            source={require('../../../../assets/images/profile.png')}
-            style={styles.avatar}
-          />
-          <Image
-            source={require('../../../../assets/images/profile.png')}
-            //style={[styles.avatar, styles.smallAvatar]}
-            style={[styles.smallAvatar]}
-          />
-
+      <TouchableOpacity onPress={onPress}>
+        <View style={styles.header}>
+          <View style={styles.avatarContainer}>
+            <Image
+              source={require('../../../../assets/images/profile.png')}
+              style={styles.avatar}
+            />
+            <Image
+              source={require('../../../../assets/images/profile.png')}
+              //style={[styles.avatar, styles.smallAvatar]}
+              style={[styles.smallAvatar]}
+            />
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <BlackStar color={colors.SECONDARY} />
+            <Text style={styles.starCount}>30</Text>
+          </View>
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}>
-          <BlackStar color={colors.SECONDARY} />
-          <Text style={styles.starCount}>30</Text>
+        <View style={styles.content}>
+          <Text style={styles.name}>Mangesh Pawar</Text>
+          <Text style={styles.role}>Technical Lead</Text>
+          <Text style={styles.appreciation}>Appreciated by Manas Joshi</Text>
+          <Text style={styles.days}>10 Days ago</Text>
         </View>
-      </View>
-      <View style={styles.content}>
-        <Text style={styles.name}>Mangesh Pawar</Text>
-        <Text style={styles.role}>Technical Lead</Text>
-        <Text style={styles.appreciation}>Appreciated by Manas Joshi</Text>
-        <Text style={styles.days}>10 Days ago</Text>
-      </View>
-      <View style={styles.footer}>
-        <View style={{padding: 5}}>
-          <Text style={styles.coreValue}>Core Value</Text>
-          <Text style={styles.value}>Technical Excellence</Text>
+        <View style={styles.footer}>
+          <View style={{padding: 5}}>
+            <Text style={styles.coreValue}>Core Value</Text>
+            <Text style={styles.value}>Technical Excellence</Text>
+          </View>
         </View>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -88,7 +93,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     position: 'absolute',
     left: 45,
-    clipPath: '50%',
   },
   icon: {
     marginLeft: 'auto',

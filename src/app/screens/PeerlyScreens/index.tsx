@@ -12,11 +12,13 @@ import {
 } from 'react-native';
 
 import colors from '../../constant/colors';
-import AppreciationCard from './components/AppreciationCard';
+import AppreciationCard from './Components/AppreciationCard';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import fonts from '../../constant/fonts';
 import FloatingGiveAppriciationButton from '../../components/button/floatingGiveAppriciationButton';
-import LeaderBoardCard from './components/LeaderBoardCard';
+import LeaderBoardCard from './Components/LeaderBoardCard';
+import {useNavigation} from '@react-navigation/native';
+import {APPRECIATION_DETAILS} from '../../constant/screenNames';
 
 const top10 = [
   {
@@ -71,12 +73,19 @@ const top10 = [
 
 const PeerlyScreen = () => {
   const layout = useWindowDimensions();
+  const navigation = useNavigation();
 
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {key: 'top10', title: 'Top 10'},
     {key: 'activeUser', title: 'Active user'},
   ]);
+
+  const navigateToDetail = () => {
+    //alert("Here I am ");
+
+    navigation.navigate(APPRECIATION_DETAILS);
+  };
 
   const FirstRoute = () => (
     <View style={{flex: 1, backgroundColor: '#F4F6FF'}}>
@@ -149,7 +158,9 @@ const PeerlyScreen = () => {
       <View style={{flex: 1, backgroundColor: colors.WHITE}}>
         <FlatList
           data={top10}
-          renderItem={({item}) => <AppreciationCard />}
+          renderItem={({item}) => (
+            <AppreciationCard onPress={navigateToDetail} />
+          )}
           keyExtractor={item => item.id}
           numColumns={2}
         />

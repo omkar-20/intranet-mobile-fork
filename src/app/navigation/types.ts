@@ -26,6 +26,7 @@ export type RootStackParamList = {
   OTPAuthentication: {email: string};
   UpdateVersion: undefined;
   NoVersion: undefined;
+  AppreciationDetails: undefined;
 };
 
 export type MainTabParamList = {
