@@ -1,26 +1,10 @@
-import React from 'react';
-import {SafeAreaView, StyleSheet, ScrollView, Text} from 'react-native';
+import {View} from 'react-native';
+import HomeScreen from '../HomeScreen';
+//import {loginPeerlySystem} from './home.hooks';
 
-import colors from '../../constant/colors';
+function PeerlyHomeScreen() {
+  //const {} = loginPeerlySystem();
+  return <HomeScreen />;
+}
 
-const PeerlyScreen = () => {
-  return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollViewContentContainer}>
-        <Text>Hey Peerly</Text>
-      </ScrollView>
-    </SafeAreaView>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.WHITE,
-  },
-  scrollViewContentContainer: {
-    paddingBottom: 72,
-  },
-});
-
-export default PeerlyScreen;
+export default PeerlyHomeScreen;
