@@ -67,6 +67,7 @@ export function useGetCoreValuesList() {
 
 export function usePostAppreciation() {
   const {mutate, isLoading, isSuccess, isError, reset} = useMutation({
+    mutationKey: ['post_appreciation'],
     mutationFn: (payload: PostAppreciationRequestBody) =>
       postAppreciationRequest(payload),
     onError: (error: AxiosError<APIError>) => {
