@@ -1,6 +1,6 @@
 import React from 'react';
 import {ActivityIndicator, View, Text} from 'react-native';
-import HomeScreen from './HomeScreen';
+import HomeScreen from './HomeScreen/index';
 import {useLoginPeerly} from './peerlyLogin.hook';
 
 function PeerlyHomeScreen() {

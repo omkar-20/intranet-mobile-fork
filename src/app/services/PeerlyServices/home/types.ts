@@ -1,60 +1,42 @@
-export type ProfileIconDetail = {
-  id: number;
-  badge: string;
-  total_rewards: number;
-  image_url: string;
-  created_at: number;
-  updated_at: number;
-};
-
-export type GetProfileIconResponse = {
-  success: boolean;
-  message: string;
-  status_code: number;
-  data: ProfileIconDetail;
-};
-
-export type TopUsersDetails = {
-  id: number;
-  badge: string;
-  total_rewards: number;
+export type ProfileDetailsDetail = {
+  user_id: number;
   first_name: string;
   last_name: string;
-  image_url: string;
-  created_at: number;
-  updated_at: number;
+  email: string;
+  profile_image_url: string;
+  designation: string;
+  reward_quota_balance: number;
+  grade_id: number;
+  employee_id: number;
+  total_points: number;
+  badge: string;
+  badge_created_at: number;
 };
 
-export type GetTopUsersListResponse = {
+export type GetProfileDetailsResponse = {
   success: boolean;
   message: string;
   status_code: number;
-  data: {
-    top_users: TopUsersDetails[];
-  };
+  data: ProfileDetailsDetail;
 };
 
-export type ActiveUsersDetails = {
+export type ActiveOrTopUsersDetails = {
   id: number;
-  badge: string;
-  total_rewards: number;
   first_name: string;
   last_name: string;
-  image_url: string;
-  created_at: number;
-  updated_at: number;
+  profile_image_url: string;
+  badge_name: string;
+  appreciation_points: number;
 };
 
-export type GetActiveUsersListResponse = {
+export type GetActiveOrTopUsersListResponse = {
   success: boolean;
   message: string;
   status_code: number;
-  data: {
-    active_users: ActiveUsersDetails[];
-  };
+  data: ActiveOrTopUsersDetails[];
 };
 
-export type AppreciationDetails = {
+export interface AppreciationDetails {
   id: number;
   core_value_name: string;
   description: string;
@@ -70,7 +52,7 @@ export type AppreciationDetails = {
   receiver_designation: string;
   created_at: number;
   updated_at: number;
-};
+}
 
 export type GetAppreciationListResponse = {
   success: boolean;
@@ -84,5 +66,7 @@ export type GetAppreciationListResponse = {
     current_page: number;
     total_page: number;
     total_records: number;
+    page_count: number;
+    total_count: number;
   };
 };
