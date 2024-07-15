@@ -9,7 +9,7 @@ import {StyleProp, ViewStyle} from 'react-native';
 import HomeScreen from '../screens/HomeScreen';
 import LeaveScreen from '../screens/LeaveScreen';
 import TimesheetScreen from '../screens/TimesheetScreen';
-import PeerlyScreen from '../screens/PeerlyScreens';
+import PeerlyHomeScreen from '../screens/PeerlyScreens';
 import TabBar from '../components/TabBar';
 import Header from '../components/header';
 
@@ -45,7 +45,7 @@ const MainNavigator = () => {
       <MainTab.Screen name={HOME_SCREEN} component={HomeScreen} />
       <MainTab.Screen name={LEAVE_SCREEN} component={LeaveScreen} />
       <MainTab.Screen name={TIMESHEET_SCREEN} component={TimesheetScreen} />
-      <MainTab.Screen name={PEERLY_SCREEN} component={PeerlyScreen} />
+      <MainTab.Screen name={PEERLY_SCREEN} component={PeerlyHomeScreen} />
     </MainTab.Navigator>
   );
 };

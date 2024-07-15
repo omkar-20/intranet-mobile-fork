@@ -2,38 +2,37 @@ import {
   GET_ACTIVE_USERS_ROUTE,
   GET_APPRECIATION_LIST_ROUTE,
   GET_TOP_USERS_ROUTE,
-  PROFILE_ICON_ROUTE,
+  PROFILE_DETAILS_ROUTE,
 } from '../../../constant/apiRoutes';
-import {apiCall} from '../../api';
+import {apiCall} from '../index';
 import {
-  GetActiveUsersListResponse,
+  GetActiveOrTopUsersListResponse,
   GetAppreciationListResponse,
-  GetProfileIconResponse,
-  GetTopUsersListResponse,
+  GetProfileDetailsResponse,
 } from './types';
 
-export const getProfileIcon = async () => {
-  const response = await apiCall<any, GetProfileIconResponse>({
+export const getProfileDetails = async () => {
+  const response = await apiCall<any, GetProfileDetailsResponse>({
     method: 'GET',
-    url: PROFILE_ICON_ROUTE,
+    url: PROFILE_DETAILS_ROUTE,
   });
-  return response;
+  return response.data;
 };
 
 export const getTopUsersList = async () => {
-  const response = await apiCall<any, GetTopUsersListResponse>({
+  const response = await apiCall<any, GetActiveOrTopUsersListResponse>({
     method: 'GET',
     url: GET_TOP_USERS_ROUTE,
   });
-  return response;
+  return response.data;
 };
 
 export const getActiveUsersList = async () => {
-  const response = await apiCall<any, GetActiveUsersListResponse>({
+  const response = await apiCall<any, GetActiveOrTopUsersListResponse>({
     method: 'GET',
     url: GET_ACTIVE_USERS_ROUTE,
   });
-  return response;
+  return response.data;
 };
 
 export const getAppreciationList = async () => {
@@ -41,5 +40,5 @@ export const getAppreciationList = async () => {
     method: 'GET',
     url: GET_APPRECIATION_LIST_ROUTE,
   });
-  return response;
+  return response.data;
 };
