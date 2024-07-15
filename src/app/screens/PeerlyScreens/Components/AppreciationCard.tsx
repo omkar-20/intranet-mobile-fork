@@ -4,7 +4,7 @@ import colors from '../../../constant/colors';
 import {BlackStar} from '../../../constant/icons';
 
 type Props = {
-  onPress: () => void;
+  onPress?: () => void;
 };
 
 const AppreciationCard = ({onPress}: Props) => {

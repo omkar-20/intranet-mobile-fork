@@ -54,4 +54,5 @@ export {
   WhiteStar,
   BlackStar,
   FlagIcon,
+  BlackStar
 };

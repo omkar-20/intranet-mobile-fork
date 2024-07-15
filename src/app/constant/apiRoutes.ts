@@ -36,4 +36,16 @@ export const EVENTS_ROUTE = '/api/mobile/v2/events';
 
 export const TIMESHEET_WARNING_ROUTE = '/api/mobile/v2/time_sheets/warning';
 
-export const PEERLY_LOGIN_ROUTE = '/api/mobile/v2/user/login';
+// Peerly Api Routes
+export const PEERLY_LOGIN_ROUTE = '/user/login';
+export const POST_APPRECIATION_ROUTE = '/appreciation';
+export const GET_APPRECIATION_DETAILS_ROUTE = '/appreciation/:id';
+export const GET_APPRECIATION_LIST_ROUTE = '/appreciations';
+export const DELETE_APPRECIATION_ROUTE = '/appreciation/:id';
+export const PROFILE_ICON_ROUTE = '/profile';
+export const PROFILE_DETAILS_ROUTE = '/profile_details';
+export const GET_ACTIVE_USERS_ROUTE = '/active_users';
+export const GET_TOP_USERS_ROUTE = '/top_users';
+export const POST_OBJECTION_ROUTE = '/objection';
+export const GET_COWORKER_LIST = '/users/all';
+export const GET_CORE_VALUES = '/core_values';

@@ -21,7 +21,6 @@ import {
 } from '../constant/screenNames';
 import {MainTabParamList} from './types';
 
-
 const MainTab = createBottomTabNavigator<MainTabParamList>();
 
 const screenOptions: BottomTabNavigationOptions = {
