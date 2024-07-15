@@ -20,26 +20,6 @@ export type GetProfileDetailsResponse = {
   data: ProfileDetailsDetail;
 };
 
-export type TopUsersDetails = {
-  id: number;
-  badge: string;
-  total_rewards: number;
-  first_name: string;
-  last_name: string;
-  image_url: string;
-  created_at: number;
-  updated_at: number;
-};
-
-export type GetTopUsersListResponse = {
-  success: boolean;
-  message: string;
-  status_code: number;
-  data: {
-    top_users: TopUsersDetails[];
-  };
-};
-
 export type ActiveOrTopUsersDetails = {
   id: number;
   first_name: string;

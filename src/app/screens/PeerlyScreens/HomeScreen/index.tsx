@@ -111,7 +111,9 @@ const HomeScreen = () => {
       <View style={{flex: 1, backgroundColor: colors.WHITE}}>
         <FlatList
           data={appreciationList?.appreciations || []}
-          renderItem={({item}) => <AppreciationCard item={item} />}
+          renderItem={({item}) => (
+            <AppreciationCard appreciationDetails={item} />
+          )}
           keyExtractor={item => item.id}
           numColumns={2}
         />
