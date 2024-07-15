@@ -15,6 +15,7 @@ import LoginInstructionScreen from '../screens/LoginScreen/LoginInstructionScree
 import OTPAuthenticationScreen from '../screens/LoginScreen/OTPAuthenticationScreen';
 import UpdateVersionScreen from '../screens/UpdateVersion';
 import NoVersionScreen from '../screens/UpdateVersion/NoVersionInfo';
+import AppreciationScreen from '../screens/PeerlyScreens/AppreciationScreen';
 import DrawerNavigator from './DrawerNavigation';
 import {navigationRef} from '.';
 
@@ -24,6 +25,7 @@ import AsyncStore from '../services/asyncStorage';
 
 import {RootStackParamList} from './types';
 import {
+  APPRECIATION_DETAILS,
   DRAWER,
   LEAVE_DETAIL_SCREEN,
   LOGIN_INSTRUCTION_SCREEN,
@@ -131,6 +133,11 @@ const RootNavigator = () => {
             <RootStack.Screen
               name={LEAVE_DETAIL_SCREEN}
               component={LeaveDetailScreen}
+            />
+
+            <RootStack.Screen
+              name={APPRECIATION_DETAILS}
+              component={AppreciationScreen}
             />
           </>
         ) : (
