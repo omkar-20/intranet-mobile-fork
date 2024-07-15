@@ -24,6 +24,7 @@ import DrawerMenuIcon from '../../assets/svg/drawerIcon.svg';
 import StarIcon from '../../assets/svg/star.svg';
 import WhiteStar from '../../assets/svg/whiteStar.svg';
 import BlackStar from '../../assets/svg/blackStar.svg';
+import FlagIcon from '../../assets/svg/flagIcon.svg';
 
 export {
   Calendar,
@@ -51,5 +52,6 @@ export {
   DrawerMenuIcon,
   StarIcon,
   WhiteStar,
-  BlackStar
+  BlackStar,
+  FlagIcon,
 };

@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import colors from '../../../constant/colors';
+import RatingBar from '../Components/RatingBar';
 
 const AppreciationScreen = () => {
   return (
@@ -30,7 +31,12 @@ const AppreciationScreen = () => {
           We are committed to delivering excellence in every product, service,
           and experience we provide, striving for continuous improvement.
         </Text>
-        <View style={{flexDirection:"row", alignSelf:'flex-start' ,marginLeft:10}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignSelf: 'flex-start',
+            marginLeft: 10,
+          }}>
           <Text style={styles.authorByText}>Words by </Text>
           <Text style={styles.author}>Manas Joshi</Text>
         </View>
@@ -46,6 +52,8 @@ const AppreciationScreen = () => {
           more recently with desktop.
         </Text>
       </View>
+
+      <RatingBar />
     </View>
   );
 };
@@ -119,7 +127,7 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     color: colors.SECONDARY,
     marginBottom: 10,
-    fontWeight:'bold'
+    fontWeight: 'bold',
   },
   authorByText: {
     fontSize: 12,
@@ -134,7 +142,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.WHITE,
     marginLeft: 10,
     marginRight: 10,
-    padding:5, borderRadius:10
+    padding: 5,
+    borderRadius: 10,
   },
   rating: {
     alignSelf: 'flex-start',
