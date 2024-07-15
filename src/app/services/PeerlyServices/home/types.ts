@@ -1,17 +1,23 @@
-export type ProfileIconDetail = {
-  id: number;
+export type ProfileDetailsDetail = {
+  user_id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  profile_image_url: string;
+  designation: string;
+  reward_quota_balance: number;
+  grade_id: number;
+  employee_id: number;
+  total_points: number;
   badge: string;
-  total_rewards: number;
-  image_url: string;
-  created_at: number;
-  updated_at: number;
+  badge_created_at: number;
 };
 
-export type GetProfileIconResponse = {
+export type GetProfileDetailsResponse = {
   success: boolean;
   message: string;
   status_code: number;
-  data: ProfileIconDetail;
+  data: ProfileDetailsDetail;
 };
 
 export type TopUsersDetails = {
@@ -54,7 +60,7 @@ export type GetActiveUsersListResponse = {
   };
 };
 
-export type AppreciationDetails = {
+export interface AppreciationDetails {
   id: number;
   core_value_name: string;
   description: string;
@@ -70,7 +76,7 @@ export type AppreciationDetails = {
   receiver_designation: string;
   created_at: number;
   updated_at: number;
-};
+}
 
 export type GetAppreciationListResponse = {
   success: boolean;
@@ -84,5 +90,7 @@ export type GetAppreciationListResponse = {
     current_page: number;
     total_page: number;
     total_records: number;
+    page_count: number;
+    total_count: number;
   };
 };

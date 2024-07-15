@@ -17,10 +17,15 @@ import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import fonts from '../../../constant/fonts';
 import FloatingGiveAppriciationButton from '../../../components/button/floatingGiveAppriciationButton';
 import LeaderBoardCard from '.././Components/LeaderBoardCard';
+import {useGetProfileDetails, useGetAppreciationList} from './home.hooks';
 
 const HomeScreen = () => {
   const layout = useWindowDimensions();
-
+  const {data: profileDetails, isLoading: isLoadingProfileDetails} =
+    useGetProfileDetails();
+  const {data: appreciationList, isLoading: isLoadingAppreciationList} =
+    useGetAppreciationList();
+  console.log(appreciationList);
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {key: 'top10', title: 'Top 10'},
@@ -75,9 +80,12 @@ const HomeScreen = () => {
       <View style={styles.header}>
         <Text style={styles.title}>Peerly</Text>
         <View style={styles.userScore}>
-          <Text style={styles.scoreText}>2000</Text>
+          <Text style={styles.scoreText}>{profileDetails?.total_points}</Text>
           <Image
-            source={require('../../../assets/images/profile.png')}
+            source={
+              profileDetails?.profile_image_url ||
+              require('../../../../assets/images/profile.png')
+            }
             style={styles.userAvatar}
           />
         </View>
@@ -97,8 +105,8 @@ const HomeScreen = () => {
 
       <View style={{flex: 1, backgroundColor: colors.WHITE}}>
         <FlatList
-          data={[]}
-          renderItem={({item}) => <AppreciationCard />}
+          data={appreciationList?.appreciations || []}
+          renderItem={({item}) => <AppreciationCard item={item} />}
           keyExtractor={item => item.id}
           numColumns={2}
         />

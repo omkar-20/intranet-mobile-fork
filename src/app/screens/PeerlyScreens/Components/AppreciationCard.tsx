@@ -5,20 +5,29 @@ import {BlackStar} from '../../../constant/icons';
 
 type Props = {
   onPress?: () => void;
+  item: any;
 };
 
-const AppreciationCard = ({onPress}: Props) => {
+const AppreciationCard = ({onPress, item}: Props) => {
   return (
     <View style={styles.card}>
       <TouchableOpacity onPress={onPress}>
         <View style={styles.header}>
           <View style={styles.avatarContainer}>
             <Image
-              source={require('../../../../assets/images/profile.png')}
+              source={
+                item.receiver_image_url
+                  ? {uri: item.receiver_image_url}
+                  : require('../../../../assets/images/profile.png')
+              }
               style={styles.avatar}
             />
             <Image
-              source={require('../../../../assets/images/profile.png')}
+              source={
+                item?.sender_image_url
+                  ? {uri: item.sender_image_url}
+                  : require('../../../../assets/images/profile.png')
+              }
               //style={[styles.avatar, styles.smallAvatar]}
               style={[styles.smallAvatar]}
             />
@@ -29,19 +38,24 @@ const AppreciationCard = ({onPress}: Props) => {
               alignItems: 'center',
             }}>
             <BlackStar color={colors.SECONDARY} />
-            <Text style={styles.starCount}>30</Text>
+            <Text style={styles.starCount}>{item.total_rewards}</Text>
           </View>
         </View>
         <View style={styles.content}>
-          <Text style={styles.name}>Mangesh Pawar</Text>
-          <Text style={styles.role}>Technical Lead</Text>
-          <Text style={styles.appreciation}>Appreciated by Manas Joshi</Text>
+          <Text style={styles.name}>
+            {`${item.receiver_first_name} ${item.receiver_last_name}`}
+          </Text>
+          <Text style={styles.role}>{item.receiver_designation}</Text>
+          <Text style={styles.appreciation}>
+            Appreciated by{' '}
+            {`${item.sender_first_name} ${item.sender_last_name}`}
+          </Text>
           <Text style={styles.days}>10 Days ago</Text>
         </View>
         <View style={styles.footer}>
           <View style={{padding: 5}}>
             <Text style={styles.coreValue}>Core Value</Text>
-            <Text style={styles.value}>Technical Excellence</Text>
+            <Text style={styles.value}>{item.core_value_name}</Text>
           </View>
         </View>
       </TouchableOpacity>
