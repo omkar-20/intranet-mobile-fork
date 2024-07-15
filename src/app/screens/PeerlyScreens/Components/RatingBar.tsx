@@ -8,19 +8,12 @@ const RatingBar = () => {
 
   return (
     <View style={styles.container}>
-      <View style={{flexDirection: 'row'}}>
+      <View style={styles.ratingCountContainer}>
         <Text style={styles.label}>Ratings</Text>
         <Text style={styles.info}>4 people rated</Text>
       </View>
-      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <View
-          style={{
-            backgroundColor: '#EE3E54',
-            height: 25,
-            width: 25,
-            borderRadius: 5,
-            padding: 5,
-          }}>
+      <View style={styles.flagContainer}>
+        <View style={styles.flagIcon}>
           <FlagIcon />
         </View>
       </View>
@@ -57,7 +50,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   info: {
-    margin:2,
+    margin: 2,
     color: '#888',
     marginBottom: 10,
   },
@@ -77,6 +70,18 @@ const styles = StyleSheet.create({
   sliderLabel: {
     fontSize: 14,
   },
+  flagContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  flagIcon: {
+    backgroundColor: '#EE3E54',
+    height: 25,
+    width: 25,
+    borderRadius: 5,
+    padding: 5,
+  },
+  ratingCountContainer: {flexDirection: 'row'},
 });
 
 export default RatingBar;

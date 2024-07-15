@@ -5,7 +5,6 @@ import RatingBar from '../Components/RatingBar';
 
 const AppreciationScreen = () => {
   return (
-    // <View style={styles.card}>
     <View style={styles.container}>
       <View style={{alignItems: 'center'}}>
         <Image
@@ -16,7 +15,6 @@ const AppreciationScreen = () => {
       <View style={{alignItems: 'center', position: 'absolute', right: 80}}>
         <Image
           source={require('../../../../assets/images/profile.png')}
-          //style={[styles.avatar, styles.smallAvatar]}
           style={[styles.smallAvatar]}
         />
       </View>
@@ -62,7 +60,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
-    //justifyContent: 'center',
     marginLeft: 30,
     marginRight: 30,
     marginTop: 80,
@@ -178,8 +175,6 @@ const styles = StyleSheet.create({
     marginTop: -20,
     borderColor: colors.WHITE,
     borderWidth: 2,
-    //overflow: 'hidden',
-    //position: 'absolute',
   },
   avatarContainer: {
     flexDirection: 'row',
