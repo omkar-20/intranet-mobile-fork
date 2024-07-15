@@ -34,7 +34,6 @@ const HomeScreen = () => {
 
   const {data: topUsersList} = useGetTopUsersList();
 
-  console.log(appreciationList);
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {key: 'top10', title: 'Top 10'},
