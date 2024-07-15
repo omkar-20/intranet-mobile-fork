@@ -84,7 +84,9 @@ const HomeScreen = () => {
       <View style={styles.header}>
         <Text style={styles.title}>Peerly</Text>
         <View style={styles.userScore}>
-          <Text style={styles.scoreText}>{profileDetails?.total_points}</Text>
+          <Text style={styles.scoreText}>
+            {profileDetails?.total_points || 0}
+          </Text>
           <Image
             source={
               profileDetails?.profile_image_url ||
