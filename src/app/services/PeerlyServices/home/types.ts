@@ -40,24 +40,20 @@ export type GetTopUsersListResponse = {
   };
 };
 
-export type ActiveUsersDetails = {
+export type ActiveOrTopUsersDetails = {
   id: number;
-  badge: string;
-  total_rewards: number;
   first_name: string;
   last_name: string;
-  image_url: string;
-  created_at: number;
-  updated_at: number;
+  profile_image_url: string;
+  badge_name: string;
+  appreciation_points: number;
 };
 
-export type GetActiveUsersListResponse = {
+export type GetActiveOrTopUsersListResponse = {
   success: boolean;
   message: string;
   status_code: number;
-  data: {
-    active_users: ActiveUsersDetails[];
-  };
+  data: ActiveOrTopUsersDetails[];
 };
 
 export interface AppreciationDetails {

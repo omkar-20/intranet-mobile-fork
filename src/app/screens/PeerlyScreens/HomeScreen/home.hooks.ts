@@ -38,7 +38,13 @@ export function useGetTopUsersList() {
       }
     },
   });
-  return {data, isLoading, isFetching, isSuccess, isError};
+  return {
+    data: data?.data || [],
+    isLoading,
+    isFetching,
+    isSuccess,
+    isError,
+  };
 }
 
 export function useGetActiveUsersList() {
@@ -53,7 +59,13 @@ export function useGetActiveUsersList() {
       }
     },
   });
-  return {data, isLoading, isFetching, isSuccess, isError};
+  return {
+    data: data?.data || [],
+    isLoading,
+    isFetching,
+    isSuccess,
+    isError,
+  };
 }
 
 export function useGetAppreciationList() {

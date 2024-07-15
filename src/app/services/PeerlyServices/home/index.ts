@@ -6,10 +6,9 @@ import {
 } from '../../../constant/apiRoutes';
 import {apiCall} from '../index';
 import {
-  GetActiveUsersListResponse,
+  GetActiveOrTopUsersListResponse,
   GetAppreciationListResponse,
   GetProfileDetailsResponse,
-  GetTopUsersListResponse,
 } from './types';
 
 export const getProfileDetails = async () => {
@@ -21,7 +20,7 @@ export const getProfileDetails = async () => {
 };
 
 export const getTopUsersList = async () => {
-  const response = await apiCall<any, GetTopUsersListResponse>({
+  const response = await apiCall<any, GetActiveOrTopUsersListResponse>({
     method: 'GET',
     url: GET_TOP_USERS_ROUTE,
   });
@@ -29,7 +28,7 @@ export const getTopUsersList = async () => {
 };
 
 export const getActiveUsersList = async () => {
-  const response = await apiCall<any, GetActiveUsersListResponse>({
+  const response = await apiCall<any, GetActiveOrTopUsersListResponse>({
     method: 'GET',
     url: GET_ACTIVE_USERS_ROUTE,
   });
