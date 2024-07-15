@@ -67,7 +67,6 @@ const styles = StyleSheet.create({
   modalText: {
     fontSize: 16,
     marginBottom: 20,
-    fontFamily: 'Montserrat',
   },
   buttonRow: {
     flexDirection: 'row',

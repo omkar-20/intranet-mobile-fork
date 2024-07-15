@@ -17,10 +17,8 @@ export const apiCall = async <T, D>(config: AxiosRequestConfig<T>) => {
   let authToken: string | null;
   if (config.url === PEERLY_LOGIN_ROUTE) {
     authToken = await AsyncStore.getItem(AsyncStore.AUTH_TOKEN_KEY);
-    // Temporary hardcoaded the token once all API integration complete we will remove it.
     config.headers = {
-      'Intranet-Auth':
-        'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo5Mjl9.6zCALizV0v58UmaJIZ16i1ASULyks6uCj8ubcRrH3dU',
+      'Intranet-Auth': authToken,
     };
   } else {
     authToken = await AsyncStore.getItem(AsyncStore.PEERLY_AUTH_TOKEN_KEY);
