@@ -19,5 +19,3 @@ export const DRAWER = 'Drawer';
 
 export const UPDATE_VERSION = 'UpdateVersion';
 export const NO_VERSION = 'NoVersion';
-
-export const APPRECIATION_DETAILS = 'AppreciationDetails';
