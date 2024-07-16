@@ -5,14 +5,14 @@ import {BlackStar} from '../../../constant/icons';
 import {AppreciationDetails} from '../../../services/PeerlyServices/home/types';
 
 type Props = {
-  onPress?: () => void;
+  onPress?: (id: number) => void;
   appreciationDetails: AppreciationDetails;
 };
 
 const AppreciationCard = ({onPress, appreciationDetails}: Props) => {
   return (
     <View style={styles.card}>
-      <TouchableOpacity onPress={onPress}>
+      <TouchableOpacity onPress={() => onPress(appreciationDetails.id)}>
         <View style={styles.header}>
           <View style={styles.avatarContainer}>
             <Image

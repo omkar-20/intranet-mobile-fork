@@ -54,6 +54,11 @@ export interface AppreciationDetails {
   updated_at: number;
 }
 
+export type GetAppreciationListRequest = {
+  page: number;
+  per_page: number;
+};
+
 export type GetAppreciationListResponse = {
   success: boolean;
   message: string;
