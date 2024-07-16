@@ -1,13 +1,42 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import colors from '../../../constant/colors';
 import RatingBar from '../Components/RatingBar';
 import ObjectionModal from '../Components/ObjectionModal';
+import {usePostReward} from './details.hooks';
+import CenteredModal from '../Components/Modal';
+import SuccessIcon from '../../../../assets/peerly/svg/rewardSuccess.svg';
 
 const AppreciationDetailsScreen = ({route}) => {
-  const [isObjectionModalVisible, setObjectionModalVisible] = useState(false);
   const {cardId, appriciationList} = route.params;
   const cardDetails = appriciationList.find(item => item.id === cardId);
+  console.log(cardDetails, cardDetails);
+  const [reward, setReward] = useState(0);
+  const [isObjectionModalVisible, setObjectionModalVisible] = useState(false);
+
+  const {
+    mutate: postReward,
+    isLoading: isLoadingPostReward,
+    isSuccess: isSuccessPostReward,
+    reset: resetPostReward,
+  } = usePostReward();
+
+  useEffect(() => {
+    if (cardDetails) {
+      setReward(cardDetails.given_reward_point);
+    }
+  }, [cardDetails]);
+
+  const handleReward = (reward: number) => {
+    console.log('reward', reward);
+    const payload = {
+      params: {
+        id: cardDetails.id,
+      },
+      body: {point: reward},
+    };
+    postReward(payload);
+  };
 
   return (
     <View style={styles.container}>
@@ -61,13 +90,29 @@ const AppreciationDetailsScreen = ({route}) => {
 
       <RatingBar
         onPressObjection={() => setObjectionModalVisible(true)}
-        totalPeopleRatings={cardDetails.total_rewards}
-        myRating={cardDetails.given_reward_point}
+        rewardedByPeople={cardDetails.total_rewards}
+        reward={reward}
+        setReward={handleReward}
+        disableSlider={isLoadingPostReward}
+        isRewardAlreadyGiven={cardDetails?.given_reward_point > 0}
       />
       <ObjectionModal
         visible={isObjectionModalVisible}
         onClose={() => setObjectionModalVisible(false)}
       />
+      <View>
+        <CenteredModal
+          visible={isSuccessPostReward}
+          message={
+            'Your Rewards has been submitted successfully. We appreciate your feedback.'
+          }
+          svgImage={SuccessIcon}
+          btnTitle="Okay"
+          onClose={() => {
+            resetPostReward();
+          }}
+        />
+      </View>
     </View>
   );
 };
