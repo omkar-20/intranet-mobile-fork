@@ -8,6 +8,7 @@ import {
   PostRewardRequestBody,
   PostRewaredResponse,
   PostObjectionRequest,
+  PostObjectionRequestBody,
   PostObjectionResponse,
 } from './types';
 
@@ -22,10 +23,14 @@ export const postReward = async (payload: PostRewardRequest) => {
 };
 
 export const postObjection = async (payload: PostObjectionRequest) => {
-  const response = await apiCall<PostObjectionRequest, PostObjectionResponse>({
+  const {body, params} = payload;
+  const response = await apiCall<
+    PostObjectionRequestBody,
+    PostObjectionResponse
+  >({
     method: 'POST',
-    url: POST_OBJECTION_ROUTE,
-    data: payload,
+    url: `${POST_OBJECTION_ROUTE}/${params.id}`,
+    data: body,
   });
   return response.data;
 };

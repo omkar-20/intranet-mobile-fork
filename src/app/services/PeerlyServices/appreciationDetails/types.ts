@@ -21,8 +21,16 @@ export type PostRewaredResponse = {
 };
 
 export type PostObjectionRequest = {
+  params: {
+    id: number;
+  };
+  body: {reporting_comment: string};
+};
+
+export type PostObjectionRequestBody = {
   reporting_comment: string;
 };
+
 export type PostObjectionResponse = {
   success: boolean;
   message: string;

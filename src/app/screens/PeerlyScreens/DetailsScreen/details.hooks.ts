@@ -12,7 +12,7 @@ import {
 } from '../../../services/PeerlyServices/appreciationDetails/types';
 
 export function usePostReward() {
-  const {mutate, data, isLoading, isSuccess, isError, reset} = useMutation({
+  return useMutation({
     mutationKey: ['post_reward'],
     mutationFn: (payload: PostRewardRequest) => postReward(payload),
     onError: (error: AxiosError<APIError>) => {
@@ -23,14 +23,12 @@ export function usePostReward() {
       }
     },
   });
-
-  return {mutate, data, isLoading, isSuccess, isError, reset};
 }
 
-export function usePostObjection(payload: PostObjectionRequest) {
-  const {mutate, data, isLoading, isError} = useMutation({
+export function usePostObjection() {
+  return useMutation({
     mutationKey: ['post_objection'],
-    mutationFn: () => postObjection(payload),
+    mutationFn: (payload: PostObjectionRequest) => postObjection(payload),
     onError: (error: AxiosError<APIError>) => {
       if (error.response?.data.message) {
         toast(error.response.data.message, 'error');
@@ -39,5 +37,4 @@ export function usePostObjection(payload: PostObjectionRequest) {
       }
     },
   });
-  return {mutate, data, isLoading, isError};
 }

@@ -3,15 +3,16 @@ import {View, Text, StyleSheet, Image} from 'react-native';
 import colors from '../../../constant/colors';
 import RatingBar from '../Components/RatingBar';
 import ObjectionModal from '../Components/ObjectionModal';
-import {usePostReward} from './details.hooks';
+import {usePostReward, usePostObjection} from './details.hooks';
 import CenteredModal from '../Components/Modal';
-import SuccessIcon from '../../../../assets/peerly/svg/rewardSuccess.svg';
+import RewardSuccessIcon from '../../../../assets/peerly/svg/rewardSuccess.svg';
+import SuccessIcon from '../../../../assets/peerly/svg/Vector.svg';
 
 const AppreciationDetailsScreen = ({route}) => {
   const {cardId, appriciationList} = route.params;
   const cardDetails = appriciationList.find(item => item.id === cardId);
-  console.log(cardDetails, cardDetails);
   const [reward, setReward] = useState(0);
+  const [reason, setReason] = useState('');
   const [isObjectionModalVisible, setObjectionModalVisible] = useState(false);
 
   const {
@@ -21,21 +22,43 @@ const AppreciationDetailsScreen = ({route}) => {
     reset: resetPostReward,
   } = usePostReward();
 
+  const {
+    mutate: postObjection,
+    isLoading: isLoadingPostObjection,
+    isSuccess: isSuccessPostObjection,
+    reset: resetPostObjection,
+  } = usePostObjection();
+
   useEffect(() => {
     if (cardDetails) {
       setReward(cardDetails.given_reward_point);
     }
   }, [cardDetails]);
 
-  const handleReward = (reward: number) => {
-    console.log('reward', reward);
+  useEffect(() => {
+    if (isSuccessPostObjection && isObjectionModalVisible) {
+      setObjectionModalVisible(false);
+    }
+  }, [isSuccessPostObjection, isObjectionModalVisible]);
+
+  const handleReward = (point: number) => {
     const payload = {
       params: {
         id: cardDetails.id,
       },
-      body: {point: reward},
+      body: {point: point},
     };
     postReward(payload);
+  };
+
+  const handleObjectionReason = () => {
+    const payload = {
+      params: {
+        id: cardDetails.id,
+      },
+      body: {reporting_comment: reason},
+    };
+    postObjection(payload);
   };
 
   return (
@@ -99,6 +122,22 @@ const AppreciationDetailsScreen = ({route}) => {
       <ObjectionModal
         visible={isObjectionModalVisible}
         onClose={() => setObjectionModalVisible(false)}
+        onConfirm={handleObjectionReason}
+        setReason={setReason}
+        reason={reason}
+        isDisabled={isLoadingPostObjection}
+      />
+      <CenteredModal
+        visible={isSuccessPostObjection}
+        message={
+          'Your objection reason has been submitted successfully. We appreciate your feedback.'
+        }
+        svgImage={SuccessIcon}
+        btnTitle="Okay"
+        onClose={() => {
+          setReason('');
+          resetPostObjection();
+        }}
       />
       <View>
         <CenteredModal
@@ -106,7 +145,7 @@ const AppreciationDetailsScreen = ({route}) => {
           message={
             'Your Rewards has been submitted successfully. We appreciate your feedback.'
           }
-          svgImage={SuccessIcon}
+          svgImage={RewardSuccessIcon}
           btnTitle="Okay"
           onClose={() => {
             resetPostReward();

@@ -40,7 +40,7 @@ const AppreciationCard = ({onPress, appreciationDetails}: Props) => {
             }}>
             <BlackStar color={colors.SECONDARY} />
             <Text style={styles.starCount}>
-              {appreciationDetails.total_rewards}
+              {appreciationDetails.total_reward_points}
             </Text>
           </View>
         </View>

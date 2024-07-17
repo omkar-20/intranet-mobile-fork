@@ -100,13 +100,18 @@ const HomeScreen = ({navigation}) => {
       <View style={styles.header}>
         <Text style={styles.title}>Peerly</Text>
         <View style={styles.userScore}>
-          <Text style={styles.scoreText}>
-            {profileDetails?.total_points || 0}
+          <Text>
+            {profileDetails?.total_points && (
+              <Text style={styles.scoreText}>
+                {profileDetails?.total_points}
+              </Text>
+            )}
           </Text>
           <Image
             source={
-              profileDetails?.profile_image_url ||
-              require('../../../../assets/images/profile.png')
+              profileDetails?.profile_image_url
+                ? {uri: profileDetails?.profile_image_url}
+                : require('../../../../assets/images/profile.png')
             }
             style={styles.userAvatar}
           />
