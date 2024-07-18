@@ -18,11 +18,11 @@ import fonts from '../../../constant/fonts';
 import FloatingGiveAppreciationButton from '../../../components/button/floatingGiveAppreciationButton';
 import LeaderBoardCard from '.././Components/LeaderBoardCard';
 import {
-  useGetProfileDetails,
   useGetAppreciationList,
   useGetActiveUsersList,
   useGetTopUsersList,
 } from './home.hooks';
+import {useGetProfileDetails} from '../ProfileDetailScreen/profile.hooks';
 import {
   APPRECIATION,
   APPRECIATION_DETAILS,

@@ -1,25 +1,3 @@
-export type ProfileDetailsDetail = {
-  user_id: number;
-  first_name: string;
-  last_name: string;
-  email: string;
-  profile_image_url: string;
-  designation: string;
-  reward_quota_balance: number;
-  grade_id: number;
-  employee_id: number;
-  total_points: number;
-  badge: string;
-  badge_created_at: number;
-};
-
-export type GetProfileDetailsResponse = {
-  success: boolean;
-  message: string;
-  status_code: number;
-  data: ProfileDetailsDetail;
-};
-
 export type ActiveOrTopUsersDetails = {
   id: number;
   first_name: string;
