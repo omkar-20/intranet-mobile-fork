@@ -23,13 +23,21 @@ import {
   useGetActiveUsersList,
   useGetTopUsersList,
 } from './home.hooks';
-import {APPRECIATION} from '../../../constant/screenNames';
+import {
+  APPRECIATION,
+  APPRECIATION_DETAILS,
+} from '../../../constant/screenNames';
+
+const paginationData = {
+  page: 1,
+  per_page: 500,
+};
 
 const HomeScreen = ({navigation}) => {
   const layout = useWindowDimensions();
   const {data: profileDetails} = useGetProfileDetails();
 
-  const {data: appreciationList} = useGetAppreciationList();
+  const {data: appreciationList} = useGetAppreciationList(paginationData);
 
   const {data: activeUsersList} = useGetActiveUsersList();
 
@@ -80,18 +88,30 @@ const HomeScreen = ({navigation}) => {
     />
   );
 
+  const handleAppreciationCardClick = (id: number) => {
+    navigation.navigate(APPRECIATION_DETAILS, {
+      cardId: id,
+      appriciationList: appreciationList,
+    });
+  };
+
   return (
     <>
       <View style={styles.header}>
         <Text style={styles.title}>Peerly</Text>
         <View style={styles.userScore}>
-          <Text style={styles.scoreText}>
-            {profileDetails?.total_points || 0}
+          <Text>
+            {profileDetails?.total_points && (
+              <Text style={styles.scoreText}>
+                {profileDetails?.total_points}
+              </Text>
+            )}
           </Text>
           <Image
             source={
-              profileDetails?.profile_image_url ||
-              require('../../../../assets/images/profile.png')
+              profileDetails?.profile_image_url
+                ? {uri: profileDetails?.profile_image_url}
+                : require('../../../../assets/images/profile.png')
             }
             style={styles.userAvatar}
           />
@@ -112,9 +132,12 @@ const HomeScreen = ({navigation}) => {
 
       <View style={{flex: 1, backgroundColor: colors.WHITE}}>
         <FlatList
-          data={appreciationList?.appreciations || []}
+          data={appreciationList || []}
           renderItem={({item}) => (
-            <AppreciationCard appreciationDetails={item} />
+            <AppreciationCard
+              appreciationDetails={item}
+              onPress={handleAppreciationCardClick}
+            />
           )}
           keyExtractor={item => item.id}
           numColumns={2}

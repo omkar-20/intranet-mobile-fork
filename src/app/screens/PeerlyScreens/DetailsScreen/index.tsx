@@ -1,33 +1,99 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import colors from '../../../constant/colors';
 import RatingBar from '../Components/RatingBar';
+import ObjectionModal from '../Components/ObjectionModal';
+import {usePostReward, usePostObjection} from './details.hooks';
+import CenteredModal from '../Components/Modal';
+import RewardSuccessIcon from '../../../../assets/peerly/svg/rewardSuccess.svg';
+import SuccessIcon from '../../../../assets/peerly/svg/Vector.svg';
 
-const AppreciationScreen = () => {
+const AppreciationDetailsScreen = ({route}) => {
+  const {cardId, appriciationList} = route.params;
+  const cardDetails = appriciationList.find(item => item.id === cardId);
+  const [reward, setReward] = useState(0);
+  const [reason, setReason] = useState('');
+  const [isObjectionModalVisible, setObjectionModalVisible] = useState(false);
+
+  const {
+    mutate: postReward,
+    isLoading: isLoadingPostReward,
+    isSuccess: isSuccessPostReward,
+    reset: resetPostReward,
+  } = usePostReward();
+
+  const {
+    mutate: postObjection,
+    isLoading: isLoadingPostObjection,
+    isSuccess: isSuccessPostObjection,
+    reset: resetPostObjection,
+  } = usePostObjection();
+
+  useEffect(() => {
+    if (cardDetails) {
+      setReward(cardDetails.given_reward_point);
+    }
+  }, [cardDetails]);
+
+  useEffect(() => {
+    if (isSuccessPostObjection && isObjectionModalVisible) {
+      setObjectionModalVisible(false);
+    }
+  }, [isSuccessPostObjection, isObjectionModalVisible]);
+
+  const handleReward = (point: number) => {
+    const payload = {
+      params: {
+        id: cardDetails.id,
+      },
+      body: {point: point},
+    };
+    postReward(payload);
+  };
+
+  const handleObjectionReason = () => {
+    const payload = {
+      params: {
+        id: cardDetails.id,
+      },
+      body: {reporting_comment: reason},
+    };
+    postObjection(payload);
+  };
+
   return (
     <View style={styles.container}>
       <View style={{alignItems: 'center'}}>
         <Image
-          source={require('../../../../assets/images/profile.png')}
+          source={
+            cardDetails?.receiver_image_url
+              ? {uri: cardDetails.receiver_image_url}
+              : require('../../../../assets/images/profile.png')
+          }
           style={styles.avatar}
         />
       </View>
       <View style={{alignItems: 'center', position: 'absolute', right: 80}}>
         <Image
-          source={require('../../../../assets/images/profile.png')}
+          source={
+            cardDetails?.sender_image_url
+              ? {uri: cardDetails.sender_image_url}
+              : require('../../../../assets/images/profile.png')
+          }
           style={[styles.smallAvatar]}
         />
       </View>
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
         <View style={styles.info}>
-          <Text style={styles.name}>Mangesh Pawar</Text>
-          <Text style={styles.title}>Technical Lead</Text>
+          <Text style={styles.name}>
+            {`${cardDetails.receiver_first_name} ${cardDetails.receiver_last_name} `}
+          </Text>
+          <Text style={styles.title}>{cardDetails.receiver_designation}</Text>
         </View>
 
-        <Text style={styles.tag}>Technical Excellence</Text>
+        <Text style={styles.tag}>{cardDetails.core_value_name}</Text>
         <Text style={styles.description}>
-          We are committed to delivering excellence in every product, service,
-          and experience we provide, striving for continuous improvement.
+          {cardDetails.core_value_description}
         </Text>
         <View
           style={{
@@ -36,22 +102,56 @@ const AppreciationScreen = () => {
             marginLeft: 10,
           }}>
           <Text style={styles.authorByText}>Words by </Text>
-          <Text style={styles.author}>Manas Joshi</Text>
+          <Text
+            style={
+              styles.author
+            }>{`${cardDetails.sender_first_name} ${cardDetails.sender_last_name}`}</Text>
         </View>
 
-        <Text style={styles.loremText}>
-          Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry. Lorem Ipsum has been the industry's standard dummy text ever
-          since the 1500s, when an unknown printer took a galley of type and
-          scrambled it to make a type specimen book. It has survived not only
-          five centuries, but also the leap into electronic typesetting,
-          remaining essentially unchanged. It was popularised in the 1960s with
-          the release of Letraset sheets containing Lorem Ipsum passages, and
-          more recently with desktop.
-        </Text>
+        <Text style={styles.loremText}>{cardDetails.description}</Text>
       </View>
 
-      <RatingBar />
+      <RatingBar
+        onPressObjection={() => setObjectionModalVisible(true)}
+        rewardedByPeople={cardDetails.total_rewards}
+        reward={reward}
+        setReward={handleReward}
+        disableSlider={isLoadingPostReward}
+        isRewardAlreadyGiven={cardDetails?.given_reward_point > 0}
+      />
+      <ObjectionModal
+        visible={isObjectionModalVisible}
+        onClose={() => setObjectionModalVisible(false)}
+        onConfirm={handleObjectionReason}
+        setReason={setReason}
+        reason={reason}
+        isDisabled={isLoadingPostObjection}
+      />
+      <CenteredModal
+        visible={isSuccessPostObjection}
+        message={
+          'Your objection reason has been submitted successfully. We appreciate your feedback.'
+        }
+        svgImage={SuccessIcon}
+        btnTitle="Okay"
+        onClose={() => {
+          setReason('');
+          resetPostObjection();
+        }}
+      />
+      <View>
+        <CenteredModal
+          visible={isSuccessPostReward}
+          message={
+            'Your Rewards has been submitted successfully. We appreciate your feedback.'
+          }
+          svgImage={RewardSuccessIcon}
+          btnTitle="Okay"
+          onClose={() => {
+            resetPostReward();
+          }}
+        />
+      </View>
     </View>
   );
 };
@@ -183,4 +283,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AppreciationScreen;
+export default AppreciationDetailsScreen;

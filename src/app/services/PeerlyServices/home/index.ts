@@ -8,6 +8,7 @@ import {apiCall} from '../index';
 import {
   GetActiveOrTopUsersListResponse,
   GetAppreciationListResponse,
+  GetAppreciationListRequest,
   GetProfileDetailsResponse,
 } from './types';
 
@@ -35,10 +36,16 @@ export const getActiveUsersList = async () => {
   return response.data;
 };
 
-export const getAppreciationList = async () => {
-  const response = await apiCall<any, GetAppreciationListResponse>({
+export const getAppreciationList = async (
+  payload: GetAppreciationListRequest,
+) => {
+  const response = await apiCall<
+    GetAppreciationListRequest,
+    GetAppreciationListResponse
+  >({
     method: 'GET',
     url: GET_APPRECIATION_LIST_ROUTE,
+    params: payload,
   });
   return response.data;
 };

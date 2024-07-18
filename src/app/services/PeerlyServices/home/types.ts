@@ -39,8 +39,11 @@ export type GetActiveOrTopUsersListResponse = {
 export interface AppreciationDetails {
   id: number;
   core_value_name: string;
+  core_value_description: string;
   description: string;
   total_rewards: number;
+  total_reward_points: number;
+  given_reward_point: number;
   quarter: string;
   sender_first_name: string;
   sender_last_name: string;
@@ -53,6 +56,11 @@ export interface AppreciationDetails {
   created_at: number;
   updated_at: number;
 }
+
+export type GetAppreciationListRequest = {
+  page: number;
+  per_page: number;
+};
 
 export type GetAppreciationListResponse = {
   success: boolean;

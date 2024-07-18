@@ -1,31 +1,50 @@
-import React, {useState} from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import React from 'react';
+import {View, Text, StyleSheet, Pressable} from 'react-native';
 import Slider from '@react-native-community/slider';
 import {FlagIcon} from '../../../constant/icons';
 
-const RatingBar = () => {
-  const [rating, setRating] = useState(0);
+interface RatingBarProps {
+  onPressObjection: () => void;
+  rewardedByPeople: number;
+  reward: number;
+  setReward: (rating: number) => void;
+  disableSlider: boolean;
+  isRewardAlreadyGiven: boolean;
+}
 
+const RatingBar: React.FC<RatingBarProps> = ({
+  onPressObjection,
+  rewardedByPeople,
+  reward,
+  setReward,
+  disableSlider,
+  isRewardAlreadyGiven,
+}) => {
   return (
     <View style={styles.container}>
       <View style={styles.ratingCountContainer}>
-        <Text style={styles.label}>Ratings</Text>
-        <Text style={styles.info}>4 people rated</Text>
+        <Text style={styles.label}>Rewards</Text>
+        <Text style={styles.info}>
+          Rewards given by {rewardedByPeople} people
+        </Text>
       </View>
-      <View style={styles.flagContainer}>
-        <View style={styles.flagIcon}>
-          <FlagIcon />
+      <Pressable onPress={onPressObjection}>
+        <View style={styles.flagContainer}>
+          <View style={styles.flagIcon}>
+            <FlagIcon />
+          </View>
         </View>
-      </View>
+      </Pressable>
 
       <View style={styles.sliderContainer}>
         <Slider
+          disabled={disableSlider || isRewardAlreadyGiven}
           style={styles.slider}
           minimumValue={0}
-          maximumValue={3}
+          maximumValue={5}
           step={1}
-          value={rating}
-          onValueChange={value => setRating(value)}
+          value={reward}
+          onValueChange={value => setReward(value)}
           thumbImage={require('../../../../assets/images/starIcon.png')}
           minimumTrackTintColor="#FFD700"
           maximumTrackTintColor="#DDD"

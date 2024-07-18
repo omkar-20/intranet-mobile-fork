@@ -10,6 +10,7 @@ import {
   getAppreciationList,
 } from '../../../services/PeerlyServices/home';
 import {APIError} from '../types';
+import {GetAppreciationListRequest} from '../../../services/PeerlyServices/home/types';
 
 export function useGetProfileDetails() {
   const {data, isLoading, isFetching, isSuccess, isError} = useQuery({
@@ -68,10 +69,10 @@ export function useGetActiveUsersList() {
   };
 }
 
-export function useGetAppreciationList() {
+export function useGetAppreciationList(payload: GetAppreciationListRequest) {
   const {data, isLoading, isFetching, isSuccess, isError} = useQuery({
     queryKey: ['appreciation_list'],
-    queryFn: getAppreciationList,
+    queryFn: () => getAppreciationList(payload),
     onError: (error: AxiosError<APIError>) => {
       if (error.response?.data.message) {
         toast(error.response.data.message, 'error');
@@ -80,5 +81,11 @@ export function useGetAppreciationList() {
       }
     },
   });
-  return {data: data?.data || [], isLoading, isFetching, isSuccess, isError};
+  return {
+    data: data?.data.appreciations || [],
+    isLoading,
+    isFetching,
+    isSuccess,
+    isError,
+  };
 }
