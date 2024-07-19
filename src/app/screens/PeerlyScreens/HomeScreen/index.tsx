@@ -9,6 +9,7 @@ import {
   Image,
   useWindowDimensions,
   FlatList,
+  Pressable,
 } from 'react-native';
 
 import colors from '../../../constant/colors';
@@ -26,6 +27,7 @@ import {useGetProfileDetails} from '../ProfileDetailScreen/profile.hooks';
 import {
   APPRECIATION,
   APPRECIATION_DETAILS,
+  PROFILE_DETAILS,
 } from '../../../constant/screenNames';
 
 const paginationData = {
@@ -97,26 +99,33 @@ const HomeScreen = ({navigation}) => {
 
   return (
     <>
-      <View style={styles.header}>
-        <Text style={styles.title}>Peerly</Text>
-        <View style={styles.userScore}>
-          <Text>
-            {profileDetails?.total_points && (
-              <Text style={styles.scoreText}>
-                {profileDetails?.total_points}
-              </Text>
-            )}
-          </Text>
-          <Image
-            source={
-              profileDetails?.profile_image_url
-                ? {uri: profileDetails?.profile_image_url}
-                : require('../../../../assets/images/profile.png')
-            }
-            style={styles.userAvatar}
-          />
+      <Pressable
+        onPress={() =>
+          navigation.navigate(PROFILE_DETAILS, {
+            details: profileDetails,
+          })
+        }>
+        <View style={styles.header}>
+          <Text style={styles.title}>Peerly</Text>
+          <View style={styles.userScore}>
+            <Text>
+              {profileDetails?.total_points && (
+                <Text style={styles.scoreText}>
+                  {profileDetails?.total_points}
+                </Text>
+              )}
+            </Text>
+            <Image
+              source={
+                profileDetails?.profile_image_url
+                  ? {uri: profileDetails?.profile_image_url}
+                  : require('../../../../assets/images/profile.png')
+              }
+              style={styles.userAvatar}
+            />
+          </View>
         </View>
-      </View>
+      </Pressable>
 
       <TextInput style={styles.searchInput} placeholder={'Search Co-Worker'} />
 
