@@ -22,8 +22,7 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import CoreValueInfoModal from '../Components/CoreValueInfoModal';
 import {FormInput} from './types';
 
-import SuccessIcon from '../../../../assets/peerly/svg/Vector.svg';
-import InfoIcon from '../../../../assets/peerly/svg/info.svg';
+import {SuccessIcon, InfoIcon} from '../constants/icons';
 
 const paginationData = {
   page: 1,
