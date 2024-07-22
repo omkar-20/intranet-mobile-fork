@@ -32,7 +32,7 @@ import {
 
 const paginationData = {
   page: 1,
-  per_page: 500,
+  page_size: 500,
 };
 
 const HomeScreen = ({navigation}) => {
