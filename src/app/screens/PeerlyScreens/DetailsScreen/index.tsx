@@ -7,6 +7,7 @@ import {usePostReward, usePostObjection} from './details.hooks';
 import CenteredModal from '../Components/Modal';
 import RewardSuccessIcon from '../../../../assets/peerly/svg/rewardSuccess.svg';
 import SuccessIcon from '../../../../assets/peerly/svg/Vector.svg';
+import {ProfileIcon} from '../constants/icons';
 
 const AppreciationDetailsScreen = ({route}) => {
   const {cardId, appriciationList, self} = route.params;
@@ -68,7 +69,7 @@ const AppreciationDetailsScreen = ({route}) => {
           source={
             cardDetails?.receiver_image_url
               ? {uri: cardDetails.receiver_image_url}
-              : require('../../../../assets/images/profile.png')
+              : ProfileIcon
           }
           style={styles.avatar}
         />
@@ -78,7 +79,7 @@ const AppreciationDetailsScreen = ({route}) => {
           source={
             cardDetails?.sender_image_url
               ? {uri: cardDetails.sender_image_url}
-              : require('../../../../assets/images/profile.png')
+              : ProfileIcon
           }
           style={[styles.smallAvatar]}
         />

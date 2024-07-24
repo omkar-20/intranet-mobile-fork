@@ -4,6 +4,7 @@ import colors from '../../../constant/colors';
 import {BlackStar} from '../../../constant/icons';
 import {AppreciationDetails} from '../../../services/PeerlyServices/home/types';
 import {timeFromNow} from '../utils';
+import {ProfileIcon} from '../constants/icons';
 
 type Props = {
   onPress?: (id: number) => void;
@@ -20,7 +21,7 @@ const AppreciationCard = ({onPress, appreciationDetails}: Props) => {
               source={
                 appreciationDetails.receiver_image_url
                   ? {uri: appreciationDetails.receiver_image_url}
-                  : require('../../../../assets/images/profile.png')
+                  : ProfileIcon
               }
               style={styles.avatar}
             />
@@ -28,7 +29,7 @@ const AppreciationCard = ({onPress, appreciationDetails}: Props) => {
               source={
                 appreciationDetails?.sender_image_url
                   ? {uri: appreciationDetails.sender_image_url}
-                  : require('../../../../assets/images/profile.png')
+                  : ProfileIcon
               }
               //style={[styles.avatar, styles.smallAvatar]}
               style={[styles.smallAvatar]}

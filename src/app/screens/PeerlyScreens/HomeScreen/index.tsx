@@ -29,6 +29,7 @@ import {
   APPRECIATION_DETAILS,
   PROFILE_DETAILS,
 } from '../../../constant/screenNames';
+import {ProfileIcon} from '../constants/icons';
 
 const paginationData = {
   page: 1,
@@ -119,7 +120,7 @@ const HomeScreen = ({navigation}) => {
               source={
                 profileDetails?.profile_image_url
                   ? {uri: profileDetails?.profile_image_url}
-                  : require('../../../../assets/images/profile.png')
+                  : ProfileIcon
               }
               style={styles.userAvatar}
             />
@@ -148,7 +149,7 @@ const HomeScreen = ({navigation}) => {
               onPress={handleAppreciationCardClick}
             />
           )}
-          keyExtractor={item => item.id}
+          keyExtractor={item => String(item.id)}
           numColumns={2}
         />
       </View>

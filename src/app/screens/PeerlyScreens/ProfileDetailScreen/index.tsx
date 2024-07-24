@@ -113,7 +113,7 @@ const ProfileDetailScreen = ({route, navigation}: any) => {
             onPress={handleAppreciationCardClick}
           />
         )}
-        keyExtractor={item => item.id}
+        keyExtractor={item => String(item.id)}
         numColumns={2}
       />
     </View>
@@ -129,7 +129,7 @@ const ProfileDetailScreen = ({route, navigation}: any) => {
             onPress={handleAppreciationCardClick}
           />
         )}
-        keyExtractor={item => item.id}
+        keyExtractor={item => String(item.id)}
         numColumns={2}
       />
     </View>
