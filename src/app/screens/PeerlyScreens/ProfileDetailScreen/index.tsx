@@ -1,5 +1,16 @@
-import React from 'react';
-import {Image, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import React, {useState} from 'react';
+import {
+  Button,
+  FlatList,
+  Image,
+  Modal,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import {BadgeMetaData} from './types';
 import {
   PlatinumIcon,
@@ -8,10 +19,22 @@ import {
   BronzeIcon,
   InfoIcon,
   StarIcon,
+  ProfileIcon,
 } from '../constants/icons';
 import {dateFormat} from '../utils';
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
+import {useGetAppreciationList} from '../HomeScreen/home.hooks';
+import AppreciationCard from '.././Components/AppreciationCard';
+import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
+import colors from '../../../constant/colors';
+import fonts from '../../../constant/fonts';
+import {APPRECIATION_DETAILS} from '../../../constant/screenNames';
 
+const paginationData = {
+  page: 1,
+  page_size: 500,
+  self: true,
+};
 const badgeData: BadgeMetaData = {
   bronze: {
     member: 'Bronze Member',
@@ -31,9 +54,13 @@ const badgeData: BadgeMetaData = {
   },
 };
 
-const ProfileDetailScreen = ({route}: any) => {
+const ProfileDetailScreen = ({route, navigation}: any) => {
+  const layout = useWindowDimensions();
+  const [index, setIndex] = useState(0);
+  const [modalVisible, setModalVisible] = useState(false);
+
   const {details} = route.params;
-  console.log('DETAILS', details);
+
   const {
     first_name,
     last_name,
@@ -49,16 +76,96 @@ const ProfileDetailScreen = ({route}: any) => {
   const name = `${first_name} ${last_name}`;
   const BadgeIcon = badgeData[badge.toLowerCase()]?.icon || GoldIcon;
 
+  const {data: appreciationList} = useGetAppreciationList(paginationData);
+
+  const handleAppreciationCardClick = (id: number) => {
+    navigation.navigate(APPRECIATION_DETAILS, {
+      cardId: id,
+      appriciationList: appreciationList,
+      self: true,
+    });
+  };
+
+  const receivedAppriciationList = appreciationList.filter(
+    item =>
+      item.receiver_first_name === first_name &&
+      item.receiver_last_name === last_name,
+  );
+
+  const expressedAppriciationList = appreciationList.filter(
+    item =>
+      item.sender_first_name === first_name &&
+      item.sender_last_name === last_name,
+  );
+
+  const [routes] = React.useState([
+    {key: 'received', title: 'Received'},
+    {key: 'expressed', title: 'Expressed'},
+  ]);
+
+  const FirstRoute = () => (
+    <View style={{backgroundColor: '#F4F6FF'}}>
+      <FlatList
+        data={receivedAppriciationList || []}
+        renderItem={({item}) => (
+          <AppreciationCard
+            appreciationDetails={item}
+            onPress={handleAppreciationCardClick}
+          />
+        )}
+        keyExtractor={item => item.id}
+        numColumns={2}
+      />
+    </View>
+  );
+
+  const SecondRoute = () => (
+    <View style={{backgroundColor: '#F4F6FF'}}>
+      <FlatList
+        data={expressedAppriciationList || []}
+        renderItem={({item}) => (
+          <AppreciationCard
+            appreciationDetails={item}
+            onPress={handleAppreciationCardClick}
+          />
+        )}
+        keyExtractor={item => item.id}
+        numColumns={2}
+      />
+    </View>
+  );
+
+  const renderScene = SceneMap({
+    received: FirstRoute,
+    expressed: SecondRoute,
+  });
+
+  const renderTabBar = (props: any) => (
+    <TabBar
+      {...props}
+      labelStyle={styles.labelStyle}
+      scrollEnabled={true}
+      inactiveColor={colors.SECONDARY}
+      activeColor={colors.PRIMARY}
+      indicatorStyle={styles.indicatorStyle}
+      style={styles.tabBarContainer}
+    />
+  );
+
+  const openModal = () => {
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileDetailsBox}>
         <Image
           style={styles.profileImage}
-          source={
-            profile_image_url
-              ? {uri: profile_image_url}
-              : require('../../../../assets/images/profile.png')
-          }
+          source={profile_image_url ? {uri: profile_image_url} : ProfileIcon}
         />
         <View>
           <Text style={[styles.name, styles.bold]}>{name}</Text>
@@ -76,7 +183,10 @@ const ProfileDetailScreen = ({route}: any) => {
       <View style={styles.rewardDetailsBox}>
         <View>
           <Text style={[styles.name, styles.bold]}>
-            Reward Balance <InfoIcon width={16} height={16} />
+            Reward Balance{' '}
+            <TouchableOpacity onPress={openModal}>
+              <InfoIcon width={16} height={16} />
+            </TouchableOpacity>
           </Text>
           <Text>Refill on {dateFormat(refil_date, 'MMMM YYYY')}</Text>
         </View>
@@ -94,6 +204,30 @@ const ProfileDetailScreen = ({route}: any) => {
           </CircularProgressBase>
         </View>
       </View>
+      <View style={styles.appreciationList}>
+        <TabView
+          navigationState={{index, routes}}
+          renderScene={renderScene}
+          renderTabBar={renderTabBar}
+          onIndexChange={setIndex}
+          initialLayout={{width: layout.width}}
+        />
+      </View>
+      <Modal
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={closeModal}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris
+              posuere faucibus est non blandit. Maecenas in dolor vulputate ante
+              commodo ultricies.
+            </Text>
+            <Button title="Close" onPress={closeModal} />
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -144,6 +278,39 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F8FF',
     borderRadius: 10,
     marginLeft: 30,
+  },
+  appreciationList: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  labelStyle: {
+    color: colors.LABEL_COLOR_SECONDARY,
+    textAlign: 'left',
+    fontSize: 14,
+    fontFamily: fonts.ARIAL,
+    textTransform: 'none',
+  },
+  indicatorStyle: {backgroundColor: colors.PRIMARY},
+  tabBarContainer: {
+    height: 50,
+    width: '100%',
+    backgroundColor: '#F4F6FF',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.PRIMARY,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+    alignItems: 'center',
   },
 });
 export default ProfileDetailScreen;
