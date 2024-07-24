@@ -9,6 +9,7 @@ import {
   Image,
   useWindowDimensions,
   FlatList,
+  Pressable,
 } from 'react-native';
 
 import colors from '../../../constant/colors';
@@ -18,19 +19,21 @@ import fonts from '../../../constant/fonts';
 import FloatingGiveAppreciationButton from '../../../components/button/floatingGiveAppreciationButton';
 import LeaderBoardCard from '.././Components/LeaderBoardCard';
 import {
-  useGetProfileDetails,
   useGetAppreciationList,
   useGetActiveUsersList,
   useGetTopUsersList,
 } from './home.hooks';
+import {useGetProfileDetails} from '../ProfileDetailScreen/profile.hooks';
 import {
   APPRECIATION,
   APPRECIATION_DETAILS,
+  PROFILE_DETAILS,
 } from '../../../constant/screenNames';
+import {ProfileIcon} from '../constants/icons';
 
 const paginationData = {
   page: 1,
-  per_page: 500,
+  page_size: 500,
 };
 
 const HomeScreen = ({navigation}) => {
@@ -97,26 +100,33 @@ const HomeScreen = ({navigation}) => {
 
   return (
     <>
-      <View style={styles.header}>
-        <Text style={styles.title}>Peerly</Text>
-        <View style={styles.userScore}>
-          <Text>
-            {profileDetails?.total_points && (
-              <Text style={styles.scoreText}>
-                {profileDetails?.total_points}
-              </Text>
-            )}
-          </Text>
-          <Image
-            source={
-              profileDetails?.profile_image_url
-                ? {uri: profileDetails?.profile_image_url}
-                : require('../../../../assets/images/profile.png')
-            }
-            style={styles.userAvatar}
-          />
+      <Pressable
+        onPress={() =>
+          navigation.navigate(PROFILE_DETAILS, {
+            details: profileDetails,
+          })
+        }>
+        <View style={styles.header}>
+          <Text style={styles.title}>Peerly</Text>
+          <View style={styles.userScore}>
+            <Text>
+              {profileDetails?.total_points && (
+                <Text style={styles.scoreText}>
+                  {profileDetails?.total_points}
+                </Text>
+              )}
+            </Text>
+            <Image
+              source={
+                profileDetails?.profile_image_url
+                  ? {uri: profileDetails?.profile_image_url}
+                  : ProfileIcon
+              }
+              style={styles.userAvatar}
+            />
+          </View>
         </View>
-      </View>
+      </Pressable>
 
       <TextInput style={styles.searchInput} placeholder={'Search Co-Worker'} />
 
@@ -139,7 +149,7 @@ const HomeScreen = ({navigation}) => {
               onPress={handleAppreciationCardClick}
             />
           )}
-          keyExtractor={item => item.id}
+          keyExtractor={item => String(item.id)}
           numColumns={2}
         />
       </View>

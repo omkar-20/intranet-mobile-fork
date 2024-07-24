@@ -66,7 +66,7 @@ export function useGetCoreValuesList() {
 }
 
 export function usePostAppreciation() {
-  const {mutate, isLoading, isSuccess, isError, reset} = useMutation({
+  return useMutation({
     mutationKey: ['post_appreciation'],
     mutationFn: (payload: PostAppreciationRequestBody) =>
       postAppreciationRequest(payload),
@@ -78,5 +78,4 @@ export function usePostAppreciation() {
       }
     },
   });
-  return {mutate, isLoading, isSuccess, isError, reset};
 }

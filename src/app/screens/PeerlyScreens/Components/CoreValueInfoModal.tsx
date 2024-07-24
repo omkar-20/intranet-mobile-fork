@@ -8,11 +8,14 @@ import {
   ScrollView,
 } from 'react-native';
 
-import TrustIcon from '../../../../assets/peerly/svg/trust.svg';
-import TechnicalIcon from '../../../../assets/peerly/svg/technical.svg';
-import RespectIcon from '../../../../assets/peerly/svg/respect.svg';
-import EthicsIcon from '../../../../assets/peerly/svg/ethics.svg';
-import CustFocusIcon from '../../../../assets/peerly/svg/custfocus.svg';
+import {
+  TrustIcon,
+  TechnicalIcon,
+  RespectIcon,
+  EthicsIcon,
+  CustFocusIcon,
+} from '../constants/icons';
+
 import {CoreValue} from '../../../services/PeerlyServices/appreciation/types';
 
 const coreValuesMeta = [

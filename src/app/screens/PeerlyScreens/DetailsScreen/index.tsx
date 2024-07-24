@@ -7,10 +7,14 @@ import {usePostReward, usePostObjection} from './details.hooks';
 import CenteredModal from '../Components/Modal';
 import RewardSuccessIcon from '../../../../assets/peerly/svg/rewardSuccess.svg';
 import SuccessIcon from '../../../../assets/peerly/svg/Vector.svg';
+import {ProfileIcon} from '../constants/icons';
+import {AppreciationDetails} from '../../../services/PeerlyServices/home/types';
 
 const AppreciationDetailsScreen = ({route}) => {
-  const {cardId, appriciationList} = route.params;
-  const cardDetails = appriciationList.find(item => item.id === cardId);
+  const {cardId, appriciationList, self} = route.params;
+  const cardDetails = appriciationList.find(
+    (item: AppreciationDetails) => item.id === cardId,
+  );
   const [reward, setReward] = useState(0);
   const [reason, setReason] = useState('');
   const [isObjectionModalVisible, setObjectionModalVisible] = useState(false);
@@ -68,7 +72,7 @@ const AppreciationDetailsScreen = ({route}) => {
           source={
             cardDetails?.receiver_image_url
               ? {uri: cardDetails.receiver_image_url}
-              : require('../../../../assets/images/profile.png')
+              : ProfileIcon
           }
           style={styles.avatar}
         />
@@ -78,7 +82,7 @@ const AppreciationDetailsScreen = ({route}) => {
           source={
             cardDetails?.sender_image_url
               ? {uri: cardDetails.sender_image_url}
-              : require('../../../../assets/images/profile.png')
+              : ProfileIcon
           }
           style={[styles.smallAvatar]}
         />
@@ -118,6 +122,7 @@ const AppreciationDetailsScreen = ({route}) => {
         setReward={handleReward}
         disableSlider={isLoadingPostReward}
         isRewardAlreadyGiven={cardDetails?.given_reward_point > 0}
+        self={self || false}
       />
       <ObjectionModal
         visible={isObjectionModalVisible}
