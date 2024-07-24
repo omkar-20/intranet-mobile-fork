@@ -8,10 +8,13 @@ import CenteredModal from '../Components/Modal';
 import RewardSuccessIcon from '../../../../assets/peerly/svg/rewardSuccess.svg';
 import SuccessIcon from '../../../../assets/peerly/svg/Vector.svg';
 import {ProfileIcon} from '../constants/icons';
+import {AppreciationDetails} from '../../../services/PeerlyServices/home/types';
 
 const AppreciationDetailsScreen = ({route}) => {
   const {cardId, appriciationList, self} = route.params;
-  const cardDetails = appriciationList.find(item => item.id === cardId);
+  const cardDetails = appriciationList.find(
+    (item: AppreciationDetails) => item.id === cardId,
+  );
   const [reward, setReward] = useState(0);
   const [reason, setReason] = useState('');
   const [isObjectionModalVisible, setObjectionModalVisible] = useState(false);
