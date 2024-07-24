@@ -1,1 +1,3 @@
-export interface demo {}
+export interface SearchScreenProp {
+  searchActive: (flag: boolean) => void;
+}
