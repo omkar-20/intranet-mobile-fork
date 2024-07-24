@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   SafeAreaView,
@@ -30,6 +30,7 @@ import {
   PROFILE_DETAILS,
 } from '../../../constant/screenNames';
 import {ProfileIcon} from '../constants/icons';
+import SearchScreen from '../SearchScreen';
 
 const paginationData = {
   page: 1,
@@ -46,6 +47,7 @@ const HomeScreen = ({navigation}) => {
 
   const {data: topUsersList} = useGetTopUsersList();
 
+  const [isSearchActive, setSearchActive] = useState(false);
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {key: 'top10', title: 'Top 10'},
@@ -128,35 +130,39 @@ const HomeScreen = ({navigation}) => {
         </View>
       </Pressable>
 
-      <TextInput style={styles.searchInput} placeholder={'Search Co-Worker'} />
+      <SearchScreen searchActive={setSearchActive} />
 
-      <View style={{height: layout.height * 0.2}}>
-        <TabView
-          navigationState={{index, routes}}
-          renderScene={renderScene}
-          renderTabBar={renderTabBar}
-          onIndexChange={setIndex}
-          initialLayout={{width: layout.width}}
-        />
-      </View>
-
-      <View style={{flex: 1, backgroundColor: colors.WHITE}}>
-        <FlatList
-          data={appreciationList || []}
-          renderItem={({item}) => (
-            <AppreciationCard
-              appreciationDetails={item}
-              onPress={handleAppreciationCardClick}
+      {isSearchActive ? null : (
+        <>
+          <View style={{height: layout.height * 0.2}}>
+            <TabView
+              navigationState={{index, routes}}
+              renderScene={renderScene}
+              renderTabBar={renderTabBar}
+              onIndexChange={setIndex}
+              initialLayout={{width: layout.width}}
             />
-          )}
-          keyExtractor={item => String(item.id)}
-          numColumns={2}
-        />
-      </View>
+          </View>
 
-      <FloatingGiveAppreciationButton
-        onPress={() => navigation.navigate(APPRECIATION)}
-      />
+          <View style={{flex: 1, backgroundColor: colors.WHITE}}>
+            <FlatList
+              data={appreciationList || []}
+              renderItem={({item}) => (
+                <AppreciationCard
+                  appreciationDetails={item}
+                  onPress={handleAppreciationCardClick}
+                />
+              )}
+              keyExtractor={item => String(item.id)}
+              numColumns={2}
+            />
+          </View>
+
+          <FloatingGiveAppreciationButton
+            onPress={() => navigation.navigate(APPRECIATION)}
+          />
+        </>
+      )}
     </>
   );
 };
@@ -188,18 +194,11 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 15,
   },
-  searchInput: {
-    backgroundColor: colors.LIGHT_GREY_BACKGROUND,
-    padding: 10,
-    margin: 10,
-    borderRadius: 10,
-  },
   activeTab: {
     fontWeight: 'bold',
     borderBottomWidth: 2,
     borderBottomColor: 'blue',
   },
-
   labelStyle: {
     color: colors.LABEL_COLOR_SECONDARY,
     textAlign: 'left',
@@ -207,9 +206,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.ARIAL,
     textTransform: 'none',
   },
-
   indicatorStyle: {backgroundColor: colors.PRIMARY},
-
   tabBarContainer: {
     backgroundColor: '#F4F6FF',
     borderBottomWidth: StyleSheet.hairlineWidth,
