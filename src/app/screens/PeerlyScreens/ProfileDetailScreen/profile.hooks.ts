@@ -3,7 +3,7 @@ import {AxiosError} from 'axios';
 import {APIError} from '../types';
 import toast from '../../../utils/toast';
 
-import {getProfileDetails} from '../../../services/PeerlyServices/home';
+import {getProfileDetails} from '../../../services/PeerlyServices/profileDetail';
 
 export function useGetProfileDetails() {
   const {data, isLoading, isFetching, isSuccess, isError} = useQuery({

@@ -24,11 +24,13 @@ import {
 import {dateFormat} from '../utils';
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
 import {useGetAppreciationList} from '../HomeScreen/home.hooks';
-import AppreciationCard from '.././Components/AppreciationCard';
+import AppreciationCard from '../Components/AppreciationCard';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import colors from '../../../constant/colors';
 import fonts from '../../../constant/fonts';
 import {APPRECIATION_DETAILS} from '../../../constant/screenNames';
+import {AppreciationDetails} from '../../../services/PeerlyServices/home/types';
+import RewardInfoModal from '../Components/RewardInfoModal';
 
 const paginationData = {
   page: 1,
@@ -57,7 +59,7 @@ const badgeData: BadgeMetaData = {
 const ProfileDetailScreen = ({route, navigation}: any) => {
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   const {details} = route.params;
 
@@ -80,7 +82,7 @@ const ProfileDetailScreen = ({route, navigation}: any) => {
 
   const getCurrentAppriciationDetails = (currentId: number) => {
     const currentAppreciation = appreciationList.filter(
-      item => item.id === currentId,
+      (item: AppreciationDetails) => item.id === currentId,
     );
     return currentAppreciation || [];
   };
@@ -163,10 +165,6 @@ const ProfileDetailScreen = ({route, navigation}: any) => {
     setModalVisible(true);
   };
 
-  const closeModal = () => {
-    setModalVisible(false);
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileDetailsBox}>
@@ -220,21 +218,10 @@ const ProfileDetailScreen = ({route, navigation}: any) => {
           initialLayout={{width: layout.width}}
         />
       </View>
-      <Modal
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={closeModal}>
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris
-              posuere faucibus est non blandit. Maecenas in dolor vulputate ante
-              commodo ultricies.
-            </Text>
-            <Button title="Close" onPress={closeModal} />
-          </View>
-        </View>
-      </Modal>
+      <RewardInfoModal
+        visible={isModalVisible}
+        closeModal={() => setModalVisible(false)}
+      />
     </SafeAreaView>
   );
 };
@@ -305,19 +292,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#F4F6FF',
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.PRIMARY,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-    width: '80%',
-    alignItems: 'center',
   },
 });
 export default ProfileDetailScreen;
