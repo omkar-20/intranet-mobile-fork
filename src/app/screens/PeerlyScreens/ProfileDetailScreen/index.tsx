@@ -78,10 +78,17 @@ const ProfileDetailScreen = ({route, navigation}: any) => {
 
   const {data: appreciationList} = useGetAppreciationList(paginationData);
 
+  const getCurrentAppriciationDetails = (currentId: number) => {
+    const currentAppreciation = appreciationList.filter(
+      item => item.id === currentId,
+    );
+    return currentAppreciation || [];
+  };
+
   const handleAppreciationCardClick = (id: number) => {
     navigation.navigate(APPRECIATION_DETAILS, {
       cardId: id,
-      appriciationList: appreciationList,
+      appriciationList: getCurrentAppriciationDetails(id),
       self: true,
     });
   };
