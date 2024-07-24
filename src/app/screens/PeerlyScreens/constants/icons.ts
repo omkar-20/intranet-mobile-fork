@@ -10,6 +10,7 @@ import CustFocusIcon from '../../../../assets/peerly/svg/custfocus.svg';
 import SuccessIcon from '../../../../assets/peerly/svg/Vector.svg';
 import InfoIcon from '../../../../assets/peerly/svg/info.svg';
 import StarIcon from '../../../../assets/svg/star.svg';
+import ProfileIcon from '../../../../assets/images/profile.png';
 
 export {
   PlatinumIcon,
@@ -24,4 +25,5 @@ export {
   SuccessIcon,
   InfoIcon,
   StarIcon,
+  ProfileIcon,
 };

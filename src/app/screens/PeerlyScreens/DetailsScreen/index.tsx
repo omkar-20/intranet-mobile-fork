@@ -9,7 +9,7 @@ import RewardSuccessIcon from '../../../../assets/peerly/svg/rewardSuccess.svg';
 import SuccessIcon from '../../../../assets/peerly/svg/Vector.svg';
 
 const AppreciationDetailsScreen = ({route}) => {
-  const {cardId, appriciationList} = route.params;
+  const {cardId, appriciationList, self} = route.params;
   const cardDetails = appriciationList.find(item => item.id === cardId);
   const [reward, setReward] = useState(0);
   const [reason, setReason] = useState('');
@@ -118,6 +118,7 @@ const AppreciationDetailsScreen = ({route}) => {
         setReward={handleReward}
         disableSlider={isLoadingPostReward}
         isRewardAlreadyGiven={cardDetails?.given_reward_point > 0}
+        self={self || false}
       />
       <ObjectionModal
         visible={isObjectionModalVisible}
