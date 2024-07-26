@@ -13,7 +13,7 @@ import {
 } from '../../constant/screenNames';
 import AppreciationScreen from './AppreciationScreen';
 import DetailsScreen from './DetailsScreen';
-import ProfileScreen from './ProfileScreen';
+import ProfileDetailScreen from './ProfileDetailScreen';
 import SearchScreen from './SearchScreen';
 const Stack = createNativeStackNavigator();
 
@@ -39,7 +39,7 @@ function PeerlyHomeScreen() {
         <Stack.Screen name={PEERLY_SCREEN} component={HomeScreen} />
         <Stack.Screen name={APPRECIATION} component={AppreciationScreen} />
         <Stack.Screen name={APPRECIATION_DETAILS} component={DetailsScreen} />
-        <Stack.Screen name={PROFILE_DETAILS} component={ProfileScreen} />
+        <Stack.Screen name={PROFILE_DETAILS} component={ProfileDetailScreen} />
         <Stack.Screen name={APPRECIATION_SEARCH} component={SearchScreen} />
       </Stack.Navigator>
     </NavigationContainer>

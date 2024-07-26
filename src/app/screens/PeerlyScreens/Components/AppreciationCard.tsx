@@ -1,8 +1,9 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import colors from '../../../constant/colors';
-import {BlackStar} from '../../../constant/icons';
 import {AppreciationDetails} from '../../../services/PeerlyServices/home/types';
+import {timeFromNow} from '../utils';
+import {BlackStar, ProfileIcon} from '../constants/icons';
 
 type Props = {
   onPress?: (id: number) => void;
@@ -19,7 +20,7 @@ const AppreciationCard = ({onPress, appreciationDetails}: Props) => {
               source={
                 appreciationDetails.receiver_image_url
                   ? {uri: appreciationDetails.receiver_image_url}
-                  : require('../../../../assets/images/profile.png')
+                  : ProfileIcon
               }
               style={styles.avatar}
             />
@@ -27,7 +28,7 @@ const AppreciationCard = ({onPress, appreciationDetails}: Props) => {
               source={
                 appreciationDetails?.sender_image_url
                   ? {uri: appreciationDetails.sender_image_url}
-                  : require('../../../../assets/images/profile.png')
+                  : ProfileIcon
               }
               //style={[styles.avatar, styles.smallAvatar]}
               style={[styles.smallAvatar]}
@@ -55,7 +56,9 @@ const AppreciationCard = ({onPress, appreciationDetails}: Props) => {
             Appreciated by{' '}
             {`${appreciationDetails.sender_first_name} ${appreciationDetails.sender_last_name}`}
           </Text>
-          <Text style={styles.days}>10 Days ago</Text>
+          <Text style={styles.days}>
+            {timeFromNow(appreciationDetails.created_at)}
+          </Text>
         </View>
         <View style={styles.footer}>
           <View style={{padding: 5}}>

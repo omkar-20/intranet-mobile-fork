@@ -1,8 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import colors from '../../../constant/colors';
-import {WhiteStar} from '../../../constant/icons';
-
+import {ProfileIcon, WhiteStar} from '../constants/icons';
 interface LeaderBoardCardProps {
   userDetail: {
     id: number;
@@ -21,7 +20,7 @@ const LeaderBoardCard: React.FC<LeaderBoardCardProps> = ({userDetail}) => {
         source={
           userDetail?.profile_image_url
             ? {uri: userDetail.profile_image_url}
-            : require('../../../../assets/images/profile.png')
+            : ProfileIcon
         }
         style={styles.profileImage}
       />

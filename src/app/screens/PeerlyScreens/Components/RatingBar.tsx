@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, Pressable} from 'react-native';
 import Slider from '@react-native-community/slider';
-import {FlagIcon} from '../../../constant/icons';
+import {FlagIcon, RatingStarIcon} from '../constants/icons';
 
 interface RatingBarProps {
   onPressObjection: () => void;
@@ -10,6 +10,7 @@ interface RatingBarProps {
   setReward: (rating: number) => void;
   disableSlider: boolean;
   isRewardAlreadyGiven: boolean;
+  self?: boolean;
 }
 
 const RatingBar: React.FC<RatingBarProps> = ({
@@ -19,6 +20,7 @@ const RatingBar: React.FC<RatingBarProps> = ({
   setReward,
   disableSlider,
   isRewardAlreadyGiven,
+  self,
 }) => {
   return (
     <View style={styles.container}>
@@ -28,33 +30,37 @@ const RatingBar: React.FC<RatingBarProps> = ({
           Rewards given by {rewardedByPeople} people
         </Text>
       </View>
-      <Pressable onPress={onPressObjection}>
-        <View style={styles.flagContainer}>
-          <View style={styles.flagIcon}>
-            <FlagIcon />
-          </View>
-        </View>
-      </Pressable>
+      {self ? null : (
+        <>
+          <Pressable onPress={onPressObjection}>
+            <View style={styles.flagContainer}>
+              <View style={styles.flagIcon}>
+                <FlagIcon />
+              </View>
+            </View>
+          </Pressable>
 
-      <View style={styles.sliderContainer}>
-        <Slider
-          disabled={disableSlider || isRewardAlreadyGiven}
-          style={styles.slider}
-          minimumValue={0}
-          maximumValue={5}
-          step={1}
-          value={reward}
-          onValueChange={value => setReward(value)}
-          thumbImage={require('../../../../assets/images/starIcon.png')}
-          minimumTrackTintColor="#FFD700"
-          maximumTrackTintColor="#DDD"
-        />
-        <View style={styles.labelsContainer}>
-          <Text style={styles.sliderLabel}>Good</Text>
-          <Text style={styles.sliderLabel}>Nice</Text>
-          <Text style={styles.sliderLabel}>Love</Text>
-        </View>
-      </View>
+          <View style={styles.sliderContainer}>
+            <Slider
+              disabled={disableSlider || isRewardAlreadyGiven}
+              style={styles.slider}
+              minimumValue={0}
+              maximumValue={5}
+              step={1}
+              value={reward}
+              onValueChange={value => setReward(value)}
+              thumbImage={RatingStarIcon}
+              minimumTrackTintColor="#FFD700"
+              maximumTrackTintColor="#DDD"
+            />
+            <View style={styles.labelsContainer}>
+              <Text style={styles.sliderLabel}>Good</Text>
+              <Text style={styles.sliderLabel}>Nice</Text>
+              <Text style={styles.sliderLabel}>Love</Text>
+            </View>
+          </View>
+        </>
+      )}
     </View>
   );
 };
