@@ -10,6 +10,7 @@ export type ProfileDetailsDetail = {
   grade_id: number;
   employee_id: number;
   total_points: number;
+  refil_date: number;
   badge: string;
   badge_created_at: number;
 };

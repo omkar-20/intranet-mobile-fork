@@ -1,9 +1,7 @@
 import React, {useState} from 'react';
 import {
-  Button,
   FlatList,
   Image,
-  Modal,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -62,24 +60,12 @@ const ProfileDetailScreen = ({route, navigation}: any) => {
   const [index, setIndex] = useState(0);
   const [isModalVisible, setModalVisible] = useState(false);
 
-  const {details} = route.params;
+  const {userId} = route.params;
+  const {data: profileDetails} = useGetProfileDetails(userId);
 
-  const {
-    first_name,
-    last_name,
-    profile_image_url,
-    designation,
-    badge,
-    // reward_quota_balance,
-    refil_date,
-    total_points,
-    // total_reward_quota,
-  } = details;
-
-  const {data: profileDetails} = useGetProfileDetails();
-
-  const name = `${first_name} ${last_name}`;
-  const BadgeIcon = badgeData[badge.toLowerCase()]?.icon || GoldIcon;
+  const name = `${profileDetails?.first_name} ${profileDetails?.last_name}`;
+  const badge = profileDetails?.badge.toLowerCase() || false;
+  const BadgeIcon = badge ? badgeData[badge]?.icon : '';
 
   const {data: appreciationList} = useGetAppreciationList(paginationData);
 
@@ -100,14 +86,14 @@ const ProfileDetailScreen = ({route, navigation}: any) => {
 
   const receivedAppriciationList = appreciationList.filter(
     item =>
-      item.receiver_first_name === first_name &&
-      item.receiver_last_name === last_name,
+      item?.receiver_first_name === profileDetails?.first_name &&
+      item?.receiver_last_name === profileDetails?.last_name,
   );
 
   const expressedAppriciationList = appreciationList.filter(
     item =>
-      item.sender_first_name === first_name &&
-      item.sender_last_name === last_name,
+      item?.sender_first_name === profileDetails?.first_name &&
+      item?.sender_last_name === profileDetails?.last_name,
   );
 
   const [routes] = React.useState([
@@ -173,18 +159,22 @@ const ProfileDetailScreen = ({route, navigation}: any) => {
       <View style={styles.profileDetailsBox}>
         <Image
           style={styles.profileImage}
-          source={profile_image_url ? {uri: profile_image_url} : ProfileIcon}
+          source={
+            profileDetails?.profile_image_url
+              ? {uri: profileDetails.profile_image_url}
+              : ProfileIcon
+          }
         />
         <View>
           <Text style={[styles.name, styles.bold]}>{name}</Text>
-          <Text>{designation}</Text>
-          <Text>
-            {badgeData[badge.toLowerCase()]?.member || badgeData.gold?.member}
-          </Text>
+          <Text>{profileDetails?.designation}</Text>
+          <Text>{badge ? badgeData[badge.toLowerCase()]?.member : null}</Text>
         </View>
         <View>
-          <BadgeIcon />
-          <Text style={[styles.name, styles.bold]}>{total_points || 2000}</Text>
+          {badge ? <BadgeIcon /> : null}
+          <Text style={[styles.name, styles.bold]}>
+            {profileDetails?.total_points}
+          </Text>
           <Text style={[styles.name, styles.bold]}>Reward Points</Text>
         </View>
       </View>
@@ -196,7 +186,14 @@ const ProfileDetailScreen = ({route, navigation}: any) => {
               <InfoIcon width={16} height={16} />
             </TouchableOpacity>
           </Text>
-          <Text>Refill on {dateFormat(refil_date, 'MMMM YYYY')}</Text>
+          <Text>
+            {profileDetails?.refil_date
+              ? `Refill on ${dateFormat(
+                  profileDetails?.refil_date,
+                  'MMMM YYYY',
+                )}`
+              : null}
+          </Text>
         </View>
         <View style={styles.progressBar}>
           <CircularProgressBase

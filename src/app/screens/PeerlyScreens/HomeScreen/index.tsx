@@ -107,7 +107,7 @@ const HomeScreen = ({navigation}) => {
       <Pressable
         onPress={() =>
           navigation.navigate(PROFILE_DETAILS, {
-            details: profileDetails,
+            userId: profileDetails?.employee_id,
           })
         }>
         <View style={styles.header}>
@@ -116,14 +116,14 @@ const HomeScreen = ({navigation}) => {
             <Text>
               {profileDetails?.total_points && (
                 <Text style={styles.scoreText}>
-                  {profileDetails?.total_points}
+                  {profileDetails.total_points}
                 </Text>
               )}
             </Text>
             <Image
               source={
                 profileDetails?.profile_image_url
-                  ? {uri: profileDetails?.profile_image_url}
+                  ? {uri: profileDetails.profile_image_url}
                   : ProfileIcon
               }
               style={styles.userAvatar}
