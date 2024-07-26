@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, Pressable} from 'react-native';
 import Slider from '@react-native-community/slider';
-import {FlagIcon} from '../../../constant/icons';
+import {FlagIcon, RatingStarIcon} from '../constants/icons';
 
 interface RatingBarProps {
   onPressObjection: () => void;
@@ -49,7 +49,7 @@ const RatingBar: React.FC<RatingBarProps> = ({
               step={1}
               value={reward}
               onValueChange={value => setReward(value)}
-              thumbImage={require('../../../../assets/images/starIcon.png')}
+              thumbImage={RatingStarIcon}
               minimumTrackTintColor="#FFD700"
               maximumTrackTintColor="#DDD"
             />
