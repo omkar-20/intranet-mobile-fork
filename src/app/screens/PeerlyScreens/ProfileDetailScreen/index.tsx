@@ -31,6 +31,7 @@ import fonts from '../../../constant/fonts';
 import {APPRECIATION_DETAILS} from '../../../constant/screenNames';
 import {AppreciationDetails} from '../../../services/PeerlyServices/home/types';
 import RewardInfoModal from '../Components/RewardInfoModal';
+import {useGetProfileDetails} from './profile.hooks';
 
 const paginationData = {
   page: 1,
@@ -69,11 +70,13 @@ const ProfileDetailScreen = ({route, navigation}: any) => {
     profile_image_url,
     designation,
     badge,
-    reward_quota_balance,
+    // reward_quota_balance,
     refil_date,
     total_points,
-    total_reward_quota,
+    // total_reward_quota,
   } = details;
+
+  const {data: profileDetails} = useGetProfileDetails();
 
   const name = `${first_name} ${last_name}`;
   const BadgeIcon = badgeData[badge.toLowerCase()]?.icon || GoldIcon;
@@ -198,9 +201,9 @@ const ProfileDetailScreen = ({route, navigation}: any) => {
         <View style={styles.progressBar}>
           <CircularProgressBase
             clockwise={false}
-            value={reward_quota_balance}
+            value={profileDetails?.reward_quota_balance || 0}
             radius={30}
-            maxValue={total_reward_quota}
+            maxValue={profileDetails?.total_reward_quota || 0}
             activeStrokeColor={'#F3A552'}
             inActiveStrokeColor={'#F5F8FF'}>
             <View>

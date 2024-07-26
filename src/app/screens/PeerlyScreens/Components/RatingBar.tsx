@@ -32,7 +32,7 @@ const RatingBar: React.FC<RatingBarProps> = ({
       </View>
       {self ? null : (
         <>
-          <Pressable onPress={onPressObjection}>
+          <Pressable onPress={onPressObjection} disabled={disableSlider}>
             <View style={styles.flagContainer}>
               <View style={styles.flagIcon}>
                 <FlagIcon />

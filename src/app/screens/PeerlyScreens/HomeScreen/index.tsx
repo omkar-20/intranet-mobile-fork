@@ -42,7 +42,8 @@ const HomeScreen = ({navigation}) => {
   const layout = useWindowDimensions();
   const {data: profileDetails} = useGetProfileDetails();
 
-  const {data: appreciationList} = useGetAppreciationList(paginationData);
+  const {data: appreciationList, metadata: appreciationListMeta} =
+    useGetAppreciationList(paginationData);
 
   const {data: activeUsersList} = useGetActiveUsersList();
 
@@ -146,6 +147,9 @@ const HomeScreen = ({navigation}) => {
           </View>
 
           <View style={{flex: 1, backgroundColor: colors.WHITE}}>
+            <Text>
+              Total: {appreciationListMeta?.total_records} Appreciations
+            </Text>
             <FlatList
               data={appreciationList || []}
               renderItem={({item}) => (

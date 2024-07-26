@@ -73,6 +73,7 @@ export function useGetAppreciationList(payload: GetAppreciationListRequest) {
   });
   return {
     data: data?.data.appreciations || [],
+    metadata: data?.data.metadata,
     isLoading,
     isFetching,
     isSuccess,

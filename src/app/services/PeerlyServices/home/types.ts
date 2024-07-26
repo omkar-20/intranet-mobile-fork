@@ -53,6 +53,7 @@ export type GetAppreciationListResponse = {
       page: number;
       page_size: number;
       total_page: number;
+      total_records: number;
     };
   };
 };
