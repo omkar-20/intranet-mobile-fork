@@ -1,10 +1,9 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import colors from '../../../constant/colors';
-import {BlackStar} from '../../../constant/icons';
 import {AppreciationDetails} from '../../../services/PeerlyServices/home/types';
 import {timeFromNow} from '../utils';
-import {ProfileIcon} from '../constants/icons';
+import {BlackStar, ProfileIcon} from '../constants/icons';
 
 type Props = {
   onPress?: (id: number) => void;

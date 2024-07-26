@@ -1,8 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import colors from '../../../constant/colors';
-import {WhiteStar} from '../../../constant/icons';
-import {ProfileIcon} from '../constants/icons';
+import {ProfileIcon, WhiteStar} from '../constants/icons';
 interface LeaderBoardCardProps {
   userDetail: {
     id: number;
