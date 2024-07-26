@@ -35,6 +35,7 @@ import SearchScreen from '../SearchScreen';
 const paginationData = {
   page: 1,
   page_size: 500,
+  sort_order: 'DESC',
 };
 
 const HomeScreen = ({navigation}) => {
@@ -59,7 +60,7 @@ const HomeScreen = ({navigation}) => {
       <FlatList
         data={activeUsersList}
         renderItem={({item}) => <LeaderBoardCard userDetail={item} />}
-        keyExtractor={item => item.id}
+        keyExtractor={item => String(item.id)}
         horizontal={true}
       />
     </View>
@@ -70,7 +71,7 @@ const HomeScreen = ({navigation}) => {
       <FlatList
         data={topUsersList}
         renderItem={({item}) => <LeaderBoardCard userDetail={item} />}
-        keyExtractor={item => item.id}
+        keyExtractor={item => String(item.id)}
         horizontal={true}
       />
     </View>
@@ -130,7 +131,7 @@ const HomeScreen = ({navigation}) => {
         </View>
       </Pressable>
 
-      <SearchScreen searchActive={setSearchActive} />
+      <SearchScreen searchActive={setSearchActive} navigation={navigation} />
 
       {isSearchActive ? null : (
         <>

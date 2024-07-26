@@ -1,4 +1,4 @@
-import {useMutation, useQuery} from 'react-query';
+import {useMutation, useQuery, useQueryClient} from 'react-query';
 import {
   getCoreValuesList,
   getCoworkerList,
@@ -66,10 +66,14 @@ export function useGetCoreValuesList() {
 }
 
 export function usePostAppreciation() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ['post_appreciation'],
     mutationFn: (payload: PostAppreciationRequestBody) =>
       postAppreciationRequest(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['appreciation_list']);
+    },
     onError: (error: AxiosError<APIError>) => {
       if (error.response?.data.message) {
         toast(error.response.data.message, 'error');

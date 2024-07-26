@@ -40,6 +40,7 @@ export type GetAppreciationListRequest = {
   page_size?: number;
   self?: boolean;
   name?: string;
+  sort_order?: string;
 };
 
 export type GetAppreciationListResponse = {

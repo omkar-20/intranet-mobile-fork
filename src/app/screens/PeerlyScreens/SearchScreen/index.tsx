@@ -5,14 +5,25 @@ import {useGetSearchAppreciationList} from './search.hooks';
 import {SearchScreenProp} from './types';
 import useDebounce from './useDebounce';
 import AppreciationCard from '../Components/AppreciationCard';
+import {APPRECIATION_DETAILS} from '../../../constant/screenNames';
 
-const SearchScreen: React.FC<SearchScreenProp> = ({searchActive}) => {
+const SearchScreen: React.FC<SearchScreenProp> = ({
+  navigation,
+  searchActive,
+}) => {
   const [searchName, setSearchName] = useState('');
   const debounceValue = useDebounce(searchName, 1000);
 
   const {data: appreciationList} = useGetSearchAppreciationList({
     name: debounceValue,
   });
+
+  const handleAppreciationCardClick = (id: number) => {
+    navigation.navigate(APPRECIATION_DETAILS, {
+      cardId: id,
+      appriciationList: appreciationList,
+    });
+  };
 
   const handleSearch = (value: string) => {
     if (value.length) {
@@ -35,7 +46,10 @@ const SearchScreen: React.FC<SearchScreenProp> = ({searchActive}) => {
         <FlatList
           data={appreciationList || []}
           renderItem={({item}) => (
-            <AppreciationCard appreciationDetails={item} onPress={() => {}} />
+            <AppreciationCard
+              appreciationDetails={item}
+              onPress={handleAppreciationCardClick}
+            />
           )}
           keyExtractor={item => String(item.id)}
           numColumns={2}
