@@ -1,13 +1,11 @@
 import React, {useState} from 'react';
 import {
-  FlatList,
   Image,
   SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  useWindowDimensions,
 } from 'react-native';
 import {BadgeMetaData} from './types';
 import {
@@ -22,14 +20,9 @@ import {
 import {dateFormat} from '../utils';
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
 import {useGetAppreciationList} from '../HomeScreen/home.hooks';
-import AppreciationCard from '../Components/AppreciationCard';
-import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
-import colors from '../../../constant/colors';
-import fonts from '../../../constant/fonts';
-import {APPRECIATION_DETAILS} from '../../../constant/screenNames';
-import {AppreciationDetails} from '../../../services/PeerlyServices/home/types';
 import RewardInfoModal from '../Components/RewardInfoModal';
 import {useGetProfileDetails} from './profile.hooks';
+import GivenAndReceivedAppriciation from '../Components/GivenAndReceivedAppreciation';
 
 const paginationData = {
   page: 1,
@@ -56,99 +49,34 @@ const badgeData: BadgeMetaData = {
 };
 
 const ProfileDetailScreen = ({route, navigation}: any) => {
-  const layout = useWindowDimensions();
-  const [index, setIndex] = useState(0);
   const [isModalVisible, setModalVisible] = useState(false);
 
   const {userId} = route.params;
   const {data: profileDetails} = useGetProfileDetails(userId);
 
-  const name = `${profileDetails?.first_name} ${profileDetails?.last_name}`;
+  const userName = `${profileDetails?.first_name} ${profileDetails?.last_name}`;
   const badge = profileDetails?.badge.toLowerCase() || false;
   const BadgeIcon = badge ? badgeData[badge]?.icon : '';
 
   const {data: appreciationList} = useGetAppreciationList(paginationData);
 
-  const getCurrentAppriciationDetails = (currentId: number) => {
-    const currentAppreciation = appreciationList.filter(
-      (item: AppreciationDetails) => item.id === currentId,
-    );
-    return currentAppreciation || [];
-  };
+  const userNameLowerCase = `${(
+    profileDetails?.first_name || ''
+  ).toLowerCase()} ${(profileDetails?.last_name || '').toLowerCase()}`;
 
-  const handleAppreciationCardClick = (id: number) => {
-    navigation.navigate(APPRECIATION_DETAILS, {
-      cardId: id,
-      appriciationList: getCurrentAppriciationDetails(id),
-      self: true,
-    });
-  };
-
-  const receivedAppriciationList = appreciationList.filter(
-    item =>
-      item?.receiver_first_name === profileDetails?.first_name &&
-      item?.receiver_last_name === profileDetails?.last_name,
-  );
-
-  const expressedAppriciationList = appreciationList.filter(
-    item =>
-      item?.sender_first_name === profileDetails?.first_name &&
-      item?.sender_last_name === profileDetails?.last_name,
-  );
-
-  const [routes] = React.useState([
-    {key: 'received', title: 'Received'},
-    {key: 'expressed', title: 'Expressed'},
-  ]);
-
-  const FirstRoute = () => (
-    <View style={{backgroundColor: '#F4F6FF'}}>
-      <FlatList
-        data={receivedAppriciationList || []}
-        renderItem={({item}) => (
-          <AppreciationCard
-            appreciationDetails={item}
-            onPress={handleAppreciationCardClick}
-          />
-        )}
-        keyExtractor={item => String(item.id)}
-        numColumns={2}
-      />
-    </View>
-  );
-
-  const SecondRoute = () => (
-    <View style={{backgroundColor: '#F4F6FF'}}>
-      <FlatList
-        data={expressedAppriciationList || []}
-        renderItem={({item}) => (
-          <AppreciationCard
-            appreciationDetails={item}
-            onPress={handleAppreciationCardClick}
-          />
-        )}
-        keyExtractor={item => String(item.id)}
-        numColumns={2}
-      />
-    </View>
-  );
-
-  const renderScene = SceneMap({
-    received: FirstRoute,
-    expressed: SecondRoute,
+  const receivedAppriciationList = appreciationList.filter(item => {
+    const fname = (item?.receiver_first_name || '').toLowerCase();
+    const lname = (item?.receiver_last_name || '').toLowerCase();
+    const receiverName = `${fname} ${lname}`;
+    return receiverName.includes(userNameLowerCase);
   });
 
-  const renderTabBar = (props: any) => (
-    <TabBar
-      {...props}
-      labelStyle={styles.labelStyle}
-      scrollEnabled={true}
-      inactiveColor={colors.SECONDARY}
-      activeColor={colors.PRIMARY}
-      indicatorStyle={styles.indicatorStyle}
-      style={styles.tabBarContainer}
-    />
-  );
+  const expressedAppriciationList = appreciationList.filter(item => {
+    const fname = (item?.sender_first_name || '').toLowerCase();
+    const lname = (item?.sender_last_name || '').toLowerCase();
+    const receiverName = `${fname} ${lname}`;
+    return receiverName.includes(userNameLowerCase);
+  });
 
   const openModal = () => {
     setModalVisible(true);
@@ -166,7 +94,7 @@ const ProfileDetailScreen = ({route, navigation}: any) => {
           }
         />
         <View>
-          <Text style={[styles.name, styles.bold]}>{name}</Text>
+          <Text style={[styles.name, styles.bold]}>{userName}</Text>
           <Text>{profileDetails?.designation}</Text>
           <Text>{badge ? badgeData[badge.toLowerCase()]?.member : null}</Text>
         </View>
@@ -209,13 +137,14 @@ const ProfileDetailScreen = ({route, navigation}: any) => {
           </CircularProgressBase>
         </View>
       </View>
+
       <View style={styles.appreciationList}>
-        <TabView
-          navigationState={{index, routes}}
-          renderScene={renderScene}
-          renderTabBar={renderTabBar}
-          onIndexChange={setIndex}
-          initialLayout={{width: layout.width}}
+        <GivenAndReceivedAppriciation
+          self={true}
+          appreciationList={appreciationList}
+          receivedList={receivedAppriciationList}
+          expressedList={expressedAppriciationList}
+          navigation={navigation}
         />
       </View>
       <RewardInfoModal
@@ -277,21 +206,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     height: '100%',
-  },
-  labelStyle: {
-    color: colors.LABEL_COLOR_SECONDARY,
-    textAlign: 'left',
-    fontSize: 14,
-    fontFamily: fonts.ARIAL,
-    textTransform: 'none',
-  },
-  indicatorStyle: {backgroundColor: colors.PRIMARY},
-  tabBarContainer: {
-    height: 50,
-    width: '100%',
-    backgroundColor: '#F4F6FF',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.PRIMARY,
   },
 });
 export default ProfileDetailScreen;
