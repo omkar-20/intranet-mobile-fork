@@ -1,58 +1,69 @@
-import React, {useState} from 'react';
-import {StyleSheet, View, TextInput, FlatList} from 'react-native';
-import colors from '../../../constant/colors';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
+import {StyleSheet, View, TextInput} from 'react-native';
 import {useGetSearchAppreciationList} from './search.hooks';
-import {SearchScreenProp} from './types';
 import useDebounce from './useDebounce';
-import AppreciationCard from '../Components/AppreciationCard';
-import {APPRECIATION_DETAILS} from '../../../constant/screenNames';
+import GivenAndReceivedAppriciation from '../Components/GivenAndReceivedAppreciation';
 
-const SearchScreen: React.FC<SearchScreenProp> = ({
-  navigation,
-  searchActive,
-}) => {
+const SearchScreen = ({navigation}) => {
+  const searchInputRef = useRef<TextInput>(null);
   const [searchName, setSearchName] = useState('');
-  const debounceValue = useDebounce(searchName, 1000);
+  const debounceValue = useDebounce(searchName, 500);
 
   const {data: appreciationList} = useGetSearchAppreciationList({
     name: debounceValue,
   });
 
-  const handleAppreciationCardClick = (id: number) => {
-    navigation.navigate(APPRECIATION_DETAILS, {
-      cardId: id,
-      appriciationList: appreciationList,
-    });
-  };
+  useEffect(() => {
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [searchInputRef]);
 
   const handleSearch = (value: string) => {
     if (value.length) {
       setSearchName(value);
-      searchActive(true);
     } else {
-      searchActive(false);
       setSearchName('');
     }
   };
+
+  const getSearchName = useMemo(() => {
+    if (debounceValue) {
+      return debounceValue.trim().toLowerCase();
+    }
+    return '';
+  }, [debounceValue]);
+
+  const receivedAppriciationList = appreciationList.filter(item => {
+    const fname = (item?.receiver_first_name || '').toLowerCase();
+    const lname = (item?.receiver_last_name || '').toLowerCase();
+    const receiverName = `${fname} ${lname}`;
+    return receiverName.includes(getSearchName);
+  });
+
+  const expressedAppriciationList = appreciationList.filter(item => {
+    const fname = (item?.sender_first_name || '').toLowerCase();
+    const lname = (item?.sender_last_name || '').toLowerCase();
+    const receiverName = `${fname} ${lname}`;
+    return receiverName.includes(getSearchName);
+  });
+
   return (
-    <View>
+    <View style={styles.container}>
       <TextInput
+        autoFocus={true}
+        ref={searchInputRef}
         style={styles.searchInput}
         placeholder={'Search Co-Worker'}
         onChangeText={handleSearch}
         value={searchName}
       />
       <View style={styles.flatListWrapper}>
-        <FlatList
-          data={appreciationList || []}
-          renderItem={({item}) => (
-            <AppreciationCard
-              appreciationDetails={item}
-              onPress={handleAppreciationCardClick}
-            />
-          )}
-          keyExtractor={item => String(item.id)}
-          numColumns={2}
+        <GivenAndReceivedAppriciation
+          appreciationList={appreciationList}
+          receivedList={receivedAppriciationList}
+          expressedList={expressedAppriciationList}
+          navigation={navigation}
         />
       </View>
     </View>
@@ -60,9 +71,14 @@ const SearchScreen: React.FC<SearchScreenProp> = ({
 };
 
 const styles = StyleSheet.create({
-  flatListWrapper: {},
+  container: {
+    flex: 1,
+  },
+  flatListWrapper: {
+    flex: 1,
+  },
   searchInput: {
-    backgroundColor: colors.LIGHT_GREY_BACKGROUND,
+    backgroundColor: 'white',
     padding: 10,
     margin: 10,
     borderRadius: 10,
