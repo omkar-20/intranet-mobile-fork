@@ -1,9 +1,7 @@
-import React, {useState} from 'react';
+import React, {useCallback} from 'react';
 import {
   View,
-  SafeAreaView,
   StyleSheet,
-  ScrollView,
   Text,
   TextInput,
   Image,
@@ -27,10 +25,10 @@ import {useGetProfileDetails} from '../ProfileDetailScreen/profile.hooks';
 import {
   APPRECIATION,
   APPRECIATION_DETAILS,
+  APPRECIATION_SEARCH,
   PROFILE_DETAILS,
 } from '../../../constant/screenNames';
 import {ProfileIcon} from '../constants/icons';
-import SearchScreen from '../SearchScreen';
 
 const paginationData = {
   page: 1,
@@ -49,33 +47,38 @@ const HomeScreen = ({navigation}) => {
 
   const {data: topUsersList} = useGetTopUsersList();
 
-  const [isSearchActive, setSearchActive] = useState(false);
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {key: 'top10', title: 'Top 10'},
     {key: 'activeUser', title: 'Active user'},
   ]);
 
-  const FirstRoute = () => (
-    <View style={{flex: 1, backgroundColor: '#F4F6FF'}}>
-      <FlatList
-        data={activeUsersList}
-        renderItem={({item}) => <LeaderBoardCard userDetail={item} />}
-        keyExtractor={item => String(item.id)}
-        horizontal={true}
-      />
-    </View>
+  const FirstRoute = useCallback(
+    () => (
+      <View style={{flex: 1, backgroundColor: '#F4F6FF'}}>
+        <FlatList
+          data={activeUsersList}
+          renderItem={({item}) => <LeaderBoardCard userDetail={item} />}
+          keyExtractor={item => String(item.id)}
+          horizontal={true}
+        />
+      </View>
+    ),
+    [activeUsersList],
   );
 
-  const SecondRoute = () => (
-    <View style={{flex: 1, backgroundColor: '#F4F6FF', height: 20}}>
-      <FlatList
-        data={topUsersList}
-        renderItem={({item}) => <LeaderBoardCard userDetail={item} />}
-        keyExtractor={item => String(item.id)}
-        horizontal={true}
-      />
-    </View>
+  const SecondRoute = useCallback(
+    () => (
+      <View style={{flex: 1, backgroundColor: '#F4F6FF', height: 20}}>
+        <FlatList
+          data={topUsersList}
+          renderItem={({item}) => <LeaderBoardCard userDetail={item} />}
+          keyExtractor={item => String(item.id)}
+          horizontal={true}
+        />
+      </View>
+    ),
+    [topUsersList],
   );
 
   const renderScene = SceneMap({
@@ -100,6 +103,10 @@ const HomeScreen = ({navigation}) => {
       cardId: id,
       appriciationList: appreciationList,
     });
+  };
+
+  const handleSearchPress = () => {
+    navigation.navigate(APPRECIATION_SEARCH);
   };
 
   return (
@@ -131,43 +138,42 @@ const HomeScreen = ({navigation}) => {
           </View>
         </View>
       </Pressable>
+      <View>
+        <TextInput
+          onPressIn={handleSearchPress}
+          style={styles.searchInput}
+          value={''}
+          placeholder={'Search Co-Worker'}
+        />
+      </View>
+      <View style={{height: layout.height * 0.2}}>
+        <TabView
+          navigationState={{index, routes}}
+          renderScene={renderScene}
+          renderTabBar={renderTabBar}
+          onIndexChange={setIndex}
+          initialLayout={{width: layout.width}}
+        />
+      </View>
 
-      <SearchScreen searchActive={setSearchActive} navigation={navigation} />
-
-      {isSearchActive ? null : (
-        <>
-          <View style={{height: layout.height * 0.2}}>
-            <TabView
-              navigationState={{index, routes}}
-              renderScene={renderScene}
-              renderTabBar={renderTabBar}
-              onIndexChange={setIndex}
-              initialLayout={{width: layout.width}}
+      <View style={styles.appreciationListWrapper}>
+        <Text>Total: {appreciationListMeta?.total_records} Appreciations</Text>
+        <FlatList
+          data={appreciationList || []}
+          renderItem={({item}) => (
+            <AppreciationCard
+              appreciationDetails={item}
+              onPress={handleAppreciationCardClick}
             />
-          </View>
+          )}
+          keyExtractor={item => String(item.id)}
+          numColumns={2}
+        />
+      </View>
 
-          <View style={{flex: 1, backgroundColor: colors.WHITE}}>
-            <Text>
-              Total: {appreciationListMeta?.total_records} Appreciations
-            </Text>
-            <FlatList
-              data={appreciationList || []}
-              renderItem={({item}) => (
-                <AppreciationCard
-                  appreciationDetails={item}
-                  onPress={handleAppreciationCardClick}
-                />
-              )}
-              keyExtractor={item => String(item.id)}
-              numColumns={2}
-            />
-          </View>
-
-          <FloatingGiveAppreciationButton
-            onPress={() => navigation.navigate(APPRECIATION)}
-          />
-        </>
-      )}
+      <FloatingGiveAppreciationButton
+        onPress={() => navigation.navigate(APPRECIATION)}
+      />
     </>
   );
 };
@@ -217,5 +223,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.PRIMARY,
   },
+  searchInput: {
+    backgroundColor: colors.LIGHT_GREY_BACKGROUND,
+    padding: 10,
+    margin: 10,
+    borderRadius: 10,
+  },
+  appreciationListWrapper: {flex: 1, backgroundColor: colors.WHITE},
 });
 export default HomeScreen;
