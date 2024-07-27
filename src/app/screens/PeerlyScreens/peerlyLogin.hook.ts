@@ -16,7 +16,6 @@ export function useLoginPeerly() {
         AsyncStore.PEERLY_AUTH_TOKEN_KEY,
         response.data.AuthToken,
       );
-      toast(response.message);
     },
     onError: (error: AxiosError<APIError>) => {
       if (error.response?.data.message) {
