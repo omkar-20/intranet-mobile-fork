@@ -1,4 +1,5 @@
 import moment from 'moment';
+import {useState, useEffect} from 'react';
 
 const validateDate = (time: number): boolean => {
   if (typeof time !== 'number' || isNaN(time) || time <= 0) {
@@ -21,4 +22,19 @@ export const dateFormat = (time: number, format: string): string => {
   const date = moment.unix(time);
   const formattedDate = date.format(format);
   return formattedDate;
+};
+
+export const useDebounce = (value: string, delay: number) => {
+  const [debounceValue, setDebounce] = useState<string>('');
+  useEffect(() => {
+    const timeOut = setTimeout(() => {
+      setDebounce(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(timeOut);
+    };
+  }, [delay, value]);
+
+  return debounceValue;
 };
