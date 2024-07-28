@@ -20,9 +20,11 @@ import {
 import {dateFormat} from '../utils';
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
 import {useGetAppreciationList} from '../HomeScreen/home.hooks';
-import RewardInfoModal from '../Components/RewardInfoModal';
+import RewardInfoModal from '../components/RewardInfoModal';
 import {useGetProfileDetails} from './profile.hooks';
-import GivenAndReceivedAppriciation from '../Components/GivenAndReceivedAppreciation';
+import GivenAndReceivedAppriciation from '../components/GivenAndReceivedAppreciation';
+import {useRoute} from '@react-navigation/native';
+import {ProfileScreenRouteProp} from '../navigation/types';
 
 const paginationData = {
   page: 1,
@@ -48,10 +50,11 @@ const badgeData: BadgeMetaData = {
   },
 };
 
-const ProfileDetailScreen = ({route, navigation}: any) => {
+const ProfileDetailScreen = () => {
+  const route = useRoute<ProfileScreenRouteProp>();
+  const {userId} = route.params;
   const [isModalVisible, setModalVisible] = useState(false);
 
-  const {userId} = route.params;
   const {data: profileDetails} = useGetProfileDetails(userId);
 
   const userName = `${profileDetails?.first_name} ${profileDetails?.last_name}`;
@@ -144,7 +147,6 @@ const ProfileDetailScreen = ({route, navigation}: any) => {
           appreciationList={appreciationList}
           receivedList={receivedAppriciationList}
           expressedList={expressedAppriciationList}
-          navigation={navigation}
         />
       </View>
       <RewardInfoModal

@@ -1,10 +1,10 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {StyleSheet, View, TextInput} from 'react-native';
 import {useGetSearchAppreciationList} from './search.hooks';
-import useDebounce from './useDebounce';
-import GivenAndReceivedAppriciation from '../Components/GivenAndReceivedAppreciation';
+import {useDebounce} from '../utils';
+import GivenAndReceivedAppriciation from '../components/GivenAndReceivedAppreciation';
 
-const SearchScreen = ({navigation}) => {
+const SearchScreen = () => {
   const searchInputRef = useRef<TextInput>(null);
   const [searchName, setSearchName] = useState('');
   const debounceValue = useDebounce(searchName, 500);
@@ -63,7 +63,6 @@ const SearchScreen = ({navigation}) => {
           appreciationList={appreciationList}
           receivedList={receivedAppriciationList}
           expressedList={expressedAppriciationList}
-          navigation={navigation}
         />
       </View>
     </View>

@@ -11,11 +11,11 @@ import {
 } from 'react-native';
 
 import colors from '../../../constant/colors';
-import AppreciationCard from '.././Components/AppreciationCard';
+import AppreciationCard from '../components/AppreciationCard';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import fonts from '../../../constant/fonts';
 import FloatingGiveAppreciationButton from '../../../components/button/floatingGiveAppreciationButton';
-import LeaderBoardCard from '.././Components/LeaderBoardCard';
+import LeaderBoardCard from '../components/LeaderBoardCard';
 import {
   useGetAppreciationList,
   useGetActiveUsersList,
@@ -27,8 +27,10 @@ import {
   APPRECIATION_DETAILS,
   APPRECIATION_SEARCH,
   PROFILE_DETAILS,
-} from '../../../constant/screenNames';
+} from '../constants/screenNames';
 import {ProfileIcon} from '../constants/icons';
+import {useNavigation} from '@react-navigation/native';
+import {HomeScreenNavigationProp} from '../navigation/types';
 
 const paginationData = {
   page: 1,
@@ -36,7 +38,8 @@ const paginationData = {
   sort_order: 'DESC',
 };
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = () => {
+  const navigation = useNavigation<HomeScreenNavigationProp>();
   const layout = useWindowDimensions();
   const {data: profileDetails} = useGetProfileDetails();
 
