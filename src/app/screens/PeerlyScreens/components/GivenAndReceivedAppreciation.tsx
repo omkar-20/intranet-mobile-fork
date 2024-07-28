@@ -7,20 +7,29 @@ import {
   useWindowDimensions,
 } from 'react-native';
 
-import AppreciationCard from '../Components/AppreciationCard';
+import AppreciationCard from './AppreciationCard';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import colors from '../../../constant/colors';
 import fonts from '../../../constant/fonts';
-import {APPRECIATION_DETAILS} from '../../../constant/screenNames';
+import {APPRECIATION_DETAILS} from '../constants/screenNames';
 import {AppreciationDetails} from '../../../services/PeerlyServices/home/types';
+import {useNavigation} from '@react-navigation/native';
+import {AppreciationDetailScreenNavigationProp} from '../navigation/types';
+
+type GivenAndReceivedAppriciationProps = {
+  appreciationList: AppreciationDetails[];
+  receivedList: AppreciationDetails[];
+  expressedList: AppreciationDetails[];
+  self?: boolean;
+};
 
 const GivenAndReceivedAppriciation = ({
   appreciationList,
   self,
   receivedList,
   expressedList,
-  navigation,
-}: any) => {
+}: GivenAndReceivedAppriciationProps) => {
+  const navigation = useNavigation<AppreciationDetailScreenNavigationProp>();
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
 

@@ -14,12 +14,12 @@ import {
 } from './appreciation.hooks';
 import Typography from '../../../components/typography';
 import {useForm, Controller, SubmitHandler} from 'react-hook-form';
-import Select from '../Components/Select';
-import CenteredModal from '../Components/Modal';
+import Select from '../components/Select';
+import CenteredModal from '../components/Modal';
 import {ScrollView} from 'react-native-gesture-handler';
 import * as yup from 'yup';
 import {yupResolver} from '@hookform/resolvers/yup';
-import CoreValueInfoModal from '../Components/CoreValueInfoModal';
+import CoreValueInfoModal from '../components/CoreValueInfoModal';
 import {FormInput} from './types';
 
 import {SuccessIcon, InfoIcon} from '../constants/icons';
