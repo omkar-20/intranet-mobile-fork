@@ -2,8 +2,8 @@ import {
   GET_CORE_VALUES,
   GET_COWORKER_LIST,
   POST_APPRECIATION_ROUTE,
-} from '../../../constant/apiRoutes';
-import {apiCall} from '../index';
+} from '../../../screens/PeerlyScreens/constants/apiRoutes';
+import {apiCall} from '../api/index';
 import {
   GetCoworkersListRequest,
   GetCoworkersListResponse,

@@ -1,5 +1,5 @@
-import {PROFILE_DETAILS_ROUTE} from '../../../constant/apiRoutes';
-import {apiCall} from '../index';
+import {PROFILE_DETAILS_ROUTE} from '../../../screens/PeerlyScreens/constants/apiRoutes';
+import {apiCall} from '../api/index';
 import {GetProfileDetailsResponse} from './types';
 
 export const getProfileDetails = async () => {

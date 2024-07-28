@@ -2,8 +2,8 @@ import {
   GET_ACTIVE_USERS_ROUTE,
   GET_APPRECIATION_LIST_ROUTE,
   GET_TOP_USERS_ROUTE,
-} from '../../../constant/apiRoutes';
-import {apiCall} from '../index';
+} from '../../../screens/PeerlyScreens/constants/apiRoutes';
+import {apiCall} from '../api/index';
 import {
   GetActiveOrTopUsersListResponse,
   GetAppreciationListResponse,
