@@ -8,7 +8,14 @@ import {
 } from 'react-native';
 
 import AppreciationCard from './AppreciationCard';
-import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
+import {
+  SceneMap,
+  TabBar,
+  TabView,
+  Route,
+  NavigationState,
+  SceneRendererProps,
+} from 'react-native-tab-view';
 import colors from '../../../constant/colors';
 import fonts from '../../../constant/fonts';
 import {APPRECIATION_DETAILS} from '../constants/screenNames';
@@ -23,6 +30,13 @@ type GivenAndReceivedAppriciationProps = {
   self?: boolean;
 };
 
+interface tabBarRoute extends Route {
+  key: string;
+  title: string;
+}
+
+interface tabBarState extends NavigationState<tabBarRoute> {}
+
 const GivenAndReceivedAppriciation = ({
   appreciationList,
   self,
@@ -32,6 +46,11 @@ const GivenAndReceivedAppriciation = ({
   const navigation = useNavigation<AppreciationDetailScreenNavigationProp>();
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
+
+  const [routes] = React.useState<tabBarRoute[]>([
+    {key: 'received', title: 'Received'},
+    {key: 'expressed', title: 'Expressed'},
+  ]);
 
   const getAppriciationDetails = useCallback(
     (currentId: number) => {
@@ -52,11 +71,6 @@ const GivenAndReceivedAppriciation = ({
     },
     [appreciationList, getAppriciationDetails, navigation, self],
   );
-
-  const [routes] = React.useState([
-    {key: 'received', title: 'Received'},
-    {key: 'expressed', title: 'Expressed'},
-  ]);
 
   const FirstRoute = useCallback(
     () => (
@@ -101,7 +115,9 @@ const GivenAndReceivedAppriciation = ({
     expressed: SecondRoute,
   });
 
-  const renderTabBar = (props: any) => (
+  const renderTabBar = (
+    props: SceneRendererProps & {navigationState: tabBarState},
+  ) => (
     <TabBar
       {...props}
       labelStyle={styles.labelStyle}
