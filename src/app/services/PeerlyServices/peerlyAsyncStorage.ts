@@ -1,9 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-class AsyncStore {
-  static AUTH_TOKEN_KEY = 'authToken';
-  static USER_DATA = 'user_data';
-  static APPLE_USER_EMAIL_ID = 'appleUserEmailId';
+class PeerlyAsyncStore {
+  static PEERLY_AUTH_TOKEN_KEY = 'peerly_authToken';
 
   static setItem = async (key: string, value: string) => {
     await AsyncStorage.setItem(key, value);
@@ -18,4 +16,4 @@ class AsyncStore {
   };
 }
 
-export default AsyncStore;
+export default PeerlyAsyncStore;

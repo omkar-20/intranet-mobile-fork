@@ -23,8 +23,3 @@ export interface PeerlyLoginResponse {
     AuthToken: string;
   };
 }
-
-export interface PeerlyError {
-  status: string;
-  message: string;
-}

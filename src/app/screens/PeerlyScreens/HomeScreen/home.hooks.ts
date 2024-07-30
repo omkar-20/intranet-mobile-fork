@@ -55,7 +55,13 @@ export function useGetActiveUsersList() {
 
 export function useGetAppreciationList(payload: GetAppreciationListRequest) {
   const {data, isLoading, isFetching, isSuccess, isError} = useQuery({
-    queryKey: ['appreciation_list'],
+    queryKey: [
+      'appreciation_list',
+      payload.page,
+      payload.page_size,
+      payload.self,
+      payload.sort_order,
+    ],
     queryFn: () => getAppreciationList(payload),
     onError: (error: AxiosError<APIError>) => {
       if (error.response?.data.message) {
@@ -67,6 +73,7 @@ export function useGetAppreciationList(payload: GetAppreciationListRequest) {
   });
   return {
     data: data?.data.appreciations || [],
+    metadata: data?.data.metadata,
     isLoading,
     isFetching,
     isSuccess,

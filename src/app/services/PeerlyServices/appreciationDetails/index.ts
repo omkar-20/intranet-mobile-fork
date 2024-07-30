@@ -1,8 +1,8 @@
 import {
   POST_REWARD_ROUTE,
   POST_OBJECTION_ROUTE,
-} from '../../../constant/apiRoutes';
-import {apiCall} from '../index';
+} from '../../../screens/PeerlyScreens/constants/apiRoutes';
+import {apiCall} from '../api/index';
 import {
   PostRewardRequest,
   PostRewardRequestBody,

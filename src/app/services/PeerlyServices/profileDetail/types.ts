@@ -6,9 +6,11 @@ export type ProfileDetailsDetail = {
   profile_image_url: string;
   designation: string;
   reward_quota_balance: number;
+  total_reward_quota: number;
   grade_id: number;
   employee_id: number;
   total_points: number;
+  refil_date: number;
   badge: string;
   badge_created_at: number;
 };

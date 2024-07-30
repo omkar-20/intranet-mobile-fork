@@ -1,9 +1,7 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {
   View,
-  SafeAreaView,
   StyleSheet,
-  ScrollView,
   Text,
   TextInput,
   Image,
@@ -13,11 +11,11 @@ import {
 } from 'react-native';
 
 import colors from '../../../constant/colors';
-import AppreciationCard from '.././Components/AppreciationCard';
+import AppreciationCard from '../components/AppreciationCard';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import fonts from '../../../constant/fonts';
 import FloatingGiveAppreciationButton from '../../../components/button/floatingGiveAppreciationButton';
-import LeaderBoardCard from '.././Components/LeaderBoardCard';
+import LeaderBoardCard from '../components/LeaderBoardCard';
 import {
   useGetAppreciationList,
   useGetActiveUsersList,
@@ -27,20 +25,26 @@ import {useGetProfileDetails} from '../ProfileDetailScreen/profile.hooks';
 import {
   APPRECIATION,
   APPRECIATION_DETAILS,
+  APPRECIATION_SEARCH,
   PROFILE_DETAILS,
-} from '../../../constant/screenNames';
+} from '../constants/screenNames';
 import {ProfileIcon} from '../constants/icons';
+import {useNavigation} from '@react-navigation/native';
+import {HomeScreenNavigationProp} from '../navigation/types';
 
 const paginationData = {
   page: 1,
   page_size: 500,
+  sort_order: 'DESC',
 };
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = () => {
+  const navigation = useNavigation<HomeScreenNavigationProp>();
   const layout = useWindowDimensions();
   const {data: profileDetails} = useGetProfileDetails();
 
-  const {data: appreciationList} = useGetAppreciationList(paginationData);
+  const {data: appreciationList, metadata: appreciationListMeta} =
+    useGetAppreciationList(paginationData);
 
   const {data: activeUsersList} = useGetActiveUsersList();
 
@@ -52,26 +56,32 @@ const HomeScreen = ({navigation}) => {
     {key: 'activeUser', title: 'Active user'},
   ]);
 
-  const FirstRoute = () => (
-    <View style={{flex: 1, backgroundColor: '#F4F6FF'}}>
-      <FlatList
-        data={activeUsersList}
-        renderItem={({item}) => <LeaderBoardCard userDetail={item} />}
-        keyExtractor={item => item.id}
-        horizontal={true}
-      />
-    </View>
+  const FirstRoute = useCallback(
+    () => (
+      <View style={{flex: 1, backgroundColor: '#F4F6FF'}}>
+        <FlatList
+          data={activeUsersList}
+          renderItem={({item}) => <LeaderBoardCard userDetail={item} />}
+          keyExtractor={item => String(item.id)}
+          horizontal={true}
+        />
+      </View>
+    ),
+    [activeUsersList],
   );
 
-  const SecondRoute = () => (
-    <View style={{flex: 1, backgroundColor: '#F4F6FF', height: 20}}>
-      <FlatList
-        data={topUsersList}
-        renderItem={({item}) => <LeaderBoardCard userDetail={item} />}
-        keyExtractor={item => item.id}
-        horizontal={true}
-      />
-    </View>
+  const SecondRoute = useCallback(
+    () => (
+      <View style={{flex: 1, backgroundColor: '#F4F6FF', height: 20}}>
+        <FlatList
+          data={topUsersList}
+          renderItem={({item}) => <LeaderBoardCard userDetail={item} />}
+          keyExtractor={item => String(item.id)}
+          horizontal={true}
+        />
+      </View>
+    ),
+    [topUsersList],
   );
 
   const renderScene = SceneMap({
@@ -98,12 +108,16 @@ const HomeScreen = ({navigation}) => {
     });
   };
 
+  const handleSearchPress = () => {
+    navigation.navigate(APPRECIATION_SEARCH);
+  };
+
   return (
     <>
       <Pressable
         onPress={() =>
           navigation.navigate(PROFILE_DETAILS, {
-            details: profileDetails,
+            userId: profileDetails?.employee_id,
           })
         }>
         <View style={styles.header}>
@@ -112,14 +126,14 @@ const HomeScreen = ({navigation}) => {
             <Text>
               {profileDetails?.total_points && (
                 <Text style={styles.scoreText}>
-                  {profileDetails?.total_points}
+                  {profileDetails.total_points}
                 </Text>
               )}
             </Text>
             <Image
               source={
                 profileDetails?.profile_image_url
-                  ? {uri: profileDetails?.profile_image_url}
+                  ? {uri: profileDetails.profile_image_url}
                   : ProfileIcon
               }
               style={styles.userAvatar}
@@ -127,9 +141,13 @@ const HomeScreen = ({navigation}) => {
           </View>
         </View>
       </Pressable>
-
-      <TextInput style={styles.searchInput} placeholder={'Search Co-Worker'} />
-
+      <View>
+        <TextInput
+          onPressIn={handleSearchPress}
+          style={styles.searchInput}
+          placeholder="Search Co-Worker"
+        />
+      </View>
       <View style={{height: layout.height * 0.2}}>
         <TabView
           navigationState={{index, routes}}
@@ -140,7 +158,8 @@ const HomeScreen = ({navigation}) => {
         />
       </View>
 
-      <View style={{flex: 1, backgroundColor: colors.WHITE}}>
+      <View style={styles.appreciationListWrapper}>
+        <Text>Total: {appreciationListMeta?.total_records} Appreciations</Text>
         <FlatList
           data={appreciationList || []}
           renderItem={({item}) => (
@@ -188,18 +207,11 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 15,
   },
-  searchInput: {
-    backgroundColor: colors.LIGHT_GREY_BACKGROUND,
-    padding: 10,
-    margin: 10,
-    borderRadius: 10,
-  },
   activeTab: {
     fontWeight: 'bold',
     borderBottomWidth: 2,
     borderBottomColor: 'blue',
   },
-
   labelStyle: {
     color: colors.LABEL_COLOR_SECONDARY,
     textAlign: 'left',
@@ -207,13 +219,18 @@ const styles = StyleSheet.create({
     fontFamily: fonts.ARIAL,
     textTransform: 'none',
   },
-
   indicatorStyle: {backgroundColor: colors.PRIMARY},
-
   tabBarContainer: {
     backgroundColor: '#F4F6FF',
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.PRIMARY,
   },
+  searchInput: {
+    backgroundColor: colors.LIGHT_GREY_BACKGROUND,
+    padding: 10,
+    margin: 10,
+    borderRadius: 10,
+  },
+  appreciationListWrapper: {flex: 1, backgroundColor: colors.WHITE},
 });
 export default HomeScreen;

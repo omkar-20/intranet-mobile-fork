@@ -1,10 +1,10 @@
 import {useQuery} from 'react-query';
-import {loginPeerly} from '../../services/PeerlyServices';
-import AsyncStore from '../../services/asyncStorage';
+import {loginPeerly} from '../../services/PeerlyServices/api/login';
 import {AxiosError} from 'axios';
 import {APIError} from './types';
 import toast from '../../utils/toast';
-import {PeerlyLoginResponse} from '../../services/PeerlyServices/types';
+import {PeerlyLoginResponse} from '../../services/PeerlyServices/api/types';
+import PeerlyAsyncStore from '../../services/PeerlyServices/peerlyAsyncStorage';
 
 export function useLoginPeerly() {
   const {data, isLoading, isFetching, isSuccess, isError} = useQuery({
@@ -12,11 +12,10 @@ export function useLoginPeerly() {
     queryFn: loginPeerly,
 
     onSuccess: async (response: PeerlyLoginResponse) => {
-      await AsyncStore.setItem(
-        AsyncStore.PEERLY_AUTH_TOKEN_KEY,
+      await PeerlyAsyncStore.setItem(
+        PeerlyAsyncStore.PEERLY_AUTH_TOKEN_KEY,
         response.data.AuthToken,
       );
-      toast(response.message);
     },
     onError: (error: AxiosError<APIError>) => {
       if (error.response?.data.message) {

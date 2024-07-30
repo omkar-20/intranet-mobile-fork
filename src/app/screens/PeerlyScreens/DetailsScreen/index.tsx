@@ -1,20 +1,22 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import colors from '../../../constant/colors';
-import RatingBar from '../Components/RatingBar';
-import ObjectionModal from '../Components/ObjectionModal';
+import RatingBar from '../components/RatingBar';
+import ObjectionModal from '../components/ObjectionModal';
 import {usePostReward, usePostObjection} from './details.hooks';
-import CenteredModal from '../Components/Modal';
-import RewardSuccessIcon from '../../../../assets/peerly/svg/rewardSuccess.svg';
-import SuccessIcon from '../../../../assets/peerly/svg/Vector.svg';
-import {ProfileIcon} from '../constants/icons';
+import CenteredModal from '../components/Modal';
+import {ProfileIcon, RewardSuccessIcon, SuccessIcon} from '../constants/icons';
 import {AppreciationDetails} from '../../../services/PeerlyServices/home/types';
+import {useRoute} from '@react-navigation/native';
+import {AppreciationDetailScreenRouteProp} from '../navigation/types';
 
-const AppreciationDetailsScreen = ({route}) => {
+const AppreciationDetailsScreen = () => {
+  const route = useRoute<AppreciationDetailScreenRouteProp>();
   const {cardId, appriciationList, self} = route.params;
   const cardDetails = appriciationList.find(
     (item: AppreciationDetails) => item.id === cardId,
   );
+
   const [reward, setReward] = useState(0);
   const [reason, setReason] = useState('');
   const [isObjectionModalVisible, setObjectionModalVisible] = useState(false);
@@ -46,24 +48,36 @@ const AppreciationDetailsScreen = ({route}) => {
   }, [isSuccessPostObjection, isObjectionModalVisible]);
 
   const handleReward = (point: number) => {
-    const payload = {
-      params: {
-        id: cardDetails.id,
-      },
-      body: {point: point},
-    };
-    postReward(payload);
+    if (cardDetails) {
+      const payload = {
+        params: {
+          id: cardDetails.id,
+        },
+        body: {point: point},
+      };
+      postReward(payload);
+    }
   };
 
   const handleObjectionReason = () => {
-    const payload = {
-      params: {
-        id: cardDetails.id,
-      },
-      body: {reporting_comment: reason},
-    };
-    postObjection(payload);
+    if (cardDetails) {
+      const payload = {
+        params: {
+          id: cardDetails.id,
+        },
+        body: {reporting_comment: reason},
+      };
+      postObjection(payload);
+    }
   };
+
+  if (!cardDetails) {
+    return (
+      <View>
+        <Text>No Card Details Found</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -90,7 +104,9 @@ const AppreciationDetailsScreen = ({route}) => {
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
         <View style={styles.info}>
           <Text style={styles.name}>
-            {`${cardDetails.receiver_first_name} ${cardDetails.receiver_last_name} `}
+            {`${cardDetails?.receiver_first_name || ''} ${
+              cardDetails?.receiver_last_name || ''
+            } `}
           </Text>
           <Text style={styles.title}>{cardDetails.receiver_designation}</Text>
         </View>
@@ -109,7 +125,7 @@ const AppreciationDetailsScreen = ({route}) => {
           <Text
             style={
               styles.author
-            }>{`${cardDetails.sender_first_name} ${cardDetails.sender_last_name}`}</Text>
+            }>{`${cardDetails?.sender_first_name} ${cardDetails?.sender_last_name}`}</Text>
         </View>
 
         <Text style={styles.loremText}>{cardDetails.description}</Text>
@@ -117,7 +133,7 @@ const AppreciationDetailsScreen = ({route}) => {
 
       <RatingBar
         onPressObjection={() => setObjectionModalVisible(true)}
-        rewardedByPeople={cardDetails.total_rewards}
+        rewardedByPeople={cardDetails?.total_rewards}
         reward={reward}
         setReward={handleReward}
         disableSlider={isLoadingPostReward}

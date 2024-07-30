@@ -1,15 +1,11 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-  Button,
-  FlatList,
   Image,
-  Modal,
   SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  useWindowDimensions,
 } from 'react-native';
 import {BadgeMetaData} from './types';
 import {
@@ -24,13 +20,11 @@ import {
 import {dateFormat} from '../utils';
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
 import {useGetAppreciationList} from '../HomeScreen/home.hooks';
-import AppreciationCard from '../Components/AppreciationCard';
-import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
-import colors from '../../../constant/colors';
-import fonts from '../../../constant/fonts';
-import {APPRECIATION_DETAILS} from '../../../constant/screenNames';
-import {AppreciationDetails} from '../../../services/PeerlyServices/home/types';
-import RewardInfoModal from '../Components/RewardInfoModal';
+import RewardInfoModal from '../components/RewardInfoModal';
+import {useGetProfileDetails} from './profile.hooks';
+import GivenAndReceivedAppriciation from '../components/GivenAndReceivedAppreciation';
+import {useRoute} from '@react-navigation/native';
+import {ProfileScreenRouteProp} from '../navigation/types';
 
 const paginationData = {
   page: 1,
@@ -56,110 +50,36 @@ const badgeData: BadgeMetaData = {
   },
 };
 
-const ProfileDetailScreen = ({route, navigation}: any) => {
-  const layout = useWindowDimensions();
-  const [index, setIndex] = useState(0);
+const ProfileDetailScreen = () => {
+  const route = useRoute<ProfileScreenRouteProp>();
+  const {userId} = route.params;
   const [isModalVisible, setModalVisible] = useState(false);
 
-  const {details} = route.params;
+  const {data: profileDetails} = useGetProfileDetails(userId);
 
-  const {
-    first_name,
-    last_name,
-    profile_image_url,
-    designation,
-    badge,
-    reward_quota_balance,
-    refil_date,
-    total_points,
-    total_reward_quota,
-  } = details;
-
-  const name = `${first_name} ${last_name}`;
-  const BadgeIcon = badgeData[badge.toLowerCase()]?.icon || GoldIcon;
+  const userName = `${profileDetails?.first_name} ${profileDetails?.last_name}`;
+  const badge = profileDetails?.badge.toLowerCase() || false;
+  const BadgeIcon = badge ? badgeData[badge]?.icon : '';
 
   const {data: appreciationList} = useGetAppreciationList(paginationData);
 
-  const getCurrentAppriciationDetails = (currentId: number) => {
-    const currentAppreciation = appreciationList.filter(
-      (item: AppreciationDetails) => item.id === currentId,
-    );
-    return currentAppreciation || [];
-  };
+  const userNameLowerCase = `${(
+    profileDetails?.first_name || ''
+  ).toLowerCase()} ${(profileDetails?.last_name || '').toLowerCase()}`;
 
-  const handleAppreciationCardClick = (id: number) => {
-    navigation.navigate(APPRECIATION_DETAILS, {
-      cardId: id,
-      appriciationList: getCurrentAppriciationDetails(id),
-      self: true,
-    });
-  };
-
-  const receivedAppriciationList = appreciationList.filter(
-    item =>
-      item.receiver_first_name === first_name &&
-      item.receiver_last_name === last_name,
-  );
-
-  const expressedAppriciationList = appreciationList.filter(
-    item =>
-      item.sender_first_name === first_name &&
-      item.sender_last_name === last_name,
-  );
-
-  const [routes] = React.useState([
-    {key: 'received', title: 'Received'},
-    {key: 'expressed', title: 'Expressed'},
-  ]);
-
-  const FirstRoute = () => (
-    <View style={{backgroundColor: '#F4F6FF'}}>
-      <FlatList
-        data={receivedAppriciationList || []}
-        renderItem={({item}) => (
-          <AppreciationCard
-            appreciationDetails={item}
-            onPress={handleAppreciationCardClick}
-          />
-        )}
-        keyExtractor={item => String(item.id)}
-        numColumns={2}
-      />
-    </View>
-  );
-
-  const SecondRoute = () => (
-    <View style={{backgroundColor: '#F4F6FF'}}>
-      <FlatList
-        data={expressedAppriciationList || []}
-        renderItem={({item}) => (
-          <AppreciationCard
-            appreciationDetails={item}
-            onPress={handleAppreciationCardClick}
-          />
-        )}
-        keyExtractor={item => String(item.id)}
-        numColumns={2}
-      />
-    </View>
-  );
-
-  const renderScene = SceneMap({
-    received: FirstRoute,
-    expressed: SecondRoute,
+  const receivedAppriciationList = appreciationList.filter(item => {
+    const fname = (item?.receiver_first_name || '').toLowerCase();
+    const lname = (item?.receiver_last_name || '').toLowerCase();
+    const receiverName = `${fname} ${lname}`;
+    return receiverName.includes(userNameLowerCase);
   });
 
-  const renderTabBar = (props: any) => (
-    <TabBar
-      {...props}
-      labelStyle={styles.labelStyle}
-      scrollEnabled={true}
-      inactiveColor={colors.SECONDARY}
-      activeColor={colors.PRIMARY}
-      indicatorStyle={styles.indicatorStyle}
-      style={styles.tabBarContainer}
-    />
-  );
+  const expressedAppriciationList = appreciationList.filter(item => {
+    const fname = (item?.sender_first_name || '').toLowerCase();
+    const lname = (item?.sender_last_name || '').toLowerCase();
+    const receiverName = `${fname} ${lname}`;
+    return receiverName.includes(userNameLowerCase);
+  });
 
   const openModal = () => {
     setModalVisible(true);
@@ -170,18 +90,22 @@ const ProfileDetailScreen = ({route, navigation}: any) => {
       <View style={styles.profileDetailsBox}>
         <Image
           style={styles.profileImage}
-          source={profile_image_url ? {uri: profile_image_url} : ProfileIcon}
+          source={
+            profileDetails?.profile_image_url
+              ? {uri: profileDetails.profile_image_url}
+              : ProfileIcon
+          }
         />
         <View>
-          <Text style={[styles.name, styles.bold]}>{name}</Text>
-          <Text>{designation}</Text>
-          <Text>
-            {badgeData[badge.toLowerCase()]?.member || badgeData.gold?.member}
-          </Text>
+          <Text style={[styles.name, styles.bold]}>{userName}</Text>
+          <Text>{profileDetails?.designation}</Text>
+          <Text>{badge ? badgeData[badge.toLowerCase()]?.member : null}</Text>
         </View>
         <View>
-          <BadgeIcon />
-          <Text style={[styles.name, styles.bold]}>{total_points || 2000}</Text>
+          {badge ? <BadgeIcon /> : null}
+          <Text style={[styles.name, styles.bold]}>
+            {profileDetails?.total_points}
+          </Text>
           <Text style={[styles.name, styles.bold]}>Reward Points</Text>
         </View>
       </View>
@@ -193,29 +117,39 @@ const ProfileDetailScreen = ({route, navigation}: any) => {
               <InfoIcon width={16} height={16} />
             </TouchableOpacity>
           </Text>
-          <Text>Refill on {dateFormat(refil_date, 'MMMM YYYY')}</Text>
+          <Text>
+            {profileDetails?.refil_date
+              ? `Refill on ${dateFormat(
+                  profileDetails?.refil_date,
+                  'MMMM YYYY',
+                )}`
+              : null}
+          </Text>
         </View>
         <View style={styles.progressBar}>
-          <CircularProgressBase
-            clockwise={false}
-            value={reward_quota_balance}
-            radius={30}
-            maxValue={total_reward_quota}
-            activeStrokeColor={'#F3A552'}
-            inActiveStrokeColor={'#F5F8FF'}>
-            <View>
-              <StarIcon width={25} height={25} />
-            </View>
-          </CircularProgressBase>
+          {profileDetails?.reward_quota_balance &&
+            profileDetails?.total_reward_quota && (
+              <CircularProgressBase
+                clockwise={false}
+                value={profileDetails.reward_quota_balance}
+                radius={30}
+                maxValue={profileDetails.total_reward_quota}
+                activeStrokeColor={'#F3A552'}
+                inActiveStrokeColor={'#F5F8FF'}>
+                <View>
+                  <StarIcon width={25} height={25} />
+                </View>
+              </CircularProgressBase>
+            )}
         </View>
       </View>
+
       <View style={styles.appreciationList}>
-        <TabView
-          navigationState={{index, routes}}
-          renderScene={renderScene}
-          renderTabBar={renderTabBar}
-          onIndexChange={setIndex}
-          initialLayout={{width: layout.width}}
+        <GivenAndReceivedAppriciation
+          self={true}
+          appreciationList={appreciationList}
+          receivedList={receivedAppriciationList}
+          expressedList={expressedAppriciationList}
         />
       </View>
       <RewardInfoModal
@@ -277,21 +211,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     height: '100%',
-  },
-  labelStyle: {
-    color: colors.LABEL_COLOR_SECONDARY,
-    textAlign: 'left',
-    fontSize: 14,
-    fontFamily: fonts.ARIAL,
-    textTransform: 'none',
-  },
-  indicatorStyle: {backgroundColor: colors.PRIMARY},
-  tabBarContainer: {
-    height: 50,
-    width: '100%',
-    backgroundColor: '#F4F6FF',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.PRIMARY,
   },
 });
 export default ProfileDetailScreen;

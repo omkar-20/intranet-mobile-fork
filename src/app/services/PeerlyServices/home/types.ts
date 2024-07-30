@@ -36,9 +36,11 @@ export interface AppreciationDetails {
 }
 
 export type GetAppreciationListRequest = {
-  page: number;
-  page_size: number;
+  page?: number;
+  page_size?: number;
   self?: boolean;
+  name?: string;
+  sort_order?: string;
 };
 
 export type GetAppreciationListResponse = {
@@ -51,6 +53,7 @@ export type GetAppreciationListResponse = {
       page: number;
       page_size: number;
       total_page: number;
+      total_records: number;
     };
   };
 };

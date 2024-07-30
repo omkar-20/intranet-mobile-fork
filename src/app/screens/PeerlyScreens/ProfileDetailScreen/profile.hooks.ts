@@ -5,9 +5,9 @@ import toast from '../../../utils/toast';
 
 import {getProfileDetails} from '../../../services/PeerlyServices/profileDetail';
 
-export function useGetProfileDetails() {
+export function useGetProfileDetails(userId?: number) {
   const {data, isLoading, isFetching, isSuccess, isError} = useQuery({
-    queryKey: ['profile_icon'],
+    queryKey: ['profile_icon', userId],
     queryFn: getProfileDetails,
     onError: (error: AxiosError<APIError>) => {
       if (error.response?.data.message) {
