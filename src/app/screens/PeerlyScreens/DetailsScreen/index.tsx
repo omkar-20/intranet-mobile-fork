@@ -104,7 +104,9 @@ const AppreciationDetailsScreen = () => {
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
         <View style={styles.info}>
           <Text style={styles.name}>
-            {`${cardDetails?.receiver_first_name} ${cardDetails?.receiver_last_name} `}
+            {`${cardDetails?.receiver_first_name || ''} ${
+              cardDetails?.receiver_last_name || ''
+            } `}
           </Text>
           <Text style={styles.title}>{cardDetails.receiver_designation}</Text>
         </View>
