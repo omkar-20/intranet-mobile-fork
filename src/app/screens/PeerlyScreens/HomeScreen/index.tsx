@@ -145,8 +145,7 @@ const HomeScreen = () => {
         <TextInput
           onPressIn={handleSearchPress}
           style={styles.searchInput}
-          value={''}
-          placeholder={'Search Co-Worker'}
+          placeholder="Search Co-Worker"
         />
       </View>
       <View style={{height: layout.height * 0.2}}>

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Image,
   SafeAreaView,
@@ -127,17 +127,20 @@ const ProfileDetailScreen = () => {
           </Text>
         </View>
         <View style={styles.progressBar}>
-          <CircularProgressBase
-            clockwise={false}
-            value={profileDetails?.reward_quota_balance || 0}
-            radius={30}
-            maxValue={profileDetails?.total_reward_quota || 0}
-            activeStrokeColor={'#F3A552'}
-            inActiveStrokeColor={'#F5F8FF'}>
-            <View>
-              <StarIcon width={25} height={25} />
-            </View>
-          </CircularProgressBase>
+          {profileDetails?.reward_quota_balance &&
+            profileDetails?.total_reward_quota && (
+              <CircularProgressBase
+                clockwise={false}
+                value={profileDetails.reward_quota_balance}
+                radius={30}
+                maxValue={profileDetails.total_reward_quota}
+                activeStrokeColor={'#F3A552'}
+                inActiveStrokeColor={'#F5F8FF'}>
+                <View>
+                  <StarIcon width={25} height={25} />
+                </View>
+              </CircularProgressBase>
+            )}
         </View>
       </View>
 

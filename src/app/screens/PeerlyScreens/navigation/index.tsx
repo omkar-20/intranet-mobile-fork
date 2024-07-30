@@ -24,7 +24,7 @@ function PeerlyHomeScreen() {
   if (isLoading || isFetching) {
     return (
       <View>
-        <ActivityIndicator size={'large'} />
+        <ActivityIndicator size="large" />
       </View>
     );
   }
