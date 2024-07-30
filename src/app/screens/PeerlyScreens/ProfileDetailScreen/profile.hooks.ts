@@ -7,7 +7,7 @@ import {getProfileDetails} from '../../../services/PeerlyServices/profileDetail'
 
 export function useGetProfileDetails(userId?: number) {
   const {data, isLoading, isFetching, isSuccess, isError} = useQuery({
-    queryKey: userId ? ['profile_icon', userId] : ['profile_icon'],
+    queryKey: ['profile_icon', userId],
     queryFn: getProfileDetails,
     onError: (error: AxiosError<APIError>) => {
       if (error.response?.data.message) {
