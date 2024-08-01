@@ -46,8 +46,8 @@ const SearchScreen = () => {
   const expressedAppriciationList = appreciationList.filter(item => {
     const fname = (item?.sender_first_name || '').toLowerCase();
     const lname = (item?.sender_last_name || '').toLowerCase();
-    const receiverName = `${fname} ${lname}`;
-    return receiverName.includes(getSearchName);
+    const senderName = `${fname} ${lname}`;
+    return senderName.includes(getSearchName);
   });
 
   return (
