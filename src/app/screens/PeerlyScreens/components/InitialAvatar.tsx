@@ -5,7 +5,6 @@ import colors from '../constants/colors';
 const colorsArray = [
   '#FF5733', // Red
   '#33FF57', // Green
-  '#3357FF', // Blue
   '#FF33A8', // Pink
   '#33FFF6', // Cyan
   '#FF8C33', // Orange

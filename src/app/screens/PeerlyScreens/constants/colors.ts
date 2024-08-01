@@ -37,4 +37,5 @@ export default {
   SILVER: '#888888',
   BRONZE: '#CC6741',
   CHARCOAL: '#383838',
+  GRAY_MEDIUM: '#797979',
 };

@@ -1,9 +1,11 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import colors from '../../../constant/colors';
+import {View, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import colors from '../constants/colors';
 import {AppreciationDetails} from '../../../services/PeerlyServices/home/types';
-import {timeFromNow} from '../utils';
-import {BlackStar, ProfileIcon} from '../constants/icons';
+import {formatNumber, timeFromNow} from '../utils';
+import {BlackStar} from '../constants/icons';
+import InitialAvatar from './InitialAvatar';
+import Typography from './typography';
 
 type Props = {
   onPress?: (id: number) => void;
@@ -11,61 +13,70 @@ type Props = {
 };
 
 const AppreciationCard = ({onPress, appreciationDetails}: Props) => {
+  const receiverName = `${appreciationDetails.receiver_first_name || ''} ${
+    appreciationDetails.receiver_last_name || ''
+  }`;
+  const senderName = `${appreciationDetails.sender_first_name || ''} ${
+    appreciationDetails.sender_last_name || ''
+  }`;
   return (
     <View style={styles.card}>
       <TouchableOpacity onPress={() => onPress(appreciationDetails.id)}>
         <View style={styles.header}>
           <View style={styles.avatarContainer}>
-            <Image
-              source={
-                appreciationDetails.receiver_image_url
-                  ? {uri: appreciationDetails.receiver_image_url}
-                  : ProfileIcon
-              }
-              style={styles.avatar}
-            />
-            <Image
-              source={
-                appreciationDetails?.sender_image_url
-                  ? {uri: appreciationDetails.sender_image_url}
-                  : ProfileIcon
-              }
-              //style={[styles.avatar, styles.smallAvatar]}
-              style={[styles.smallAvatar]}
-            />
+            {appreciationDetails.receiver_image_url ? (
+              <Image
+                source={{uri: appreciationDetails.receiver_image_url}}
+                style={styles.avatar}
+              />
+            ) : (
+              <View style={styles.initialAvatarBig}>
+                <InitialAvatar name={receiverName} size={60} />
+              </View>
+            )}
+            {appreciationDetails?.sender_image_url ? (
+              <Image
+                source={{uri: appreciationDetails.sender_image_url}}
+                style={[styles.smallAvatar]}
+              />
+            ) : (
+              <View style={styles.initialAvatarSmall}>
+                <InitialAvatar name={senderName} size={47} />
+              </View>
+            )}
           </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <BlackStar color={colors.SECONDARY} />
-            <Text style={styles.starCount}>
-              {appreciationDetails.total_reward_points}
-            </Text>
+          <View style={styles.totalRewardBox}>
+            <BlackStar widht={14} height={14} />
+            <Typography type="h4" style={styles.starCount}>
+              {formatNumber(appreciationDetails.total_reward_points)}
+            </Typography>
           </View>
         </View>
         <View style={styles.content}>
-          <Text style={styles.name}>
-            {`${appreciationDetails.receiver_first_name} ${appreciationDetails.receiver_last_name}`}
-          </Text>
-          <Text style={styles.role}>
+          <Typography type="h3" style={styles.receiverName}>
+            {receiverName}
+          </Typography>
+          <Typography type="h5" style={styles.role}>
             {appreciationDetails.receiver_designation}
-          </Text>
-          <Text style={styles.appreciation}>
-            Appreciated by{' '}
-            {`${appreciationDetails.sender_first_name} ${appreciationDetails.sender_last_name}`}
-          </Text>
-          <Text style={styles.days}>
+          </Typography>
+          <Typography type="h5" style={styles.appreciation}>
+            Appreciated by
+          </Typography>
+          <Typography type="h4" style={styles.senderName}>
+            {senderName}
+          </Typography>
+          <Typography type="h6" style={styles.days}>
             {timeFromNow(appreciationDetails.created_at)}
-          </Text>
+          </Typography>
         </View>
         <View style={styles.footer}>
-          <View style={{padding: 5}}>
-            <Text style={styles.coreValue}>Core Value</Text>
-            <Text style={styles.value}>
+          <View style={styles.coreValueBox}>
+            <Typography type="h6" style={styles.coreValueLabel}>
+              Core Value
+            </Typography>
+            <Typography type="h4" style={styles.coreValue}>
               {appreciationDetails.core_value_name}
-            </Text>
+            </Typography>
           </View>
         </View>
       </TouchableOpacity>
@@ -76,14 +87,11 @@ const AppreciationCard = ({onPress, appreciationDetails}: Props) => {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.LIGHT_GREY_BACKGROUND,
-    borderRadius: 15,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
     shadowRadius: 5,
-    elevation: 5,
     marginTop: 40,
-    marginBottom: 10,
+    marginBottom: 20,
     marginLeft: 10,
     marginRight: 10,
     width: '45%',
@@ -107,59 +115,103 @@ const styles = StyleSheet.create({
     marginRight: -10,
     marginTop: -40,
   },
+  initialAvatarBig: {
+    width: 64,
+    height: 64,
+    borderRadius: 33,
+    marginRight: -10,
+    marginTop: -40,
+    borderWidth: 2,
+    borderColor: colors.PRIMARY,
+  },
   smallAvatar: {
-    width: 45,
-    height: 45,
-    borderRadius: 23,
+    width: 50,
+    height: 50,
+    borderRadius: 33,
     marginTop: -20,
-    borderColor: colors.WHITE,
+    borderColor: colors.PRIMARY,
     borderWidth: 2,
     overflow: 'hidden',
     position: 'absolute',
     left: 45,
+  },
+  initialAvatarSmall: {
+    width: 50,
+    height: 50,
+    borderRadius: 33,
+    marginTop: -20,
+    overflow: 'hidden',
+    position: 'absolute',
+    left: 45,
+    borderWidth: 2,
+    borderColor: colors.PRIMARY,
   },
   icon: {
     marginLeft: 'auto',
   },
   starCount: {
     marginLeft: 5,
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: '300',
+    lineHeight: 17,
   },
   content: {
     marginTop: 10,
     padding: 5,
   },
-  name: {
-    fontSize: 18,
+  totalRewardBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    width: 60,
+    height: 20,
+    bottom: 20,
+    left: 10,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    backgroundColor: colors.LIGHT_GREY_BACKGROUND,
+  },
+  receiverName: {
+    lineHeight: 21,
+    fontWeight: 'bold',
+  },
+  senderName: {
+    lineHeight: 15,
     fontWeight: 'bold',
   },
   role: {
-    fontSize: 14,
-    color: '#555',
+    fontWeight: '300',
+    lineHeight: 15,
+    marginBottom: 10,
   },
   appreciation: {
-    fontSize: 14,
-    marginTop: 5,
+    fontWeight: '300',
+    lineHeight: 15,
+    color: colors.GRAY_MEDIUM,
   },
   days: {
-    fontSize: 12,
-    color: '#888',
+    fontWeight: '300',
+    lineHeight: 12,
+    color: colors.GRAY_MEDIUM,
   },
   footer: {
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
     paddingTop: 5,
-    borderTopWidth: 1,
-    borderTopColor: '#eee',
     backgroundColor: '#F5E6D6',
   },
-  coreValue: {
-    fontSize: 12,
-    color: '#888',
+  coreValueBox: {
+    paddingBottom: 6,
+    flex: 1,
+    alignItems: 'center',
   },
-  value: {
-    fontSize: 16,
+  coreValue: {
     fontWeight: 'bold',
-    marginTop: 5,
+    lineHeight: 15,
+  },
+  coreValueLabel: {
+    fontWeight: '300',
+    lineHeight: 9,
   },
 });
 
