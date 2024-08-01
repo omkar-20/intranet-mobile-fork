@@ -69,7 +69,11 @@ const LeaderBoardCard: React.FC<LeaderBoardCardProps> = ({userDetail}) => {
         <InitialsAvatar
           name={userName}
           size={60}
-          borderColor={avatarStyle.border.borderColor}
+          borderColor={
+            userDetail?.appreciation_points > 0
+              ? avatarStyle.border.borderColor
+              : ''
+          }
         />
       )}
       {BadgeIcon !== '' && (
@@ -112,7 +116,7 @@ const styles = StyleSheet.create({
   },
   starContainer: {
     position: 'absolute',
-    bottom: 75,
+    bottom: 57,
     borderRadius: 12,
     paddingHorizontal: 5,
     flexDirection: 'row',
