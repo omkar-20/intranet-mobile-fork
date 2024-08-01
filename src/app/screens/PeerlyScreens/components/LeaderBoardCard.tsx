@@ -129,15 +129,16 @@ const styles = StyleSheet.create({
     marginRight: 3,
   },
   starText: {
-    color: 'white',
+    color: colors.WHITE,
     fontWeight: 'bold',
     fontSize: 12,
   },
   useName: {
     width: 60,
-    fontSize: 14,
+    fontSize: 12,
     textAlign: 'center',
     lineHeight: 18,
+    color: colors.CHARCOAL,
   },
   leadText: {
     fontSize: 14,

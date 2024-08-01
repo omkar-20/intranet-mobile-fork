@@ -36,4 +36,5 @@ export default {
   GOLD: '#FFB128',
   SILVER: '#888888',
   BRONZE: '#CC6741',
+  CHARCOAL: '#383838',
 };
