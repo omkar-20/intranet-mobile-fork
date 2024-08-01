@@ -3,7 +3,6 @@ import {
   View,
   StyleSheet,
   Text,
-  TextInput,
   Image,
   useWindowDimensions,
   FlatList,
@@ -30,8 +29,9 @@ import {
 } from '../constants/screenNames';
 import {useNavigation} from '@react-navigation/native';
 import {HomeScreenNavigationProp} from '../navigation/types';
-import {ProfileIcon, StarIcon} from '../constants/icons';
+import {StarIcon} from '../constants/icons';
 import Search from '../components/Search';
+import InitialsAvatar from '../components/InitialAvatar';
 
 const paginationData = {
   page: 1,
@@ -105,7 +105,6 @@ const HomeScreen = () => {
           : styles.withBorder,
       ]}
       tabStyle={styles.tabStyle}
-      contentContainerStyle={styles.contentContainer}
     />
   );
 
@@ -120,42 +119,58 @@ const HomeScreen = () => {
     navigation.navigate(APPRECIATION_SEARCH);
   };
 
+  const profileIconPadding = {
+    paddingLeft: profileDetails?.total_points ? 7 : 0,
+  };
+
+  const handleProfileIconClick = () => {
+    navigation.navigate(PROFILE_DETAILS, {
+      userId: profileDetails?.employee_id,
+    });
+  };
+
+  const userName = `${profileDetails?.first_name || ''}  ${
+    profileDetails?.last_name || ''
+  }`;
+
   return (
     <View style={styles.container}>
-      <View>
-        <View style={styles.header}>
-          <Text style={styles.title}>Peerly</Text>
-          <Pressable
-            onPress={() =>
-              navigation.navigate(PROFILE_DETAILS, {
-                userId: profileDetails?.employee_id,
-              })
-            }>
-            <View style={styles.userScoreBox}>
-              <StarIcon width={18} height={18} />
-              <Text>
-                {profileDetails?.total_points && (
-                  <Text style={styles.scoreText}>
-                    {profileDetails.total_points}
+      <View style={styles.header}>
+        <Text style={styles.title}>Peerly</Text>
+        <Pressable onPress={() => handleProfileIconClick()}>
+          {!profileDetails?.total_points &&
+          profileDetails?.profile_image_url === '' ? (
+            <InitialsAvatar name={userName} size={40} />
+          ) : (
+            <View style={[styles.userScoreBox, profileIconPadding]}>
+              {profileDetails?.total_points ? (
+                <>
+                  <StarIcon width={18} height={18} />
+                  <Text>
+                    {profileDetails?.total_points && (
+                      <Text style={styles.scoreText}>
+                        {profileDetails.total_points}
+                      </Text>
+                    )}
                   </Text>
-                )}
-              </Text>
-              <Image
-                source={
-                  profileDetails?.profile_image_url
-                    ? {uri: profileDetails.profile_image_url}
-                    : ProfileIcon
-                }
-                style={styles.userAvatar}
-              />
+                </>
+              ) : null}
+              {profileDetails?.profile_image_url !== '' ? (
+                <Image
+                  source={{uri: profileDetails?.profile_image_url}}
+                  style={styles.userAvatar}
+                />
+              ) : (
+                <InitialsAvatar name={userName} size={40} />
+              )}
             </View>
-          </Pressable>
-        </View>
+          )}
+        </Pressable>
       </View>
       <Pressable onPressIn={handleSearchPress}>
         <Search placeholder="Search Co-Worker" editable={false} />
       </Pressable>
-      <View style={{height: layout.height * 0.25}}>
+      <View style={{height: layout.height * 0.23}}>
         <TabView
           navigationState={{index, routes}}
           renderScene={renderScene}
@@ -166,7 +181,9 @@ const HomeScreen = () => {
       </View>
 
       <View style={styles.appreciationListWrapper}>
-        <Text>Total: {appreciationListMeta?.total_records} Appreciations</Text>
+        <Text style={styles.totalAppreciationCount}>
+          Total: {appreciationListMeta?.total_records} Appreciations
+        </Text>
         <FlatList
           data={appreciationList || []}
           renderItem={({item}) => (
@@ -208,7 +225,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingLeft: 7,
     backgroundColor: 'pink',
     borderRadius: 50,
     borderColor: colors.PRIMARY,
@@ -255,9 +271,14 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
   },
-  contentContainer: {
-    paddingLeft: 10,
+  appreciationListWrapper: {
+    marginTop: 10,
+    flex: 1,
+    backgroundColor: colors.WHITE,
   },
-  appreciationListWrapper: {flex: 1, backgroundColor: colors.WHITE},
+  totalAppreciationCount: {
+    paddingLeft: 10,
+    paddingBottom: 10,
+  },
 });
 export default HomeScreen;
