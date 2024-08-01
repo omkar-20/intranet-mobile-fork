@@ -10,7 +10,7 @@ import {
   Pressable,
 } from 'react-native';
 
-import colors from '../../../constant/colors';
+import colors from '../constants/colors';
 import AppreciationCard from '../components/AppreciationCard';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import fonts from '../../../constant/fonts';
@@ -28,9 +28,10 @@ import {
   APPRECIATION_SEARCH,
   PROFILE_DETAILS,
 } from '../constants/screenNames';
-import {ProfileIcon} from '../constants/icons';
 import {useNavigation} from '@react-navigation/native';
 import {HomeScreenNavigationProp} from '../navigation/types';
+import {ProfileIcon, StarIcon} from '../constants/icons';
+import Search from '../components/Search';
 
 const paginationData = {
   page: 1,
@@ -58,7 +59,7 @@ const HomeScreen = () => {
 
   const FirstRoute = useCallback(
     () => (
-      <View style={{flex: 1, backgroundColor: '#F4F6FF'}}>
+      <View style={styles.activeAndTopTenTab}>
         <FlatList
           data={activeUsersList}
           renderItem={({item}) => <LeaderBoardCard userDetail={item} />}
@@ -72,7 +73,7 @@ const HomeScreen = () => {
 
   const SecondRoute = useCallback(
     () => (
-      <View style={{flex: 1, backgroundColor: '#F4F6FF', height: 20}}>
+      <View style={styles.activeAndTopTenTab}>
         <FlatList
           data={topUsersList}
           renderItem={({item}) => <LeaderBoardCard userDetail={item} />}
@@ -97,7 +98,14 @@ const HomeScreen = () => {
       inactiveColor={colors.SECONDARY}
       activeColor={colors.PRIMARY}
       indicatorStyle={styles.indicatorStyle}
-      style={styles.tabBarContainer}
+      style={[
+        styles.tabBarContainer,
+        props.navigationState.index === 0 || 1
+          ? styles.noBorder
+          : styles.withBorder,
+      ]}
+      tabStyle={styles.tabStyle}
+      contentContainerStyle={styles.contentContainer}
     />
   );
 
@@ -113,42 +121,41 @@ const HomeScreen = () => {
   };
 
   return (
-    <>
-      <Pressable
-        onPress={() =>
-          navigation.navigate(PROFILE_DETAILS, {
-            userId: profileDetails?.employee_id,
-          })
-        }>
+    <View style={styles.container}>
+      <View>
         <View style={styles.header}>
           <Text style={styles.title}>Peerly</Text>
-          <View style={styles.userScore}>
-            <Text>
-              {profileDetails?.total_points && (
-                <Text style={styles.scoreText}>
-                  {profileDetails.total_points}
-                </Text>
-              )}
-            </Text>
-            <Image
-              source={
-                profileDetails?.profile_image_url
-                  ? {uri: profileDetails.profile_image_url}
-                  : ProfileIcon
-              }
-              style={styles.userAvatar}
-            />
-          </View>
+          <Pressable
+            onPress={() =>
+              navigation.navigate(PROFILE_DETAILS, {
+                userId: profileDetails?.employee_id,
+              })
+            }>
+            <View style={styles.userScoreBox}>
+              <StarIcon width={18} height={18} />
+              <Text>
+                {profileDetails?.total_points && (
+                  <Text style={styles.scoreText}>
+                    {profileDetails.total_points}
+                  </Text>
+                )}
+              </Text>
+              <Image
+                source={
+                  profileDetails?.profile_image_url
+                    ? {uri: profileDetails.profile_image_url}
+                    : ProfileIcon
+                }
+                style={styles.userAvatar}
+              />
+            </View>
+          </Pressable>
         </View>
-      </Pressable>
-      <View>
-        <TextInput
-          onPressIn={handleSearchPress}
-          style={styles.searchInput}
-          placeholder="Search Co-Worker"
-        />
       </View>
-      <View style={{height: layout.height * 0.2}}>
+      <Pressable onPressIn={handleSearchPress}>
+        <Search placeholder="Search Co-Worker" editable={false} />
+      </Pressable>
+      <View style={{height: layout.height * 0.25}}>
         <TabView
           navigationState={{index, routes}}
           renderScene={renderScene}
@@ -176,7 +183,7 @@ const HomeScreen = () => {
       <FloatingGiveAppreciationButton
         onPress={() => navigation.navigate(APPRECIATION)}
       />
-    </>
+    </View>
   );
 };
 
@@ -192,44 +199,64 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.BLACK,
   },
-  userScore: {
+  userScoreBox: {
+    height: 39,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingLeft: 7,
+    backgroundColor: 'pink',
+    borderRadius: 50,
+    borderColor: colors.PRIMARY,
+    borderWidth: 2,
   },
   scoreText: {
+    fontSize: 14,
     marginRight: 5,
+    color: colors.WHITE,
   },
   userAvatar: {
-    width: 30,
-    height: 30,
+    width: 35,
+    height: 35,
     borderRadius: 15,
+    paddingBottom: 18,
   },
-  activeTab: {
-    fontWeight: 'bold',
-    borderBottomWidth: 2,
-    borderBottomColor: 'blue',
+  activeAndTopTenTab: {
+    flex: 1,
+    backgroundColor: colors.LIGHT_PASTEL_BLUE,
   },
   labelStyle: {
     color: colors.LABEL_COLOR_SECONDARY,
     textAlign: 'left',
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: fonts.ARIAL,
     textTransform: 'none',
   },
   indicatorStyle: {backgroundColor: colors.PRIMARY},
   tabBarContainer: {
-    backgroundColor: '#F4F6FF',
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    backgroundColor: colors.LIGHT_PASTEL_BLUE,
+    elevation: 0,
+    shadowOpacity: 0,
+  },
+  noBorder: {
+    borderBottomWidth: 0,
+  },
+  withBorder: {
+    borderBottomWidth: 1,
     borderBottomColor: colors.PRIMARY,
   },
-  searchInput: {
-    backgroundColor: colors.LIGHT_GREY_BACKGROUND,
-    padding: 10,
-    margin: 10,
-    borderRadius: 10,
+  tabStyle: {
+    alignItems: 'flex-start',
+    width: 'auto',
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+  contentContainer: {
+    paddingLeft: 10,
   },
   appreciationListWrapper: {flex: 1, backgroundColor: colors.WHITE},
 });

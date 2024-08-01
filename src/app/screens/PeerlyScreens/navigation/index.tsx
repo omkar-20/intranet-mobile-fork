@@ -5,7 +5,7 @@ import {useLoginPeerly} from '../peerlyLogin.hook';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
-  PEERLY_SCREEN,
+  PEERLY_HOME_SCREEN,
   APPRECIATION,
   APPRECIATION_DETAILS,
   PROFILE_DETAILS,
@@ -30,25 +30,51 @@ function PeerlyHomeScreen() {
   }
 
   if (isError) {
-    <View>
-      <Text>Something went Wrong</Text>
-    </View>;
+    return (
+      <View>
+        <Text>Something went Wrong</Text>
+      </View>
+    );
   }
 
   return (
     <NavigationContainer independent={true}>
-      <RootStack.Navigator initialRouteName={PEERLY_SCREEN}>
-        <RootStack.Screen name={PEERLY_SCREEN} component={HomeScreen} />
-        <RootStack.Screen name={APPRECIATION} component={AppreciationScreen} />
+      <RootStack.Navigator initialRouteName={PEERLY_HOME_SCREEN}>
+        <RootStack.Screen
+          name={PEERLY_HOME_SCREEN}
+          component={HomeScreen}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name={APPRECIATION}
+          component={AppreciationScreen}
+          options={{
+            headerShadowVisible: false,
+          }}
+        />
         <RootStack.Screen
           name={APPRECIATION_DETAILS}
           component={DetailsScreen}
+          options={{
+            headerTitle: '',
+            headerShadowVisible: false,
+          }}
         />
         <RootStack.Screen
           name={PROFILE_DETAILS}
           component={ProfileDetailScreen}
+          options={{
+            headerShadowVisible: false,
+          }}
         />
-        <RootStack.Screen name={APPRECIATION_SEARCH} component={SearchScreen} />
+        <RootStack.Screen
+          name={APPRECIATION_SEARCH}
+          component={SearchScreen}
+          options={{
+            headerTitle: '',
+            headerShadowVisible: false,
+          }}
+        />
       </RootStack.Navigator>
     </NavigationContainer>
   );

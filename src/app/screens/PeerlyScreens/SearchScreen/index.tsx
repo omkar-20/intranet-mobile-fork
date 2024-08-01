@@ -3,6 +3,8 @@ import {StyleSheet, View, TextInput} from 'react-native';
 import {useGetSearchAppreciationList} from './search.hooks';
 import {useDebounce} from '../utils';
 import GivenAndReceivedAppriciation from '../components/GivenAndReceivedAppreciation';
+import Search from '../components/Search';
+import colors from '../constants/colors';
 
 const SearchScreen = () => {
   const searchInputRef = useRef<TextInput>(null);
@@ -50,13 +52,11 @@ const SearchScreen = () => {
 
   return (
     <View style={styles.container}>
-      <TextInput
+      <Search
         autoFocus={true}
-        ref={searchInputRef}
-        style={styles.searchInput}
-        placeholder={'Search Co-Worker'}
-        onChangeText={handleSearch}
+        onChange={handleSearch}
         value={searchName}
+        placeholder={'Search Co-Worker'}
       />
       <View style={styles.flatListWrapper}>
         <GivenAndReceivedAppriciation
@@ -72,12 +72,13 @@ const SearchScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.WHITE,
   },
   flatListWrapper: {
     flex: 1,
   },
   searchInput: {
-    backgroundColor: 'white',
+    backgroundColor: colors.WHITE,
     padding: 10,
     margin: 10,
     borderRadius: 10,

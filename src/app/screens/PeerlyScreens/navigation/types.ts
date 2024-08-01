@@ -3,7 +3,7 @@ import {AppreciationDetails} from '../../../services/PeerlyServices/home/types';
 import {RouteProp} from '@react-navigation/native';
 
 export type RootStackParamList = {
-  Peerly: undefined;
+  PeerlyHome: undefined;
   AppreciationSearch: undefined;
   Appreciation: undefined;
   Profile: {userId: number | undefined};
@@ -16,7 +16,7 @@ export type RootStackParamList = {
 
 export type HomeScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
-  'Peerly'
+  'PeerlyHome'
 >;
 
 export type AppreciationSearchNavigationProp = NativeStackNavigationProp<

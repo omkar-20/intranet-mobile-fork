@@ -1,7 +1,45 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
-import colors from '../../../constant/colors';
-import {ProfileIcon, WhiteStar} from '../constants/icons';
+
+import {
+  WhiteStar,
+  PlatinumIcon,
+  GoldIcon,
+  SilverIcon,
+  BronzeIcon,
+} from '../constants/icons';
+import {formatNumber} from '../utils';
+import InitialsAvatar from './InitialAvatar';
+import colors from '../constants/colors';
+
+const userBadgeProperty = {
+  platinum: {
+    border: {borderColor: colors.PLATINUM},
+    backgroundColor: {backgroundColor: colors.PLATINUM},
+    icon: PlatinumIcon,
+  },
+  gold: {
+    border: {borderColor: colors.GOLD},
+    backgroundColor: {backgroundColor: colors.GOLD},
+    icon: GoldIcon,
+  },
+  silver: {
+    border: {borderColor: colors.SILVER},
+    backgroundColor: {backgroundColor: colors.SILVER},
+    icon: SilverIcon,
+  },
+  bronze: {
+    border: {borderColor: colors.BRONZE},
+    backgroundColor: {backgroundColor: colors.BRONZE},
+    icon: BronzeIcon,
+  },
+  basicUser: {
+    border: {borderColor: colors.PRIMARY},
+    backgroundColor: {backgroundColor: colors.PRIMARY},
+    icon: '',
+  },
+};
+
 interface LeaderBoardCardProps {
   userDetail: {
     id: number;
@@ -12,26 +50,43 @@ interface LeaderBoardCardProps {
     appreciation_points: number;
   };
 }
+type BadgeType = 'platinum' | 'gold' | 'silver' | 'bronze' | 'basicUser';
 
 const LeaderBoardCard: React.FC<LeaderBoardCardProps> = ({userDetail}) => {
+  const userName = `${userDetail.first_name}  ${userDetail.last_name || ''}`;
+  const badge = userDetail?.badge_name?.toLowerCase() || 'basicUser';
+  const avatarStyle = userBadgeProperty[badge as BadgeType];
+  const BadgeIcon = avatarStyle.icon;
+
   return (
     <View style={styles.container}>
-      <Image
-        source={
-          userDetail?.profile_image_url
-            ? {uri: userDetail.profile_image_url}
-            : ProfileIcon
-        }
-        style={styles.profileImage}
-      />
-      <View style={styles.starContainer}>
-        <WhiteStar color={colors.SECONDARY} />
-        <Text style={styles.leadText}>{userDetail.appreciation_points}</Text>
-      </View>
-
+      {userDetail?.profile_image_url ? (
+        <Image
+          source={{uri: userDetail.profile_image_url}}
+          style={[styles.profileImage, avatarStyle.border]}
+        />
+      ) : (
+        <InitialsAvatar
+          name={userName}
+          size={60}
+          borderColor={avatarStyle.border.borderColor}
+        />
+      )}
+      {BadgeIcon !== '' && (
+        <View style={[styles.badgeIconWrapper]}>
+          <BadgeIcon width={21} height={21} />
+        </View>
+      )}
+      {userDetail?.appreciation_points > 0 && (
+        <View style={[styles.starContainer, avatarStyle.backgroundColor]}>
+          <WhiteStar color={colors.SECONDARY} />
+          <Text style={styles.leadText}>
+            {formatNumber(userDetail.appreciation_points)}
+          </Text>
+        </View>
+      )}
       <View style={styles.nameContainer}>
-        <Text style={styles.firstName}>{userDetail.first_name}</Text>
-        <Text style={styles.lastName}>{userDetail.last_name}</Text>
+        <Text style={styles.useName}>{userName}</Text>
       </View>
     </View>
   );
@@ -41,7 +96,8 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     marginHorizontal: 10,
-    padding: 10,
+    padding: 5,
+    marginTop: 10,
   },
   nameContainer: {
     marginTop: 5,
@@ -56,9 +112,7 @@ const styles = StyleSheet.create({
   },
   starContainer: {
     position: 'absolute',
-    bottom: 45,
-    //right: 5,
-    backgroundColor: '#FEB333',
+    bottom: 75,
     borderRadius: 12,
     paddingHorizontal: 5,
     flexDirection: 'row',
@@ -75,19 +129,22 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 12,
   },
-  firstName: {
+  useName: {
+    width: 60,
     fontSize: 14,
     textAlign: 'center',
-  },
-  lastName: {
-    fontSize: 14,
-    marginTop: 1,
+    lineHeight: 18,
   },
   leadText: {
     fontSize: 14,
     marginTop: 1,
     marginLeft: 2,
     color: colors.WHITE,
+  },
+  badgeIconWrapper: {
+    position: 'absolute',
+    top: -3,
+    left: 42,
   },
 });
 

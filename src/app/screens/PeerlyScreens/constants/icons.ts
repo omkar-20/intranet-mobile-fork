@@ -16,6 +16,7 @@ import WhiteStar from '../../../../assets/peerly/svg/whiteStar.svg';
 import BlackStar from '../../../../assets/peerly/svg/blackStar.svg';
 import FlagIcon from '../../../../assets/peerly/svg/flagIcon.svg';
 import RewardSuccessIcon from '../../../../assets/peerly/svg/rewardSuccess.svg';
+import SearchIcon from '../../../../assets/peerly/svg/search.svg';
 
 export {
   PlatinumIcon,
@@ -36,4 +37,5 @@ export {
   BlackStar,
   FlagIcon,
   RewardSuccessIcon,
+  SearchIcon,
 };
