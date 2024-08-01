@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
   },
   badgeIconWrapper: {
     position: 'absolute',
-    top: -3,
+    top: 1,
     left: 42,
   },
 });
