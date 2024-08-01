@@ -38,7 +38,10 @@ const getTabBar = (props: BottomTabBarProps) => <TabBar {...props} />;
 const MainNavigator = () => {
   return (
     <MainTab.Navigator
-      screenOptions={screenOptions}
+      screenOptions={({route}) => ({
+        headerShown: route.name === PEERLY_SCREEN ? false : true,
+        ...screenOptions,
+      })}
       tabBar={getTabBar}
       sceneContainerStyle={sceneContainerStyle}
       initialRouteName={HOME_SCREEN}>
