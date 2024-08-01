@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import colors from '../constants/colors';
 
@@ -73,4 +73,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default InitialsAvatar;
+export default memo(InitialsAvatar);
