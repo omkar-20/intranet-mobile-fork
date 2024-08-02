@@ -162,6 +162,7 @@ const styles = StyleSheet.create({
   },
   indicatorStyle: {backgroundColor: colors.PRIMARY},
   tabBarContainer: {
+    marginBottom: 20,
     height: 50,
     width: '100%',
     backgroundColor: '#F4F6FF',
