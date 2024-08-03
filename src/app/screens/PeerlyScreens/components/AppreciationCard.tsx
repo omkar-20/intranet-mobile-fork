@@ -24,7 +24,7 @@ const AppreciationCard = ({onPress, appreciationDetails}: Props) => {
       <TouchableOpacity onPress={() => onPress(appreciationDetails.id)}>
         <View style={styles.header}>
           <View style={styles.avatarContainer}>
-            {appreciationDetails.receiver_image_url ? (
+            {appreciationDetails.receiver_image_url !== '' ? (
               <Image
                 source={{uri: appreciationDetails.receiver_image_url}}
                 style={styles.avatar}
@@ -34,7 +34,7 @@ const AppreciationCard = ({onPress, appreciationDetails}: Props) => {
                 <InitialAvatar name={receiverName} size={60} />
               </View>
             )}
-            {appreciationDetails?.sender_image_url ? (
+            {appreciationDetails?.sender_image_url !== '' ? (
               <Image
                 source={{uri: appreciationDetails.sender_image_url}}
                 style={[styles.smallAvatar]}
