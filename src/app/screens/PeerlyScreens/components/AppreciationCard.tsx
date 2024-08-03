@@ -157,6 +157,7 @@ const styles = StyleSheet.create({
   content: {
     marginTop: 10,
     padding: 5,
+    paddingLeft: 10,
   },
   totalRewardBox: {
     flexDirection: 'row',
@@ -198,7 +199,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 15,
     borderBottomRightRadius: 15,
     paddingTop: 5,
-    backgroundColor: '#F5E6D6',
+    backgroundColor: colors.WARM_CREAM,
   },
   coreValueBox: {
     paddingBottom: 6,

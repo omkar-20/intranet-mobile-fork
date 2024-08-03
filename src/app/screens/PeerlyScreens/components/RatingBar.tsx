@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, Pressable} from 'react-native';
 import Slider from '@react-native-community/slider';
-import {FlagIcon, RatingStarIcon} from '../constants/icons';
+import {FlagIcon, InfoIcon, RatingStarIcon} from '../constants/icons';
 
 interface RatingBarProps {
   onPressObjection: () => void;
@@ -23,23 +23,23 @@ const RatingBar: React.FC<RatingBarProps> = ({
   self,
 }) => {
   return (
-    <View style={styles.container}>
+    <View>
       <View style={styles.ratingCountContainer}>
         <Text style={styles.label}>Rewards</Text>
+        <View style={styles.infoWrapper}>
+          <InfoIcon width={16} height={16} />
+        </View>
         <Text style={styles.info}>
           Rewards given by {rewardedByPeople} people
         </Text>
       </View>
       {self ? null : (
-        <>
+        <View style={styles.rewardAndReportWrapper}>
           <Pressable onPress={onPressObjection} disabled={disableSlider}>
-            <View style={styles.flagContainer}>
-              <View style={styles.flagIcon}>
-                <FlagIcon />
-              </View>
+            <View style={styles.flagIcon}>
+              <FlagIcon />
             </View>
           </Pressable>
-
           <View style={styles.sliderContainer}>
             <Slider
               disabled={disableSlider || isRewardAlreadyGiven}
@@ -54,20 +54,27 @@ const RatingBar: React.FC<RatingBarProps> = ({
               maximumTrackTintColor="#DDD"
             />
             <View style={styles.labelsContainer}>
-              <Text style={styles.sliderLabel}>Good</Text>
-              <Text style={styles.sliderLabel}>Nice</Text>
-              <Text style={styles.sliderLabel}>Love</Text>
+              <Text style={styles.sliderGood}>Good</Text>
+              <Text style={styles.sliderNice}>Nice</Text>
+              <Text style={styles.sliderLove}>Love</Text>
             </View>
           </View>
-        </>
+        </View>
       )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 20,
+  rewardAndReportWrapper: {
+    flex: 1,
+    flexDirection: 'row',
+    marginTop: 10,
+  },
+  infoWrapper: {
+    marginTop: 4,
+    marginLeft: 15,
+    marginRight: 5,
   },
   label: {
     margin: 2,
@@ -75,38 +82,51 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   info: {
+    fontSize: 12,
     margin: 2,
-    color: '#888',
-    marginBottom: 10,
+    marginBottom: 5,
+    paddingTop: 7,
   },
   sliderContainer: {
+    marginLeft: 30,
     alignItems: 'center',
+    width: '90%',
+    height: 30,
   },
   slider: {
-    width: '100%',
-    height: 40,
+    width: '90%',
+    height: 30,
   },
   labelsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '100%',
-    paddingHorizontal: 10,
+    width: '85%',
   },
-  sliderLabel: {
+  sliderGood: {
     fontSize: 14,
+    color: 'black',
+    paddingLeft: 30,
   },
-  flagContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  sliderNice: {
+    fontSize: 14,
+    color: 'black',
+    paddingLeft: 25,
+  },
+  sliderLove: {
+    fontSize: 14,
+    color: 'black',
+    paddingLeft: 10,
+    paddingRight: 10,
   },
   flagIcon: {
+    marginTop: 20,
     backgroundColor: '#EE3E54',
     height: 25,
     width: 25,
     borderRadius: 5,
     padding: 5,
   },
-  ratingCountContainer: {flexDirection: 'row'},
+  ratingCountContainer: {flexDirection: 'row', alignItems: 'center'},
 });
 
 export default RatingBar;

@@ -38,4 +38,5 @@ export default {
   BRONZE: '#CC6741',
   CHARCOAL: '#383838',
   GRAY_MEDIUM: '#797979',
+  WARM_CREAM: '#F5E6D6',
 };
