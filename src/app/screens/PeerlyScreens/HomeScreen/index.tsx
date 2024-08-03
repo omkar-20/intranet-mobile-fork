@@ -146,12 +146,8 @@ const HomeScreen = () => {
               {profileDetails?.total_points ? (
                 <>
                   <StarIcon width={18} height={18} />
-                  <Text>
-                    {profileDetails?.total_points && (
-                      <Text style={styles.scoreText}>
-                        {profileDetails.total_points}
-                      </Text>
-                    )}
+                  <Text style={styles.scoreText}>
+                    {profileDetails.total_points}
                   </Text>
                 </>
               ) : null}
@@ -194,6 +190,7 @@ const HomeScreen = () => {
           )}
           keyExtractor={item => String(item.id)}
           numColumns={2}
+          style={styles.flatListAppreciation}
         />
       </View>
 
@@ -226,13 +223,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
     backgroundColor: colors.PRIMARY,
-    borderRadius: 50,
+    borderRadius: 999,
     borderColor: colors.PRIMARY,
     borderWidth: 2,
   },
   scoreText: {
     fontSize: 14,
-    marginRight: 5,
+    marginHorizontal: 5,
     color: colors.WHITE,
   },
   userAvatar: {
@@ -279,6 +276,9 @@ const styles = StyleSheet.create({
   totalAppreciationCount: {
     paddingLeft: 10,
     paddingBottom: 10,
+  },
+  flatListAppreciation: {
+    marginBottom: 50,
   },
 });
 export default HomeScreen;
