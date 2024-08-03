@@ -4,20 +4,19 @@ import {
   SafeAreaView,
   StyleSheet,
   View,
+  Text,
+  TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
-
-import AppreciationCard from './AppreciationCard';
 import {
   SceneMap,
-  TabBar,
   TabView,
   Route,
   NavigationState,
   SceneRendererProps,
 } from 'react-native-tab-view';
-import colors from '../../../constant/colors';
-import fonts from '../../../constant/fonts';
+import colors from '../constants/colors';
+import AppreciationCard from './AppreciationCard';
 import {APPRECIATION_DETAILS} from '../constants/screenNames';
 import {AppreciationDetails} from '../../../services/PeerlyServices/home/types';
 import {useNavigation} from '@react-navigation/native';
@@ -115,18 +114,33 @@ const GivenAndReceivedAppriciation = ({
     expressed: SecondRoute,
   });
 
-  const renderTabBar = (
+  const renderCustomTabBar = (
     props: SceneRendererProps & {navigationState: tabBarState},
   ) => (
-    <TabBar
-      {...props}
-      labelStyle={styles.labelStyle}
-      scrollEnabled={true}
-      inactiveColor={colors.SECONDARY}
-      activeColor={colors.PRIMARY}
-      indicatorStyle={styles.indicatorStyle}
-      style={styles.tabBarContainer}
-    />
+    <View style={styles.tabContainer}>
+      {props.navigationState.routes.map((route, i) => {
+        const isFocused = props.navigationState.index === i;
+
+        return (
+          <TouchableOpacity
+            key={route.key}
+            onPress={() => props.jumpTo(route.key)}
+            style={[
+              styles.tab,
+              isFocused ? styles.activeTab : styles.inactiveTab,
+              i === 0 ? styles.leftTab : styles.rightTab,
+            ]}>
+            <Text
+              style={[
+                styles.tabText,
+                isFocused ? styles.activeTabText : styles.inactiveTabText,
+              ]}>
+              {route.title}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
+    </View>
   );
 
   return (
@@ -135,7 +149,7 @@ const GivenAndReceivedAppriciation = ({
         <TabView
           navigationState={{index, routes}}
           renderScene={renderScene}
-          renderTabBar={renderTabBar}
+          renderTabBar={renderCustomTabBar}
           onIndexChange={setIndex}
           initialLayout={{width: layout.width}}
         />
@@ -146,31 +160,48 @@ const GivenAndReceivedAppriciation = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
-    paddingTop: 20,
+    backgroundColor: colors.WHITE,
   },
   appreciationList: {
     width: '100%',
     height: '100%',
   },
-  labelStyle: {
-    color: colors.LABEL_COLOR_SECONDARY,
-    textAlign: 'left',
-    fontSize: 14,
-    fontFamily: fonts.ARIAL,
-    textTransform: 'none',
+  tabContainer: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+    marginVertical: 10,
+    borderRadius: 15,
+    backgroundColor: colors.SECONDARY_BACKGROUND_FIRST,
   },
-  indicatorStyle: {backgroundColor: colors.PRIMARY},
-  tabBarContainer: {
-    marginBottom: 20,
-    height: 50,
-    width: '100%',
-    backgroundColor: '#F4F6FF',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.PRIMARY,
+  tab: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
+  },
+  activeTab: {
+    backgroundColor: colors.PRIMARY,
+  },
+  inactiveTab: {
+    backgroundColor: 'transparent',
+  },
+  leftTab: {
+    borderRadius: 15,
+  },
+  rightTab: {
+    borderRadius: 15,
+  },
+  tabText: {
+    fontSize: 16,
+  },
+  activeTabText: {
+    color: colors.WHITE,
+  },
+  inactiveTabText: {
+    color: colors.BLACK,
   },
   flatListWrapper: {
-    backgroundColor: 'white',
+    backgroundColor: colors.WHITE,
   },
 });
 
