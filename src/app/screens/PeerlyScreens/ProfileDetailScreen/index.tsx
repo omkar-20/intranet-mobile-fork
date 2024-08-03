@@ -1,5 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
+  ActivityIndicator,
   Image,
   SafeAreaView,
   StyleSheet,
@@ -15,7 +16,6 @@ import {
   BronzeIcon,
   InfoIcon,
   StarIcon,
-  ProfileIcon,
 } from '../constants/icons';
 import {dateFormat} from '../utils';
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
@@ -25,6 +25,8 @@ import {useGetProfileDetails} from './profile.hooks';
 import GivenAndReceivedAppriciation from '../components/GivenAndReceivedAppreciation';
 import {useRoute} from '@react-navigation/native';
 import {ProfileScreenRouteProp} from '../navigation/types';
+import InitialAvatar from '../components/InitialAvatar';
+import colors from '../constants/colors';
 
 const paginationData = {
   page: 1,
@@ -32,22 +34,35 @@ const paginationData = {
   self: true,
 };
 const badgeData: BadgeMetaData = {
-  bronze: {
-    member: 'Bronze Member',
-    icon: PlatinumIcon,
-  },
-  silver: {
-    member: 'Silver Member',
-    icon: GoldIcon,
+  platinum: {
+    member: 'Platinum Member',
+    icon: <PlatinumIcon width={60} height={60} />,
   },
   gold: {
     member: 'Gold Member',
-    icon: SilverIcon,
+    icon: <GoldIcon width={60} height={60} />,
   },
-  platinum: {
-    member: 'Platinum Member',
-    icon: BronzeIcon,
+  silver: {
+    member: 'Silver Member',
+    icon: <SilverIcon width={60} height={60} />,
   },
+  bronze: {
+    member: 'Bronze Member',
+    icon: <BronzeIcon width={60} height={60} />,
+  },
+};
+
+const initialProfileDetails = {
+  first_name: '',
+  last_name: '',
+  profile_image_url: '',
+  designation: '',
+  reward_quota_balance: 0,
+  total_reward_quota: 0,
+  grade_id: 0,
+  total_points: 0,
+  refil_date: 0,
+  badge: '',
 };
 
 const ProfileDetailScreen = () => {
@@ -55,17 +70,42 @@ const ProfileDetailScreen = () => {
   const {userId} = route.params;
   const [isModalVisible, setModalVisible] = useState(false);
 
-  const {data: profileDetails} = useGetProfileDetails(userId);
-
-  const userName = `${profileDetails?.first_name} ${profileDetails?.last_name}`;
-  const badge = profileDetails?.badge.toLowerCase() || false;
-  const BadgeIcon = badge ? badgeData[badge]?.icon : '';
-
+  const {
+    data: profileDetails,
+    isLoading,
+    isFetching,
+  } = useGetProfileDetails(userId);
   const {data: appreciationList} = useGetAppreciationList(paginationData);
 
-  const userNameLowerCase = `${(
-    profileDetails?.first_name || ''
-  ).toLowerCase()} ${(profileDetails?.last_name || '').toLowerCase()}`;
+  if (isLoading || isFetching) {
+    return (
+      <View>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  const {
+    first_name,
+    last_name,
+    badge,
+    refil_date,
+    profile_image_url,
+    designation,
+    total_points,
+    reward_quota_balance,
+    total_reward_quota,
+  } = profileDetails || initialProfileDetails;
+
+  const userName = `${first_name || ''} ${last_name || ''}`;
+  const badgeType = badge.toLowerCase() || '';
+  const member = badgeType ? (
+    <Text>{badgeData[badgeType.toLowerCase()].member}</Text>
+  ) : null;
+  const userNameLowerCase = `${(first_name || '').toLowerCase()} ${(
+    last_name || ''
+  ).toLowerCase()}`;
+  const rewardPointMargin = {marginTop: badgeType ? 30 : 0};
 
   const receivedAppriciationList = appreciationList.filter(item => {
     const fname = (item?.receiver_first_name || '').toLowerCase();
@@ -87,27 +127,31 @@ const ProfileDetailScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.profileDetailsBox}>
-        <Image
-          style={styles.profileImage}
-          source={
-            profileDetails?.profile_image_url
-              ? {uri: profileDetails.profile_image_url}
-              : ProfileIcon
-          }
-        />
-        <View>
-          <Text style={[styles.name, styles.bold]}>{userName}</Text>
-          <Text>{profileDetails?.designation}</Text>
-          <Text>{badge ? badgeData[badge.toLowerCase()]?.member : null}</Text>
+      <View>
+        <View style={styles.profileDetailsBox}>
+          <View style={styles.profileDetails}>
+            {profile_image_url !== '' ? (
+              <Image
+                style={styles.profileImage}
+                source={{uri: profile_image_url}}
+              />
+            ) : (
+              <InitialAvatar name={userName} size={60} />
+            )}
+            <View style={styles.userNameWrapper}>
+              <Text style={[styles.name, styles.bold]}>{userName}</Text>
+              <Text>{designation}</Text>
+              {member}
+            </View>
+          </View>
+          <View style={[styles.totalPoints, rewardPointMargin]}>
+            <Text style={[styles.name, styles.bold]}>{total_points}</Text>
+            <Text style={[styles.name, styles.bold]}>Reward Points</Text>
+          </View>
         </View>
-        <View>
-          {badge ? <BadgeIcon /> : null}
-          <Text style={[styles.name, styles.bold]}>
-            {profileDetails?.total_points}
-          </Text>
-          <Text style={[styles.name, styles.bold]}>Reward Points</Text>
-        </View>
+        {badgeType && (
+          <View style={styles.badgeWrapper}>{badgeData[badgeType]?.icon}</View>
+        )}
       </View>
       <View style={styles.rewardDetailsBox}>
         <View>
@@ -117,30 +161,22 @@ const ProfileDetailScreen = () => {
               <InfoIcon width={16} height={16} />
             </TouchableOpacity>
           </Text>
-          <Text>
-            {profileDetails?.refil_date
-              ? `Refill on ${dateFormat(
-                  profileDetails?.refil_date,
-                  'MMMM YYYY',
-                )}`
-              : null}
-          </Text>
+          <Text>Refill on {dateFormat(refil_date, 'MMMM YYYY')}</Text>
         </View>
         <View style={styles.progressBar}>
-          {profileDetails?.reward_quota_balance &&
-            profileDetails?.total_reward_quota && (
-              <CircularProgressBase
-                clockwise={false}
-                value={profileDetails.reward_quota_balance}
-                radius={30}
-                maxValue={profileDetails.total_reward_quota}
-                activeStrokeColor={'#F3A552'}
-                inActiveStrokeColor={'#F5F8FF'}>
-                <View>
-                  <StarIcon width={25} height={25} />
-                </View>
-              </CircularProgressBase>
-            )}
+          {reward_quota_balance && total_reward_quota && (
+            <CircularProgressBase
+              clockwise={false}
+              value={reward_quota_balance}
+              radius={30}
+              maxValue={total_reward_quota}
+              activeStrokeColor={'#F3A552'}
+              inActiveStrokeColor={'#F5F8FF'}>
+              <View>
+                <StarIcon width={25} height={25} />
+              </View>
+            </CircularProgressBase>
+          )}
         </View>
       </View>
 
@@ -163,22 +199,26 @@ const ProfileDetailScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     backgroundColor: 'white',
-    paddingTop: 20,
+    padding: 20,
   },
   profileDetailsBox: {
+    marginTop: 10,
     flexDirection: 'row',
-    width: '90%',
-    height: 100,
-    backgroundColor: '#F5F8FF',
-    padding: 10,
+    backgroundColor: colors.LIGHT_PASTEL_BLUE,
+    padding: 15,
     borderRadius: 10,
   },
+  profileDetails: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
   profileImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 50,
+    width: 60,
+    height: 60,
+    borderRadius: 32,
   },
   name: {
     lineHeight: 19,
@@ -187,14 +227,26 @@ const styles = StyleSheet.create({
   bold: {
     fontSize: 16,
     fontWeight: '500',
-    color: '#000000',
+    color: colors.BLACK,
+  },
+  userNameWrapper: {
+    marginLeft: 15,
+  },
+  badgeWrapper: {
+    position: 'absolute',
+    top: -20,
+    right: 15,
+  },
+  totalPoints: {
+    marginLeft: 0,
+    alignItems: 'center',
+    maxWidth: 55,
   },
   rewardDetailsBox: {
     flexDirection: 'row',
-    width: '90%',
-    height: 100,
+    width: '100%',
     backgroundColor: 'white',
-    marginTop: 40,
+    marginTop: 30,
     borderRadius: 10,
     alignItems: 'center',
   },
@@ -203,11 +255,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 80,
     height: 80,
-    backgroundColor: '#F5F8FF',
+    backgroundColor: colors.LIGHT_PASTEL_BLUE,
     borderRadius: 10,
     marginLeft: 30,
   },
   appreciationList: {
+    marginTop: 15,
     flex: 1,
     width: '100%',
     height: '100%',
