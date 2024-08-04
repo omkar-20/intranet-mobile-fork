@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: colors.ERROR_RED,
+    paddingTop: 5,
   },
   error: {
     borderBottomColor: colors.ERROR_RED,

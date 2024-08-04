@@ -11,7 +11,6 @@ import {
   useGetCoreValuesList,
   usePostAppreciation,
 } from './appreciation.hooks';
-import Typography from '../../../components/typography';
 import {useForm, Controller, SubmitHandler} from 'react-hook-form';
 import Select from '../components/Select';
 import CenteredModal from '../components/Modal';
@@ -25,6 +24,8 @@ import {SuccessIcon, InfoIcon} from '../constants/icons';
 import {useNavigation} from '@react-navigation/native';
 import {AppreciationScreenNavigationProp} from '../navigation/types';
 import Button from '../components/button/button';
+import Typography from '../components/typography';
+import colors from '../constants/colors';
 
 const paginationData = {
   page: 1,
@@ -109,9 +110,7 @@ const AppreciationScreen = () => {
         <View style={styles.fieldWrapper}>
           <Typography type="header" style={styles.labelText}>
             Core Value{' '}
-            <Pressable
-              style={styles.infoIcon}
-              onPress={() => setCoreValueModalVisible(true)}>
+            <Pressable onPress={() => setCoreValueModalVisible(true)}>
               <InfoIcon width={16} height={16} />
             </Pressable>
           </Typography>
@@ -139,7 +138,6 @@ const AppreciationScreen = () => {
             render={({field: {onChange, onBlur, value}}) => (
               <TextInput
                 style={styles.description}
-                placeholder="Description"
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
@@ -195,28 +193,26 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   fieldWrapper: {
-    paddingBottom: 40,
+    paddingBottom: 30,
   },
   labelText: {
     fontWeight: '500',
     fontSize: 14,
-    color: '#000000',
+    color: colors.BLACK,
     marginBottom: 10,
   },
   description: {
     textAlignVertical: 'top',
     borderRadius: 4,
     borderWidth: 1,
-    height: 400,
-    borderColor: 'black',
+    height: 300,
+    borderColor: colors.BLACK,
+    padding: 10,
   },
   button: {
     height: 20,
     fontSize: 16,
     borderRadius: 12,
-  },
-  infoIcon: {
-    paddingTop: 10,
   },
 });
 

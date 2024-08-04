@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
     color: colors.ERROR_RED,
     fontFamily: fonts.ARIAL,
     fontSize: 12,
+    paddingTop: 5,
   },
 });
 export default memo(Typography);
