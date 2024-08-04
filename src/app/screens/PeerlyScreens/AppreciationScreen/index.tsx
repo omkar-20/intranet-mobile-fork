@@ -1,9 +1,8 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   View,
   StyleSheet,
   TextInput,
-  Button,
   SafeAreaView,
   Pressable,
 } from 'react-native';
@@ -23,6 +22,9 @@ import CoreValueInfoModal from '../components/CoreValueInfoModal';
 import {FormInput} from './types';
 
 import {SuccessIcon, InfoIcon} from '../constants/icons';
+import {useNavigation} from '@react-navigation/native';
+import {AppreciationScreenNavigationProp} from '../navigation/types';
+import Button from '../components/button/button';
 
 const paginationData = {
   page: 1,
@@ -36,6 +38,8 @@ const schema = yup.object().shape({
 });
 
 const AppreciationScreen = () => {
+  const navigation = useNavigation<AppreciationScreenNavigationProp>();
+
   const [isCoreValueModalVisible, setCoreValueModalVisible] = useState(false);
   const {
     data: coworkerList,
@@ -74,6 +78,12 @@ const AppreciationScreen = () => {
   const onSubmit: SubmitHandler<FormInput> = data => {
     postAppriciation(data);
   };
+  const handleSuccessModalClose = useCallback(() => {
+    resetPostAppreciation();
+    resetForm();
+    navigation.goBack();
+  }, [navigation, resetForm, resetPostAppreciation]);
+
   return (
     <ScrollView>
       <SafeAreaView style={styles.container}>
@@ -144,8 +154,10 @@ const AppreciationScreen = () => {
         </View>
         <Button
           title="Submit"
+          type="primary"
           onPress={handleSubmit(onSubmit)}
           disabled={isAppreciationLoading}
+          isLoading={isAppreciationLoading}
         />
       </SafeAreaView>
       <View>
@@ -156,10 +168,7 @@ const AppreciationScreen = () => {
           }
           svgImage={SuccessIcon}
           btnTitle="Okay"
-          onClose={() => {
-            resetPostAppreciation();
-            resetForm();
-          }}
+          onClose={handleSuccessModalClose}
         />
       </View>
       <View>
