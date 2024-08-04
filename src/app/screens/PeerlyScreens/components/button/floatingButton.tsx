@@ -1,32 +1,31 @@
 import React, {memo} from 'react';
 import {StyleSheet, Text, TouchableOpacity, ViewStyle} from 'react-native';
-
-import colors from '../../constant/colors';
+import colors from '../../constants/colors';
 
 type Props = {
   style?: ViewStyle;
   onPress: () => void;
+  title: string;
 };
 
-const FloatingGiveAppreciationButton = ({style, onPress}: Props) => {
+const FloatingButton = ({style, onPress, title}: Props) => {
   return (
     <TouchableOpacity style={[style, styles.floating]} onPress={onPress}>
-      <Text style={styles.buttonText}>Give Appreciation</Text>
+      <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   floating: {
-    flex: 1,
     justifyContent: 'center',
+    padding: 15,
     alignItems: 'center',
+    borderRadius: 12,
     position: 'absolute',
-    height: 50,
     left: 10,
     right: 10,
     bottom: 10,
-    borderRadius: 10,
     backgroundColor: colors.PRIMARY,
   },
   buttonText: {
@@ -36,4 +35,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default memo(FloatingGiveAppreciationButton);
+export default memo(FloatingButton);

@@ -13,7 +13,6 @@ import colors from '../constants/colors';
 import AppreciationCard from '../components/AppreciationCard';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import fonts from '../../../constant/fonts';
-import FloatingGiveAppreciationButton from '../../../components/button/floatingGiveAppreciationButton';
 import LeaderBoardCard from '../components/LeaderBoardCard';
 import {
   useGetAppreciationList,
@@ -32,6 +31,7 @@ import {HomeScreenNavigationProp} from '../navigation/types';
 import {StarIcon} from '../constants/icons';
 import Search from '../components/Search';
 import InitialsAvatar from '../components/InitialAvatar';
+import FloatingButton from '../components/button/floatingButton';
 
 const paginationData = {
   page: 1,
@@ -193,8 +193,8 @@ const HomeScreen = () => {
           style={styles.flatListAppreciation}
         />
       </View>
-
-      <FloatingGiveAppreciationButton
+      <FloatingButton
+        title="Give Appreciation"
         onPress={() => navigation.navigate(APPRECIATION)}
       />
     </View>
