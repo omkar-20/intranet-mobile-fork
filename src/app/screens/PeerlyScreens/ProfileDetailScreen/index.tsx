@@ -72,12 +72,16 @@ const ProfileDetailScreen = () => {
 
   const {
     data: profileDetails,
-    isLoading,
-    isFetching,
+    isLoading: isLoadingProfileDetail,
+    isFetching: isFetchingProfileDetail,
   } = useGetProfileDetails(userId);
-  const {data: appreciationList} = useGetAppreciationList(paginationData);
+  const {
+    data: appreciationList,
+    isLoading: isLoadingAppreciations,
+    isFetching: isFetchingAppreciations,
+  } = useGetAppreciationList(paginationData);
 
-  if (isLoading || isFetching) {
+  if (isLoadingProfileDetail || isFetchingProfileDetail) {
     return (
       <View>
         <ActivityIndicator size="large" />
@@ -186,6 +190,7 @@ const ProfileDetailScreen = () => {
           appreciationList={appreciationList}
           receivedList={receivedAppriciationList}
           expressedList={expressedAppriciationList}
+          isLoading={isLoadingAppreciations || isFetchingAppreciations}
         />
       </View>
       <RewardInfoModal

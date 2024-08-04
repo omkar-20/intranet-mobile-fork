@@ -32,6 +32,7 @@ import {StarIcon} from '../constants/icons';
 import Search from '../components/Search';
 import InitialsAvatar from '../components/InitialAvatar';
 import FloatingButton from '../components/button/floatingButton';
+import SkeletonLoader from '../components/skeleton/skeleton';
 
 const paginationData = {
   page: 1,
@@ -44,8 +45,12 @@ const HomeScreen = () => {
   const layout = useWindowDimensions();
   const {data: profileDetails} = useGetProfileDetails();
 
-  const {data: appreciationList, metadata: appreciationListMeta} =
-    useGetAppreciationList(paginationData);
+  const {
+    data: appreciationList,
+    metadata: appreciationListMeta,
+    isLoading: isLoadingAppreciations,
+    isFetching: isFetchingAppreciations,
+  } = useGetAppreciationList(paginationData);
 
   const {data: activeUsersList} = useGetActiveUsersList();
 
@@ -180,18 +185,22 @@ const HomeScreen = () => {
         <Text style={styles.totalAppreciationCount}>
           Total: {appreciationListMeta?.total_records} Appreciations
         </Text>
-        <FlatList
-          data={appreciationList || []}
-          renderItem={({item}) => (
-            <AppreciationCard
-              appreciationDetails={item}
-              onPress={handleAppreciationCardClick}
-            />
-          )}
-          keyExtractor={item => String(item.id)}
-          numColumns={2}
-          style={styles.flatListAppreciation}
-        />
+        {isLoadingAppreciations || isFetchingAppreciations ? (
+          <SkeletonLoader />
+        ) : (
+          <FlatList
+            data={appreciationList || []}
+            renderItem={({item}) => (
+              <AppreciationCard
+                appreciationDetails={item}
+                onPress={handleAppreciationCardClick}
+              />
+            )}
+            keyExtractor={item => String(item.id)}
+            numColumns={2}
+            style={styles.flatListAppreciation}
+          />
+        )}
       </View>
       <FloatingButton
         title="Give Appreciation"
@@ -213,8 +222,8 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   title: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 18,
+    fontWeight: '500',
     color: colors.BLACK,
   },
   userScoreBox: {

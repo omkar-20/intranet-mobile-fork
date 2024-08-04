@@ -21,12 +21,14 @@ import {APPRECIATION_DETAILS} from '../constants/screenNames';
 import {AppreciationDetails} from '../../../services/PeerlyServices/home/types';
 import {useNavigation} from '@react-navigation/native';
 import {AppreciationDetailScreenNavigationProp} from '../navigation/types';
+import SkeletonLoader from './skeleton/skeleton';
 
 type GivenAndReceivedAppriciationProps = {
   appreciationList: AppreciationDetails[];
   receivedList: AppreciationDetails[];
   expressedList: AppreciationDetails[];
   self?: boolean;
+  isLoading?: boolean;
 };
 
 interface tabBarRoute extends Route {
@@ -41,6 +43,7 @@ const GivenAndReceivedAppriciation = ({
   self,
   receivedList,
   expressedList,
+  isLoading,
 }: GivenAndReceivedAppriciationProps) => {
   const navigation = useNavigation<AppreciationDetailScreenNavigationProp>();
   const layout = useWindowDimensions();
@@ -74,39 +77,47 @@ const GivenAndReceivedAppriciation = ({
   const FirstRoute = useCallback(
     () => (
       <View style={styles.flatListWrapper}>
-        <FlatList
-          data={receivedList || []}
-          renderItem={({item}) => (
-            <AppreciationCard
-              appreciationDetails={item}
-              onPress={handleAppreciationCardClick}
-            />
-          )}
-          keyExtractor={item => String(item.id)}
-          numColumns={2}
-        />
+        {isLoading ? (
+          <SkeletonLoader />
+        ) : (
+          <FlatList
+            data={receivedList || []}
+            renderItem={({item}) => (
+              <AppreciationCard
+                appreciationDetails={item}
+                onPress={handleAppreciationCardClick}
+              />
+            )}
+            keyExtractor={item => String(item.id)}
+            numColumns={2}
+          />
+        )}
       </View>
     ),
-    [receivedList, handleAppreciationCardClick],
+    [isLoading, receivedList, handleAppreciationCardClick],
   );
 
   const SecondRoute = useCallback(
     () => (
       <View style={styles.flatListWrapper}>
-        <FlatList
-          data={expressedList || []}
-          renderItem={({item}) => (
-            <AppreciationCard
-              appreciationDetails={item}
-              onPress={handleAppreciationCardClick}
-            />
-          )}
-          keyExtractor={item => String(item.id)}
-          numColumns={2}
-        />
+        {isLoading ? (
+          <SkeletonLoader />
+        ) : (
+          <FlatList
+            data={expressedList || []}
+            renderItem={({item}) => (
+              <AppreciationCard
+                appreciationDetails={item}
+                onPress={handleAppreciationCardClick}
+              />
+            )}
+            keyExtractor={item => String(item.id)}
+            numColumns={2}
+          />
+        )}
       </View>
     ),
-    [expressedList, handleAppreciationCardClick],
+    [expressedList, handleAppreciationCardClick, isLoading],
   );
 
   const renderScene = SceneMap({

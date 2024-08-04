@@ -10,7 +10,11 @@ const SearchScreen = () => {
   const [searchName, setSearchName] = useState('');
   const debounceValue = useDebounce(searchName, 500);
 
-  const {data: appreciationList} = useGetSearchAppreciationList({
+  const {
+    data: appreciationList,
+    isLoading,
+    isFetching,
+  } = useGetSearchAppreciationList({
     name: debounceValue,
   });
 
@@ -58,6 +62,7 @@ const SearchScreen = () => {
           appreciationList={appreciationList}
           receivedList={receivedAppriciationList}
           expressedList={expressedAppriciationList}
+          isLoading={isLoading || isFetching}
         />
       </View>
     </View>
