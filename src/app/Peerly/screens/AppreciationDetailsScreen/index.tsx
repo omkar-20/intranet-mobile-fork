@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, Image, ScrollView} from 'react-native';
 import colors from '../../constants/colors';
 import RatingBar from '../../components/RatingBar';
 import ObjectionModal from '../../components/ObjectionModal';
-import {usePostReward, usePostObjection} from './details.hooks';
+import {usePostReward, usePostObjection} from './appreciationDetails.hooks';
 import CenteredModal from '../../components/Modal';
 import {RewardSuccessIcon, SuccessIcon} from '../../constants/icons';
 import {AppreciationDetails} from '../../services/home/types';

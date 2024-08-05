@@ -19,12 +19,12 @@ import {
   useGetActiveUsersList,
   useGetTopUsersList,
 } from './home.hooks';
-import {useGetProfileDetails} from '../ProfileDetailScreen/profile.hooks';
+import {useGetProfileDetails} from '../ProfileDetailScreen/profileDetail.hooks';
 import {
-  APPRECIATION,
-  APPRECIATION_DETAILS,
-  APPRECIATION_SEARCH,
-  PROFILE_DETAILS,
+  GIVE_APPRECIATION_SCREEN,
+  APPRECIATION_DETAILS_SCREEN,
+  APPRECIATION_SEARCH_SCREEN,
+  PROFILE_DETAILS_SCREEN,
 } from '../../constants/screenNames';
 import {useNavigation} from '@react-navigation/native';
 import {HomeScreenNavigationProp} from '../../navigation/types';
@@ -114,14 +114,14 @@ const HomeScreen = () => {
   );
 
   const handleAppreciationCardClick = (id: number) => {
-    navigation.navigate(APPRECIATION_DETAILS, {
+    navigation.navigate(APPRECIATION_DETAILS_SCREEN, {
       cardId: id,
       appriciationList: appreciationList,
     });
   };
 
   const handleSearchPress = () => {
-    navigation.navigate(APPRECIATION_SEARCH);
+    navigation.navigate(APPRECIATION_SEARCH_SCREEN);
   };
 
   const profileIconPadding = {
@@ -129,7 +129,7 @@ const HomeScreen = () => {
   };
 
   const handleProfileIconClick = () => {
-    navigation.navigate(PROFILE_DETAILS, {
+    navigation.navigate(PROFILE_DETAILS_SCREEN, {
       userId: profileDetails?.employee_id,
     });
   };
@@ -204,7 +204,7 @@ const HomeScreen = () => {
       </View>
       <FloatingButton
         title="Give Appreciation"
-        onPress={() => navigation.navigate(APPRECIATION)}
+        onPress={() => navigation.navigate(GIVE_APPRECIATION_SCREEN)}
       />
     </View>
   );

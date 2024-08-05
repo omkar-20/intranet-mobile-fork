@@ -21,7 +21,7 @@ import {dateFormat} from '../../utils';
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
 import {useGetAppreciationList} from '../HomeScreen/home.hooks';
 import RewardInfoModal from '../../components/RewardInfoModal';
-import {useGetProfileDetails} from './profile.hooks';
+import {useGetProfileDetails} from './profileDetail.hooks';
 import GivenAndReceivedAppriciation from '../../components/GivenAndReceivedAppreciation';
 import {useRoute} from '@react-navigation/native';
 import {ProfileScreenRouteProp} from '../../navigation/types';

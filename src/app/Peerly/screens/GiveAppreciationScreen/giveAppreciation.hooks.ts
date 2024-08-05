@@ -3,13 +3,13 @@ import {
   getCoreValuesList,
   getCoworkerList,
   postAppreciationRequest,
-} from '../../services/appreciation';
+} from '../../services/giveAppreciation';
 import {
   PostAppreciationRequestBody,
   GetCoworkersListRequest,
   UserDetails,
   CoreValue,
-} from '../../services/appreciation/types';
+} from '../../services/giveAppreciation/types';
 import toast from '../../../utils/toast';
 import {AxiosError} from 'axios';
 import {APIError} from './types';

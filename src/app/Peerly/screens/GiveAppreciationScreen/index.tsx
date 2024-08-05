@@ -10,7 +10,7 @@ import {
   useGetCoworkerList,
   useGetCoreValuesList,
   usePostAppreciation,
-} from './appreciation.hooks';
+} from './giveAppreciation.hooks';
 import {useForm, Controller, SubmitHandler} from 'react-hook-form';
 import Select from '../../components/Select';
 import CenteredModal from '../../components/Modal';
@@ -22,7 +22,7 @@ import {FormInput} from './types';
 
 import {SuccessIcon, InfoIcon} from '../../constants/icons';
 import {useNavigation} from '@react-navigation/native';
-import {AppreciationScreenNavigationProp} from '../../navigation/types';
+import {GiveAppreciationScreenNavigationProp} from '../../navigation/types';
 import Button from '../../components/button/button';
 import Typography from '../../components/typography';
 import colors from '../../constants/colors';
@@ -39,7 +39,7 @@ const schema = yup.object().shape({
 });
 
 const AppreciationScreen = () => {
-  const navigation = useNavigation<AppreciationScreenNavigationProp>();
+  const navigation = useNavigation<GiveAppreciationScreenNavigationProp>();
 
   const [isCoreValueModalVisible, setCoreValueModalVisible] = useState(false);
   const {

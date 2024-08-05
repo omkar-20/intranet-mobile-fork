@@ -5,14 +5,14 @@ import {useLoginPeerly} from '../hooks/peerlyLogin.hook';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
-  PEERLY_HOME_SCREEN,
-  APPRECIATION,
-  APPRECIATION_DETAILS,
-  PROFILE_DETAILS,
-  APPRECIATION_SEARCH,
+  HOME_SCREEN,
+  GIVE_APPRECIATION_SCREEN,
+  APPRECIATION_DETAILS_SCREEN,
+  PROFILE_DETAILS_SCREEN,
+  APPRECIATION_SEARCH_SCREEN,
 } from '../constants/screenNames';
-import AppreciationScreen from '../screens/AppreciationScreen';
-import DetailsScreen from '../screens/DetailsScreen';
+import AppreciationScreen from '../screens/GiveAppreciationScreen';
+import DetailsScreen from '../screens/AppreciationDetailsScreen';
 import ProfileDetailScreen from '../screens/ProfileDetailScreen';
 import SearchScreen from '../screens/SearchScreen';
 import {RootStackParamList} from './types';
@@ -39,21 +39,22 @@ function PeerlyScreen() {
 
   return (
     <NavigationContainer independent={true}>
-      <RootStack.Navigator initialRouteName={PEERLY_HOME_SCREEN}>
+      <RootStack.Navigator initialRouteName={HOME_SCREEN}>
         <RootStack.Screen
-          name={PEERLY_HOME_SCREEN}
+          name={HOME_SCREEN}
           component={HomeScreen}
           options={{headerShown: false}}
         />
         <RootStack.Screen
-          name={APPRECIATION}
+          name={GIVE_APPRECIATION_SCREEN}
           component={AppreciationScreen}
           options={{
+            headerTitle: 'Appreciation',
             headerShadowVisible: false,
           }}
         />
         <RootStack.Screen
-          name={APPRECIATION_DETAILS}
+          name={APPRECIATION_DETAILS_SCREEN}
           component={DetailsScreen}
           options={{
             headerTitle: '',
@@ -61,14 +62,14 @@ function PeerlyScreen() {
           }}
         />
         <RootStack.Screen
-          name={PROFILE_DETAILS}
+          name={PROFILE_DETAILS_SCREEN}
           component={ProfileDetailScreen}
           options={{
             headerShadowVisible: false,
           }}
         />
         <RootStack.Screen
-          name={APPRECIATION_SEARCH}
+          name={APPRECIATION_SEARCH_SCREEN}
           component={SearchScreen}
           options={{
             headerTitle: '',

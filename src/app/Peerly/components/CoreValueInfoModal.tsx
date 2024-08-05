@@ -16,7 +16,7 @@ import {
   CustFocusIcon,
 } from '../constants/icons';
 
-import {CoreValue} from '../services/appreciation/types';
+import {CoreValue} from '../services/giveAppreciation/types';
 import colors from '../constants/colors';
 
 const coreValuesMeta = [

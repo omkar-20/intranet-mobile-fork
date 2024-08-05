@@ -3,9 +3,9 @@ import {AppreciationDetails} from '../services/home/types';
 import {RouteProp} from '@react-navigation/native';
 
 export type RootStackParamList = {
-  PeerlyHome: undefined;
+  Home: undefined;
   AppreciationSearch: undefined;
-  Appreciation: undefined;
+  GiveAppreciation: undefined;
   Profile: {userId: number | undefined};
   AppreciationDetail: {
     cardId: number;
@@ -16,7 +16,7 @@ export type RootStackParamList = {
 
 export type HomeScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
-  'PeerlyHome'
+  'Home'
 >;
 
 export type AppreciationSearchNavigationProp = NativeStackNavigationProp<
@@ -24,9 +24,9 @@ export type AppreciationSearchNavigationProp = NativeStackNavigationProp<
   'AppreciationSearch'
 >;
 
-export type AppreciationScreenNavigationProp = NativeStackNavigationProp<
+export type GiveAppreciationScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
-  'Appreciation'
+  'GiveAppreciation'
 >;
 
 export type ProfileScreenNavigationProp = NativeStackNavigationProp<

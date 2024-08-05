@@ -17,7 +17,7 @@ import {
 } from 'react-native-tab-view';
 import colors from '../constants/colors';
 import AppreciationCard from './AppreciationCard';
-import {APPRECIATION_DETAILS} from '../constants/screenNames';
+import {APPRECIATION_DETAILS_SCREEN} from '../constants/screenNames';
 import {AppreciationDetails} from '../services/home/types';
 import {useNavigation} from '@react-navigation/native';
 import {AppreciationDetailScreenNavigationProp} from '../navigation/types';
@@ -65,7 +65,7 @@ const GivenAndReceivedAppriciation = ({
 
   const handleAppreciationCardClick = useCallback(
     (id: number) => {
-      navigation.navigate(APPRECIATION_DETAILS, {
+      navigation.navigate(APPRECIATION_DETAILS_SCREEN, {
         cardId: id,
         appriciationList: self ? getAppriciationDetails(id) : appreciationList,
         self,
