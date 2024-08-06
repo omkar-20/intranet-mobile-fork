@@ -1,4 +1,4 @@
-import React, {memo} from 'react';
+import React from 'react';
 import {View, Text, StyleSheet, Pressable} from 'react-native';
 import Slider from '@react-native-community/slider';
 import {FlagIcon, RatingStarIcon} from '../constants/icons';
@@ -96,4 +96,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default memo(RatingBar);
+export default RatingBar;
