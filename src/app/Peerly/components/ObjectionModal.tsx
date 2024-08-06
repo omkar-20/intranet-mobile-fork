@@ -34,7 +34,7 @@ const ObjectionModal: React.FC<CenteredModalProps> = ({
     if (!reason.trim().length) {
       return true;
     } else {
-      false;
+      return false;
     }
   }, [reason]);
 

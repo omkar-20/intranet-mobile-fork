@@ -18,7 +18,6 @@ const RatingBar: React.FC<RatingBarProps> = ({
   disableSlider,
   isRewardAlreadyGiven,
 }) => {
-  console.log('RATIG BAR', reward);
   return (
     <View>
       <View style={styles.rewardAndReportWrapper}>
