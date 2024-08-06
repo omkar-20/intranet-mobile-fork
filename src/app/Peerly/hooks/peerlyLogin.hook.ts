@@ -7,7 +7,7 @@ import {PeerlyLoginResponse} from '../services/api/types';
 import PeerlyAsyncStore from '../services/peerlyAsyncStorage';
 
 export function useLoginPeerly() {
-  const {data, isLoading, isFetching, isSuccess, isError} = useQuery({
+  const {data, isLoading, isFetching, isSuccess, isError, refetch} = useQuery({
     queryKey: ['peerly_login'],
     queryFn: loginPeerly,
 
@@ -26,5 +26,5 @@ export function useLoginPeerly() {
     },
     refetchOnMount: true,
   });
-  return {data, isLoading, isFetching, isSuccess, isError};
+  return {data, isLoading, isFetching, isSuccess, isError, refetch};
 }

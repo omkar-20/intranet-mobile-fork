@@ -1,5 +1,5 @@
 import React from 'react';
-import {ActivityIndicator, View, Text} from 'react-native';
+import {ActivityIndicator, Text, SafeAreaView, StyleSheet} from 'react-native';
 import HomeScreen from '../screens/HomeScreen/index';
 import {useLoginPeerly} from '../hooks/peerlyLogin.hook';
 import {NavigationContainer} from '@react-navigation/native';
@@ -16,24 +16,27 @@ import DetailsScreen from '../screens/AppreciationDetailsScreen';
 import ProfileDetailScreen from '../screens/ProfileDetailScreen';
 import SearchScreen from '../screens/SearchScreen';
 import {RootStackParamList} from './types';
+import Button from '../components/button/button';
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 
 function PeerlyScreen() {
-  const {isLoading, isFetching, isError} = useLoginPeerly();
+  const {isLoading, isFetching, isError, refetch} = useLoginPeerly();
+
   if (isLoading || isFetching) {
     return (
-      <View>
+      <SafeAreaView style={styles.centerContainer}>
         <ActivityIndicator size="large" />
-      </View>
+      </SafeAreaView>
     );
   }
 
   if (isError) {
     return (
-      <View>
-        <Text>Something went Wrong</Text>
-      </View>
+      <SafeAreaView style={styles.centerContainer}>
+        <Text style={styles.errorMessage}>Something went Wrong</Text>
+        <Button title="retry" type="secondary" onPress={() => refetch()} />
+      </SafeAreaView>
     );
   }
 
@@ -80,5 +83,17 @@ function PeerlyScreen() {
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  centerContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  errorMessage: {
+    fontSize: 18,
+    paddingBottom: 10,
+  },
+});
 
 export default PeerlyScreen;
