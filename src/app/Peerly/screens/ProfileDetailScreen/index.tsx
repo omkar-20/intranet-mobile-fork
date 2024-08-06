@@ -1,0 +1,274 @@
+import React, {useState} from 'react';
+import {
+  ActivityIndicator,
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {BadgeMetaData} from './types';
+import {
+  PlatinumIcon,
+  GoldIcon,
+  SilverIcon,
+  BronzeIcon,
+  InfoIcon,
+  StarIcon,
+} from '../../constants/icons';
+import {dateFormat} from '../../utils';
+import {CircularProgressBase} from 'react-native-circular-progress-indicator';
+import {useGetAppreciationList} from '../HomeScreen/home.hooks';
+import RewardInfoModal from '../../components/RewardInfoModal';
+import {useGetProfileDetails} from './profileDetail.hooks';
+import GivenAndReceivedAppriciation from '../../components/GivenAndReceivedAppreciation';
+import {useRoute} from '@react-navigation/native';
+import {ProfileScreenRouteProp} from '../../navigation/types';
+import InitialAvatar from '../../components/InitialAvatar';
+import colors from '../../constants/colors';
+
+const paginationData = {
+  page: 1,
+  page_size: 500,
+  self: true,
+};
+const badgeData: BadgeMetaData = {
+  platinum: {
+    member: 'Platinum Member',
+    icon: <PlatinumIcon width={60} height={60} />,
+  },
+  gold: {
+    member: 'Gold Member',
+    icon: <GoldIcon width={60} height={60} />,
+  },
+  silver: {
+    member: 'Silver Member',
+    icon: <SilverIcon width={60} height={60} />,
+  },
+  bronze: {
+    member: 'Bronze Member',
+    icon: <BronzeIcon width={60} height={60} />,
+  },
+};
+
+const initialProfileDetails = {
+  first_name: '',
+  last_name: '',
+  profile_image_url: '',
+  designation: '',
+  reward_quota_balance: 0,
+  total_reward_quota: 0,
+  grade_id: 0,
+  total_points: 0,
+  refil_date: 0,
+  badge: '',
+};
+
+const ProfileDetailScreen = () => {
+  const route = useRoute<ProfileScreenRouteProp>();
+  const {userId} = route.params;
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const {
+    data: profileDetails,
+    isLoading: isLoadingProfileDetail,
+    isFetching: isFetchingProfileDetail,
+  } = useGetProfileDetails(userId);
+  const {
+    data: appreciationList,
+    isLoading: isLoadingAppreciations,
+    isFetching: isFetchingAppreciations,
+  } = useGetAppreciationList(paginationData);
+
+  if (isLoadingProfileDetail || isFetchingProfileDetail) {
+    return (
+      <View>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  const {
+    first_name,
+    last_name,
+    badge,
+    refil_date,
+    profile_image_url,
+    designation,
+    total_points,
+    reward_quota_balance,
+    total_reward_quota,
+  } = profileDetails || initialProfileDetails;
+
+  const userName = `${first_name || ''} ${last_name || ''}`;
+  const badgeType = badge.toLowerCase() || '';
+  const member = badgeType ? (
+    <Text>{badgeData[badgeType.toLowerCase()].member}</Text>
+  ) : null;
+  const userNameLowerCase = `${(first_name || '').toLowerCase()} ${(
+    last_name || ''
+  ).toLowerCase()}`;
+  const rewardPointMargin = {marginTop: badgeType ? 30 : 0};
+
+  const receivedAppriciationList = appreciationList.filter(item => {
+    const fname = (item?.receiver_first_name || '').toLowerCase();
+    const lname = (item?.receiver_last_name || '').toLowerCase();
+    const receiverName = `${fname} ${lname}`;
+    return receiverName.includes(userNameLowerCase);
+  });
+
+  const expressedAppriciationList = appreciationList.filter(item => {
+    const fname = (item?.sender_first_name || '').toLowerCase();
+    const lname = (item?.sender_last_name || '').toLowerCase();
+    const senderName = `${fname} ${lname}`;
+    return senderName.includes(userNameLowerCase);
+  });
+
+  const openModal = () => {
+    setModalVisible(true);
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <View>
+        <View style={styles.profileDetailsBox}>
+          <View style={styles.profileDetails}>
+            {profile_image_url !== '' ? (
+              <Image
+                style={styles.profileImage}
+                source={{uri: profile_image_url}}
+              />
+            ) : (
+              <InitialAvatar name={userName} size={60} />
+            )}
+            <View style={styles.userNameWrapper}>
+              <Text style={[styles.name, styles.bold]}>{userName}</Text>
+              <Text>{designation}</Text>
+              {member}
+            </View>
+          </View>
+          <View style={[styles.totalPoints, rewardPointMargin]}>
+            <Text style={[styles.name, styles.bold]}>{total_points}</Text>
+            <Text style={[styles.name, styles.bold]}>Reward Points</Text>
+          </View>
+        </View>
+        {badgeType && (
+          <View style={styles.badgeWrapper}>{badgeData[badgeType]?.icon}</View>
+        )}
+      </View>
+      <View style={styles.rewardDetailsBox}>
+        <View>
+          <Text style={[styles.name, styles.bold]}>
+            Reward Balance{' '}
+            <TouchableOpacity onPress={openModal}>
+              <InfoIcon width={16} height={16} />
+            </TouchableOpacity>
+          </Text>
+          <Text>Refill on {dateFormat(refil_date, 'MMMM YYYY')}</Text>
+        </View>
+        <View style={styles.progressBar}>
+          {reward_quota_balance && total_reward_quota && (
+            <CircularProgressBase
+              clockwise={false}
+              value={reward_quota_balance}
+              radius={30}
+              maxValue={total_reward_quota}
+              activeStrokeColor={'#F3A552'}
+              inActiveStrokeColor={'#F5F8FF'}>
+              <View>
+                <StarIcon width={25} height={25} />
+              </View>
+            </CircularProgressBase>
+          )}
+        </View>
+      </View>
+
+      <View style={styles.appreciationList}>
+        <GivenAndReceivedAppriciation
+          self={true}
+          appreciationList={appreciationList}
+          receivedList={receivedAppriciationList}
+          expressedList={expressedAppriciationList}
+          isLoading={isLoadingAppreciations || isFetchingAppreciations}
+        />
+      </View>
+      <RewardInfoModal
+        visible={isModalVisible}
+        closeModal={() => setModalVisible(false)}
+      />
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+    padding: 20,
+  },
+  profileDetailsBox: {
+    marginTop: 10,
+    flexDirection: 'row',
+    backgroundColor: colors.LIGHT_PASTEL_BLUE,
+    padding: 15,
+    borderRadius: 10,
+  },
+  profileDetails: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  profileImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 32,
+  },
+  name: {
+    lineHeight: 19,
+    textAlign: 'left',
+  },
+  bold: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: colors.BLACK,
+  },
+  userNameWrapper: {
+    marginLeft: 15,
+  },
+  badgeWrapper: {
+    position: 'absolute',
+    top: -20,
+    right: 15,
+  },
+  totalPoints: {
+    marginLeft: 0,
+    alignItems: 'center',
+    maxWidth: 55,
+  },
+  rewardDetailsBox: {
+    flexDirection: 'row',
+    width: '100%',
+    backgroundColor: 'white',
+    marginTop: 30,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  progressBar: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 80,
+    height: 80,
+    backgroundColor: colors.LIGHT_PASTEL_BLUE,
+    borderRadius: 10,
+    marginLeft: 30,
+  },
+  appreciationList: {
+    marginTop: 15,
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+});
+export default ProfileDetailScreen;

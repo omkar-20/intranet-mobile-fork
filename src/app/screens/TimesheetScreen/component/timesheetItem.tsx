@@ -58,13 +58,19 @@ const TimesheetItem = ({
     <View style={styles.container}>
       {!timesheetData.is_freezed && showCheckbox && (
         <View style={styles.checkboxContainer}>
-          <CheckBox
-            value={isChecked}
-            tintColors={{
-              true: error ? colors.ERROR_RED : colors.PRIMARY,
-            }}
-            onChange={toggleCheckbox}
-          />
+          <View style={styles.checkBoxWrapper}>
+            <CheckBox
+              style={styles.checkBox}
+              value={isChecked}
+              onCheckColor={error ? colors.ERROR_RED : colors.PRIMARY}
+              boxType="square"
+              onTintColor={error ? colors.ERROR_RED : colors.PRIMARY}
+              tintColors={{
+                true: error ? colors.ERROR_RED : colors.PRIMARY,
+              }}
+              onChange={toggleCheckbox}
+            />
+          </View>
         </View>
       )}
       <View style={styles.main}>
@@ -144,6 +150,14 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: colors.ERROR_RED,
+  },
+  checkBoxWrapper: {
+    height: 22,
+    width: 22,
+  },
+  checkBox: {
+    height: 20,
+    width: 20,
   },
 });
 
