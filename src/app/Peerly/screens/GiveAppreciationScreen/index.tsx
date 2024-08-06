@@ -29,7 +29,7 @@ import colors from '../../constants/colors';
 
 const paginationData = {
   page: 1,
-  per_page: 500,
+  page_size: 500,
 };
 
 const schema = yup.object().shape({

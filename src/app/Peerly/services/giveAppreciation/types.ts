@@ -1,7 +1,6 @@
 export type GetCoworkersListRequest = {
   page: number;
-  per_page: number;
-  name?: string;
+  page_size: number;
 };
 
 export type UserDetails = {
@@ -19,8 +18,8 @@ export type GetCoworkersListResponse = {
     user_list: UserDetails[];
     metadata: {
       total_count: number;
-      current_page: number;
-      page_count: number;
+      page: number;
+      page_size: number;
     };
   };
 };
