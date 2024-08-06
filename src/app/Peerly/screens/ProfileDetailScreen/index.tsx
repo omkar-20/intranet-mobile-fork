@@ -105,7 +105,9 @@ const ProfileDetailScreen = () => {
   const badgeType = badge.toLowerCase() || '';
   const member = badgeType ? (
     <Text>{badgeData[badgeType.toLowerCase()].member}</Text>
-  ) : null;
+  ) : (
+    <Text>{null}</Text>
+  );
   const userNameLowerCase = `${(first_name || '').toLowerCase()} ${(
     last_name || ''
   ).toLowerCase()}`;
@@ -168,19 +170,17 @@ const ProfileDetailScreen = () => {
           <Text>Refill on {dateFormat(refil_date, 'MMMM YYYY')}</Text>
         </View>
         <View style={styles.progressBar}>
-          {reward_quota_balance && total_reward_quota && (
-            <CircularProgressBase
-              clockwise={false}
-              value={reward_quota_balance}
-              radius={30}
-              maxValue={total_reward_quota}
-              activeStrokeColor={'#F3A552'}
-              inActiveStrokeColor={'#F5F8FF'}>
-              <View>
-                <StarIcon width={25} height={25} />
-              </View>
-            </CircularProgressBase>
-          )}
+          <CircularProgressBase
+            clockwise={false}
+            value={reward_quota_balance}
+            radius={30}
+            maxValue={total_reward_quota}
+            activeStrokeColor={'#F3A552'}
+            inActiveStrokeColor={'#F5F8FF'}>
+            <View>
+              <StarIcon width={25} height={25} />
+            </View>
+          </CircularProgressBase>
         </View>
       </View>
 

@@ -1,16 +1,24 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Image, ScrollView} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ScrollView,
+  Pressable,
+} from 'react-native';
 import colors from '../../constants/colors';
 import RatingBar from '../../components/RatingBar';
 import ObjectionModal from '../../components/ObjectionModal';
 import {usePostReward, usePostObjection} from './appreciationDetails.hooks';
 import CenteredModal from '../../components/Modal';
-import {RewardSuccessIcon, SuccessIcon} from '../../constants/icons';
+import {InfoIcon, RewardSuccessIcon, SuccessIcon} from '../../constants/icons';
 import {AppreciationDetails} from '../../services/home/types';
 import {useRoute} from '@react-navigation/native';
 import {AppreciationDetailScreenRouteProp} from '../../navigation/types';
 import InitialAvatar from '../../components/InitialAvatar';
 import Typography from '../../components/typography';
+import RewardInfoModal from '../../components/RewardInfoModal';
 
 const AppreciationDetailsScreen = () => {
   const route = useRoute<AppreciationDetailScreenRouteProp>();
@@ -22,7 +30,7 @@ const AppreciationDetailsScreen = () => {
   const [reward, setReward] = useState(0);
   const [reason, setReason] = useState('');
   const [isObjectionModalVisible, setObjectionModalVisible] = useState(false);
-
+  const [isRewardInfoModalVisible, setRewardInfoModal] = useState(false);
   const {
     mutate: postReward,
     isLoading: isLoadingPostReward,
@@ -145,23 +153,38 @@ const AppreciationDetailsScreen = () => {
           </View>
         </View>
         <View>
-          <RatingBar
-            onPressObjection={() => setObjectionModalVisible(true)}
-            rewardedByPeople={cardDetails?.total_rewards}
-            reward={reward}
-            setReward={handleReward}
-            disableSlider={isLoadingPostReward}
-            isRewardAlreadyGiven={cardDetails?.given_reward_point > 0}
-            self={self || false}
-          />
+          <View style={styles.ratingCountContainer}>
+            <Text style={styles.label}>Rewards</Text>
+            <Pressable
+              onPress={() => setRewardInfoModal(true)}
+              style={styles.infoWrapper}>
+              <InfoIcon width={16} height={16} />
+            </Pressable>
+            <Text style={styles.info}>
+              Rewards given by {cardDetails?.total_rewards} people
+            </Text>
+          </View>
+          {self ? null : (
+            <RatingBar
+              onPressObjection={() => setObjectionModalVisible(true)}
+              reward={reward}
+              setReward={handleReward}
+              disableSlider={isLoadingPostReward}
+              isRewardAlreadyGiven={cardDetails?.given_reward_point > 0}
+            />
+          )}
         </View>
+        <RewardInfoModal
+          visible={isRewardInfoModalVisible}
+          closeModal={() => setRewardInfoModal(false)}
+        />
         <ObjectionModal
           visible={isObjectionModalVisible}
           onClose={() => setObjectionModalVisible(false)}
           onConfirm={handleObjectionReason}
           setReason={setReason}
           reason={reason}
-          isDisabled={isLoadingPostObjection}
+          isLoading={isLoadingPostObjection}
         />
         <CenteredModal
           visible={isSuccessPostObjection}
@@ -315,6 +338,23 @@ const styles = StyleSheet.create({
   },
   appreciationDescription: {
     fontSize: 14,
+  },
+  ratingCountContainer: {flexDirection: 'row', alignItems: 'center'},
+  label: {
+    margin: 2,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  info: {
+    fontSize: 12,
+    margin: 2,
+    marginBottom: 5,
+    paddingTop: 7,
+  },
+  infoWrapper: {
+    marginTop: 4,
+    marginLeft: 15,
+    marginRight: 5,
   },
 });
 

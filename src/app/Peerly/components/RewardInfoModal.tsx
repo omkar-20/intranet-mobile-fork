@@ -1,5 +1,6 @@
 import React from 'react';
-import {Button, Modal, StyleSheet, Text, View} from 'react-native';
+import {Modal, StyleSheet, Text, View} from 'react-native';
+import Button from './button/button';
 
 interface RewardInfoModalProps {
   visible: boolean;
@@ -13,12 +14,12 @@ const RewardInfoModal: React.FC<RewardInfoModalProps> = ({
     <Modal transparent={true} visible={visible} onRequestClose={closeModal}>
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
-          <Text>
+          <Text style={styles.text}>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris
             posuere faucibus est non blandit. Maecenas in dolor vulputate ante
             commodo ultricies.
           </Text>
-          <Button title="Close" onPress={closeModal} />
+          <Button title="Close" type="secondary" onPress={closeModal} />
         </View>
       </View>
     </Modal>
@@ -38,6 +39,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: '80%',
     alignItems: 'center',
+  },
+  text: {
+    marginBottom: 15,
   },
 });
 
