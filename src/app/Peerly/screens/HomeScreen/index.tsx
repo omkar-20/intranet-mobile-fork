@@ -7,6 +7,7 @@ import {
   useWindowDimensions,
   FlatList,
   Pressable,
+  SafeAreaView,
 } from 'react-native';
 
 import colors from '../../constants/colors';
@@ -139,7 +140,7 @@ const HomeScreen = () => {
   }`;
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Peerly</Text>
         <Pressable onPress={() => handleProfileIconClick()}>
@@ -206,7 +207,7 @@ const HomeScreen = () => {
         title="Give Appreciation"
         onPress={() => navigation.navigate(GIVE_APPRECIATION_SCREEN)}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
