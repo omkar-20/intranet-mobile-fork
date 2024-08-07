@@ -186,7 +186,6 @@ const ProfileDetailScreen = () => {
 
       <View style={styles.appreciationList}>
         <GivenAndReceivedAppriciation
-          self={true}
           appreciationList={appreciationList}
           receivedList={receivedAppriciationList}
           expressedList={expressedAppriciationList}
@@ -224,6 +223,8 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 32,
+    borderWidth: 1,
+    borderColor: colors.PRIMARY,
   },
   name: {
     lineHeight: 19,
