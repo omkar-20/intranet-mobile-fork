@@ -168,25 +168,22 @@ const ProfileDetailScreen = () => {
           <Text>Refill on {dateFormat(refil_date, 'MMMM YYYY')}</Text>
         </View>
         <View style={styles.progressBar}>
-          {reward_quota_balance && total_reward_quota && (
-            <CircularProgressBase
-              clockwise={false}
-              value={reward_quota_balance}
-              radius={30}
-              maxValue={total_reward_quota}
-              activeStrokeColor={'#F3A552'}
-              inActiveStrokeColor={'#F5F8FF'}>
-              <View>
-                <StarIcon width={25} height={25} />
-              </View>
-            </CircularProgressBase>
-          )}
+          <CircularProgressBase
+            clockwise={false}
+            value={reward_quota_balance}
+            radius={30}
+            maxValue={total_reward_quota}
+            activeStrokeColor={'#F3A552'}
+            inActiveStrokeColor={'#F5F8FF'}>
+            <View>
+              <StarIcon width={25} height={25} />
+            </View>
+          </CircularProgressBase>
         </View>
       </View>
 
       <View style={styles.appreciationList}>
         <GivenAndReceivedAppriciation
-          self={true}
           appreciationList={appreciationList}
           receivedList={receivedAppriciationList}
           expressedList={expressedAppriciationList}
@@ -224,6 +221,8 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 32,
+    borderWidth: 1,
+    borderColor: colors.PRIMARY,
   },
   name: {
     lineHeight: 19,

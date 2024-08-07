@@ -1,66 +1,40 @@
 import React from 'react';
 import {View, Text, StyleSheet, Pressable} from 'react-native';
 import Slider from '@react-native-community/slider';
-import {FlagIcon, InfoIcon, RatingStarIcon} from '../constants/icons';
+import {RatingStarIcon} from '../constants/icons';
 
 interface RatingBarProps {
-  onPressObjection: () => void;
-  rewardedByPeople: number;
   reward: number;
   setReward: (rating: number) => void;
-  disableSlider: boolean;
-  isRewardAlreadyGiven: boolean;
-  self?: boolean;
+  disabled?: boolean;
 }
 
-const RatingBar: React.FC<RatingBarProps> = ({
-  onPressObjection,
-  rewardedByPeople,
-  reward,
-  setReward,
-  disableSlider,
-  isRewardAlreadyGiven,
-  self,
-}) => {
+const RatingBar: React.FC<RatingBarProps> = ({reward, setReward, disabled}) => {
   return (
-    <View>
-      <View style={styles.ratingCountContainer}>
-        <Text style={styles.label}>Rewards</Text>
-        <View style={styles.infoWrapper}>
-          <InfoIcon width={16} height={16} />
-        </View>
-        <Text style={styles.info}>
-          Rewards given by {rewardedByPeople} people
-        </Text>
+    <View style={styles.sliderContainer}>
+      <Slider
+        style={styles.slider}
+        minimumValue={0}
+        maximumValue={3}
+        step={1}
+        value={reward}
+        onSlidingComplete={value => setReward(value)}
+        thumbImage={RatingStarIcon}
+        minimumTrackTintColor="#FFD700"
+        maximumTrackTintColor="#DDD"
+        disabled={disabled || false}
+      />
+      <View style={styles.labelsContainer}>
+        <Pressable onPress={() => setReward(1)} disabled={disabled || false}>
+          <Text style={styles.sliderGood}>Good</Text>
+        </Pressable>
+        <Pressable onPress={() => setReward(2)} disabled={disabled || false}>
+          <Text style={styles.sliderNice}>Nice</Text>
+        </Pressable>
+        <Pressable onPress={() => setReward(3)} disabled={disabled || false}>
+          <Text style={styles.sliderLove}>Love</Text>
+        </Pressable>
       </View>
-      {self ? null : (
-        <View style={styles.rewardAndReportWrapper}>
-          <Pressable onPress={onPressObjection} disabled={disableSlider}>
-            <View style={styles.flagIcon}>
-              <FlagIcon />
-            </View>
-          </Pressable>
-          <View style={styles.sliderContainer}>
-            <Slider
-              disabled={disableSlider || isRewardAlreadyGiven}
-              style={styles.slider}
-              minimumValue={0}
-              maximumValue={5}
-              step={1}
-              value={reward}
-              onValueChange={value => setReward(value)}
-              thumbImage={RatingStarIcon}
-              minimumTrackTintColor="#FFD700"
-              maximumTrackTintColor="#DDD"
-            />
-            <View style={styles.labelsContainer}>
-              <Text style={styles.sliderGood}>Good</Text>
-              <Text style={styles.sliderNice}>Nice</Text>
-              <Text style={styles.sliderLove}>Love</Text>
-            </View>
-          </View>
-        </View>
-      )}
     </View>
   );
 };
@@ -70,22 +44,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     marginTop: 10,
-  },
-  infoWrapper: {
-    marginTop: 4,
-    marginLeft: 15,
-    marginRight: 5,
-  },
-  label: {
-    margin: 2,
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  info: {
-    fontSize: 12,
-    margin: 2,
-    marginBottom: 5,
-    paddingTop: 7,
   },
   sliderContainer: {
     marginLeft: 30,
@@ -105,7 +63,7 @@ const styles = StyleSheet.create({
   sliderGood: {
     fontSize: 14,
     color: 'black',
-    paddingLeft: 30,
+    marginLeft: 60,
   },
   sliderNice: {
     fontSize: 14,
@@ -118,15 +76,6 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
   },
-  flagIcon: {
-    marginTop: 20,
-    backgroundColor: '#EE3E54',
-    height: 25,
-    width: 25,
-    borderRadius: 5,
-    padding: 5,
-  },
-  ratingCountContainer: {flexDirection: 'row', alignItems: 'center'},
 });
 
 export default RatingBar;

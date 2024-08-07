@@ -19,7 +19,10 @@ export function useGetTopUsersList() {
       if (error.response?.data.message) {
         toast(error.response.data.message, 'error');
       } else {
-        toast('Something went wrong while fetching top 10 users list', 'error');
+        toast(
+          'Something went wrong while fetching Leaderboard users list',
+          'error',
+        );
       }
     },
   });
@@ -40,7 +43,10 @@ export function useGetActiveUsersList() {
       if (error.response?.data.message) {
         toast(error.response.data.message, 'error');
       } else {
-        toast('Something went wrong while fetching active users list', 'error');
+        toast(
+          'Something went wrong while fetching dynamic engagers users list',
+          'error',
+        );
       }
     },
   });
