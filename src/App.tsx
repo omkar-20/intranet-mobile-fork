@@ -16,93 +16,32 @@ import VersionContext from './app/context/version.context';
 import {CheckVersionResponse} from 'react-native-check-version';
 
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import usePushNotification from './app/Peerly/services/firebase/notification';
 
 const queryClient = new QueryClient();
 
 const App = () => {
   const userContextValue = useState<UserContextData | null>(null);
   const versionContextValue = useState<CheckVersionResponse | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+
+  const {
+    getDeviceToken,
+    requestUserPermission,
+    listenToBackgroundNotifications,
+    listenToForegroundNotifications,
+    onForeGroundNotificationHandler,
+    onBackGroundNotifeeHandler,
+  } = usePushNotification();
 
   useEffect(() => {
-    // Request permission to receive notifications
-    async function requestUserPermission() {
-      const authStatus = await messaging().requestPermission();
-      const enabled =
-        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-      if (enabled) {
-        console.log('Notification permission granted.');
-        getToken();
-      } else {
-        console.log('Notification permission denied.');
-      }
-    }
-
-    const getToken = async () => {
-      try {
-        let fcmToken = await messaging().getToken();
-        if (fcmToken) {
-          console.log('FCM Token:', fcmToken);
-          setToken(fcmToken);
-        } else {
-          console.log('No FCM token received.');
-        }
-      } catch (error) {
-        console.error('Error getting token:', error);
-      }
-    };
-
     requestUserPermission();
-
-    // Handle foreground messages
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      console.log('Foreground notification received:', remoteMessage);
-      onDisplayNotification(remoteMessage);
-    });
-
-    // Handle notifications when the app is opened from the background or quit state
-    messaging().onNotificationOpenedApp(remoteMessage => {
-      console.log('Notification opened from background or quit state:', remoteMessage);
-    });
-
-    messaging().getInitialNotification().then(remoteMessage => {
-      if (remoteMessage) {
-        console.log('App opened by a notification:', remoteMessage);
-      }
-    });
-
-    return unsubscribe;
+    getDeviceToken();
+    listenToForegroundNotifications();
+    listenToBackgroundNotifications();
+    onForeGroundNotificationHandler();
+    onBackGroundNotifeeHandler();
   }, []);
 
-  async function onDisplayNotification(remoteMessage: any) {
-    console.log('Displaying notification:', remoteMessage);
-
-    // Request permissions (required for iOS)
-    await notifee.requestPermission();
-
-    // Create a channel (required for Android)
-    const channelId = await notifee.createChannel({
-      id: 'default',
-      name: 'Default Channel',
-    });
-
-    // Display a notification
-    await notifee.displayNotification({
-      title: remoteMessage.notification?.title || 'No Title',
-      body: remoteMessage.notification?.body || 'No Body',
-      android: {
-        channelId,
-        pressAction: {
-          id: 'default',
-        },
-      },
-      ios: {
-        sound: 'default', // Ensure the sound setting is correct
-      },
-    });
-  }
 
   return (
     <GestureHandlerRootView style={{flex: 1}}>
