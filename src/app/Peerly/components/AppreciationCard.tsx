@@ -1,5 +1,6 @@
-import React from 'react';
-import {View, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import React, {useState} from 'react';
+import {View, StyleSheet, Image, TouchableOpacity, Text} from 'react-native';
+import Tooltip from 'react-native-walkthrough-tooltip';
 import colors from '../constants/colors';
 import {AppreciationDetails} from '../services/home/types';
 import {formatNumber, timeFromNow} from '../utils';
@@ -13,12 +14,16 @@ type Props = {
 };
 
 const AppreciationCard = ({onPress, appreciationDetails}: Props) => {
+  const [showReceiverTooltip, setShowReceiverTooltip] = useState(false);
+  const [showSenderTooltip, setShowSenderTooltip] = useState(false);
+
   const receiverName = `${appreciationDetails.receiver_first_name || ''} ${
     appreciationDetails.receiver_last_name || ''
   }`;
   const senderName = `${appreciationDetails.sender_first_name || ''} ${
     appreciationDetails.sender_last_name || ''
   }`;
+
   return (
     <View style={styles.card}>
       <TouchableOpacity onPress={() => onPress(appreciationDetails.id)}>
@@ -46,25 +51,48 @@ const AppreciationCard = ({onPress, appreciationDetails}: Props) => {
             )}
           </View>
           <View style={styles.totalRewardBox}>
-            <BlackStar widht={14} height={14} />
+            <BlackStar width={14} height={14} />
             <Typography type="h4" style={styles.starCount}>
               {formatNumber(appreciationDetails.total_reward_points)}
             </Typography>
           </View>
         </View>
         <View style={styles.content}>
-          <Typography type="h3" style={styles.receiverName}>
-            {receiverName}
-          </Typography>
+          <Tooltip
+            isVisible={showReceiverTooltip}
+            content={<Typography>{receiverName}</Typography>}
+            placement="top"
+            onClose={() => setShowReceiverTooltip(false)}>
+            <Typography
+              type="h3"
+              style={styles.receiverName}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              onPress={() => setShowReceiverTooltip(true)}
+            >
+              {receiverName}
+            </Typography>
+          </Tooltip>
           <Typography type="h5" style={styles.role}>
             {appreciationDetails.receiver_designation}
           </Typography>
           <Typography type="h5" style={styles.appreciation}>
             Appreciated by
           </Typography>
-          <Typography type="h4" style={styles.senderName}>
-            {senderName}
-          </Typography>
+          <Tooltip
+            isVisible={showSenderTooltip}
+            content={<Typography>{senderName}</Typography>}
+            placement="top"
+            onClose={() => setShowSenderTooltip(false)}>
+            <Typography
+              type="h4"
+              style={styles.senderName}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              onPress={() => setShowSenderTooltip(true)}>
+              {senderName}
+            </Typography>
+          </Tooltip>
           <Typography type="h6" style={styles.days}>
             {timeFromNow(appreciationDetails.created_at)}
           </Typography>

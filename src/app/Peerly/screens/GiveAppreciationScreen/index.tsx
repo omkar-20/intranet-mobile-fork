@@ -118,7 +118,7 @@ const AppreciationScreen = () => {
             <Typography type="header" style={styles.labelText}>
               Core Value{' '}
               <Pressable onPress={() => setCoreValueModalVisible(true)}>
-                <InfoIcon width={16} height={16} />
+                <InfoIcon width={18} height={18} />
               </Pressable>
             </Typography>
             <Controller
