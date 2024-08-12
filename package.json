@@ -59,6 +59,7 @@
     "react-native-svg-transformer": "^1.1.0",
     "react-native-tab-view": "^3.5.2",
     "react-native-toast-message": "^2.1.6",
+    "react-native-walkthrough-tooltip": "^1.6.0",
     "react-query": "^3.39.3",
     "yup": "^1.2.0"
   },

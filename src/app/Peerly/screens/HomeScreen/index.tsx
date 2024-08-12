@@ -238,6 +238,9 @@ const HomeScreen = () => {
                     style={styles.flatListAppreciation}
                     refreshing={refreshing}
                     onRefresh={onRefresh}
+                    contentContainerStyle={{
+                      paddingBottom: 50
+                    }}
                   />
                 )}
               </View>

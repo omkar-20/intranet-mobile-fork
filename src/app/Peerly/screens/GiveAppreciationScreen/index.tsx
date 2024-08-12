@@ -124,7 +124,7 @@ const AppreciationScreen = () => {
               <Pressable
                 style={styles.infoIconWrapper}
                 onPress={() => setCoreValueModalVisible(true)}>
-                <InfoIcon width={16} height={16} />
+                <InfoIcon width={18} height={18} />
               </Pressable>
             </View>
             <Controller
