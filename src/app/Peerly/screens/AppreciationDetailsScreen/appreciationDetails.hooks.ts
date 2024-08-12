@@ -1,4 +1,4 @@
-import {useMutation} from 'react-query';
+import {useMutation, useQueryClient} from 'react-query';
 import {postReward, postObjection} from '../../services/appreciationDetails';
 import toast from '../../../utils/toast';
 import {AxiosError} from 'axios';
@@ -9,9 +9,13 @@ import {
 } from '../../services/appreciationDetails/types';
 
 export function usePostReward() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ['post_reward'],
     mutationFn: (payload: PostRewardRequest) => postReward(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['appreciation_list']);
+    },
     onError: (error: AxiosError<APIError>) => {
       if (error.response?.data.message) {
         toast(error.response.data.message, 'error');
