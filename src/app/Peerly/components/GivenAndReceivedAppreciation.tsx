@@ -81,17 +81,25 @@ const GivenAndReceivedAppriciation = ({
         {isLoading ? (
           <SkeletonLoader />
         ) : (
-          <FlatList
-            data={receivedList || []}
-            renderItem={({item}) => (
-              <AppreciationCard
-                appreciationDetails={item}
-                onPress={handleAppreciationCardClick}
+          <>
+            {receivedList.length == 0 ? (
+              <View style={styles.noDataTextView}>
+                <Text style={styles.noDataText}>No search result found !</Text>
+              </View>
+            ) : (
+              <FlatList
+                data={receivedList || []}
+                renderItem={({item}) => (
+                  <AppreciationCard
+                    appreciationDetails={item}
+                    onPress={handleAppreciationCardClick}
+                  />
+                )}
+                keyExtractor={item => String(item.id)}
+                numColumns={2}
               />
             )}
-            keyExtractor={item => String(item.id)}
-            numColumns={2}
-          />
+          </>
         )}
       </View>
     ),
@@ -104,17 +112,25 @@ const GivenAndReceivedAppriciation = ({
         {isLoading ? (
           <SkeletonLoader />
         ) : (
-          <FlatList
-            data={expressedList || []}
-            renderItem={({item}) => (
-              <AppreciationCard
-                appreciationDetails={item}
-                onPress={handleAppreciationCardClick}
+          <>
+            {expressedList.length == 0 ? (
+              <View style={styles.noDataTextView}>
+                <Text>No search reult found !</Text>
+              </View>
+            ) : (
+              <FlatList
+                data={expressedList || []}
+                renderItem={({item}) => (
+                  <AppreciationCard
+                    appreciationDetails={item}
+                    onPress={handleAppreciationCardClick}
+                  />
+                )}
+                keyExtractor={item => String(item.id)}
+                numColumns={2}
               />
             )}
-            keyExtractor={item => String(item.id)}
-            numColumns={2}
-          />
+          </>
         )}
       </View>
     ),
@@ -220,6 +236,12 @@ const styles = StyleSheet.create({
   btnOpacity: {
     opacity: 0.5,
   },
+  noDataTextView: {
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  noDataText: {fontSize: 16, fontWeight: 'bold', color: colors.LIGHT_GRAY},
 });
 
 export default GivenAndReceivedAppriciation;
