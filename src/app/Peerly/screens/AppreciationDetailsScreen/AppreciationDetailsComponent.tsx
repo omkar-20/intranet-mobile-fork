@@ -317,7 +317,7 @@ const AppreciationDetailsComponent = ({
           <CenteredModal
             visible={isSuccessPostReward}
             message={
-              'Your Rewards has been submitted successfully. We appreciate your feedback.'
+              'Your rewards has been submitted successfully. We appreciate your feedback.'
             }
             svgImage={RewardSuccessIcon}
             btnTitle="Okay"
