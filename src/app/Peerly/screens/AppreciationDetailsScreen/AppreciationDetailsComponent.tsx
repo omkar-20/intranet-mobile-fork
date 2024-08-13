@@ -21,10 +21,12 @@ import {
 } from '../../constants/icons';
 import InitialAvatar from '../../components/InitialAvatar';
 import Typography from '../../components/typography';
-import RewardInfoModal from '../../components/RewardInfoModal';
+import InfoModal from '../../components/InfoModal';
 import RewardAcknowledgementModal from '../../components/RewardAcknowledgementModal';
 import {useGetProfileDetails} from '../ProfileDetailScreen/profileDetail.hooks';
 import toast from '../../../utils/toast';
+import message from '../../constants/message';
+import ImageWithFallback from '../../components/imageWithFallback/ImageWithFallback';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
 const AppreciationDetailsComponent = ({
@@ -36,7 +38,7 @@ const AppreciationDetailsComponent = ({
   const [reward, setReward] = useState(0);
   const [reason, setReason] = useState('');
   const [isObjectionModalVisible, setObjectionModalVisible] = useState(false);
-  const [isRewardInfoModalVisible, setRewardInfoModal] = useState(false);
+  const [isInfoModalVisible, setInfoModal] = useState(false);
   const [isOpenRewardAckModal, setOpenAckRewardModal] = useState(false);
   const [isRewardAlreadyGiven, setRewardAlreadyGivenStatus] = useState(false);
   const {data: profileDetails} = useGetProfileDetails();
@@ -186,12 +188,16 @@ const AppreciationDetailsComponent = ({
   return (
     <View style={styles.screen}>
       <View style={styles.container}>
-     
         <View style={styles.receiverImageBox}>
           {cardDetails?.receiver_image_url ? (
-            <Image
-              source={{uri: cardDetails.receiver_image_url}}
-              style={styles.receiverImage}
+            <ImageWithFallback
+              imageUrl={cardDetails.receiver_image_url}
+              imageStyle={styles.receiverImage}
+              initials={
+                <View style={styles.receiverImageAvatar}>
+                  <InitialAvatar name={receiverName} size={95} />
+                </View>
+              }
             />
           ) : (
             <View style={styles.receiverImageAvatar}>
@@ -201,9 +207,14 @@ const AppreciationDetailsComponent = ({
         </View>
         <View style={styles.senderImageBox}>
           {cardDetails?.sender_image_url ? (
-            <Image
-              source={{uri: cardDetails.sender_image_url}}
-              style={styles.senderImage}
+            <ImageWithFallback
+              imageUrl={cardDetails.sender_image_url}
+              imageStyle={styles.senderImage}
+              initials={
+                <View style={styles.senderImageAvatar}>
+                  <InitialAvatar name={senderName} size={66} />
+                </View>
+              }
             />
           ) : (
             <View style={styles.senderImageAvatar}>
@@ -248,7 +259,7 @@ const AppreciationDetailsComponent = ({
           <View style={styles.ratingCountContainer}>
             <Text style={styles.label}>Rewards</Text>
             <Pressable
-              onPress={() => setRewardInfoModal(true)}
+              onPress={() => setInfoModal(true)}
               style={styles.infoWrapper}>
               <InfoIcon width={16} height={16} />
             </Pressable>
@@ -280,9 +291,10 @@ const AppreciationDetailsComponent = ({
             </View>
           )}
         </View>
-        <RewardInfoModal
-          visible={isRewardInfoModalVisible}
-          closeModal={() => setRewardInfoModal(false)}
+        <InfoModal
+          message={message.REWARD_INFO}
+          visible={isInfoModalVisible}
+          closeModal={() => setInfoModal(false)}
         />
         <ObjectionModal
           visible={isObjectionModalVisible}
@@ -304,9 +316,7 @@ const AppreciationDetailsComponent = ({
             resetPostObjection();
           }}
         />
-        
         <View>
-          
           <RewardAcknowledgementModal
             visible={isOpenRewardAckModal}
             resetModal={() => handleRewardAckReset()}
