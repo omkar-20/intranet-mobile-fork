@@ -225,7 +225,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  noDataText: {fontSize: 16, fontWeight: 'bold', color: colors.LIGHT_GRAY},
 });
 
 export default GivenAndReceivedAppriciation;
