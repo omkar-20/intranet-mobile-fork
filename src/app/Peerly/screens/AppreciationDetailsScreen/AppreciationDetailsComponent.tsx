@@ -329,7 +329,7 @@ const AppreciationDetailsComponent = ({
           />
         </View>
       </View>
-      {true && <LoadingSpinner />}
+      {isLoadingPostReward && <LoadingSpinner />}
     </View>
   );
 };
