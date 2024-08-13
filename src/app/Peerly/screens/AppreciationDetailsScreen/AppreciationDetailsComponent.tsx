@@ -25,6 +25,7 @@ import RewardInfoModal from '../../components/RewardInfoModal';
 import RewardAcknowledgementModal from '../../components/RewardAcknowledgementModal';
 import {useGetProfileDetails} from '../ProfileDetailScreen/profileDetail.hooks';
 import toast from '../../../utils/toast';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const AppreciationDetailsComponent = ({
   currentIndex,
@@ -185,6 +186,7 @@ const AppreciationDetailsComponent = ({
   return (
     <View style={styles.screen}>
       <View style={styles.container}>
+     
         <View style={styles.receiverImageBox}>
           {cardDetails?.receiver_image_url ? (
             <Image
@@ -255,30 +257,28 @@ const AppreciationDetailsComponent = ({
             </Text>
           </View>
 
-          <View style={styles.rewardAndReportWrapper}>
-            <Pressable
-              onPress={() =>
-                selfAppreciations
-                  ? toast(
-                      'For self appreciations you are not allowed to give rating',
-                      'success',
-                    )
-                  : setObjectionModalVisible(true)
-              }>
-              <View style={styles.flagIcon}>
-                <FlagIcon />
-              </View>
-            </Pressable>
-            <RatingBar
-              reward={reward}
-              setReward={handleReward}
-              disabled={
-                getRewardConversion > 0 ||
-                isRewardAlreadyGiven ||
-                selfAppreciations
-              }
-            />
-          </View>
+          {!selfAppreciations && (
+            <View style={styles.rewardAndReportWrapper}>
+              <Pressable
+                onPress={() =>
+                  selfAppreciations
+                    ? toast(
+                        'For self appreciations you are not allowed to give rating',
+                        'success',
+                      )
+                    : setObjectionModalVisible(true)
+                }>
+                <View style={styles.flagIcon}>
+                  <FlagIcon />
+                </View>
+              </Pressable>
+              <RatingBar
+                reward={reward}
+                setReward={handleReward}
+                disabled={getRewardConversion > 0 || isRewardAlreadyGiven}
+              />
+            </View>
+          )}
         </View>
         <RewardInfoModal
           visible={isRewardInfoModalVisible}
@@ -304,7 +304,9 @@ const AppreciationDetailsComponent = ({
             resetPostObjection();
           }}
         />
+        
         <View>
+          
           <RewardAcknowledgementModal
             visible={isOpenRewardAckModal}
             resetModal={() => handleRewardAckReset()}
@@ -327,6 +329,7 @@ const AppreciationDetailsComponent = ({
           />
         </View>
       </View>
+      {true && <LoadingSpinner />}
     </View>
   );
 };
