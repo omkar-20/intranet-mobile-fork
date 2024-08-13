@@ -20,13 +20,15 @@ import {
 import {dateFormat} from '../../utils';
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
 import {useGetAppreciationList} from '../HomeScreen/home.hooks';
-import RewardInfoModal from '../../components/RewardInfoModal';
+import InfoModal from '../../components/InfoModal';
 import {useGetProfileDetails} from './profileDetail.hooks';
 import GivenAndReceivedAppriciation from '../../components/GivenAndReceivedAppreciation';
 import {useRoute} from '@react-navigation/native';
 import {ProfileScreenRouteProp} from '../../navigation/types';
 import InitialAvatar from '../../components/InitialAvatar';
 import colors from '../../constants/colors';
+import message from '../../constants/message';
+import ImageWithFallback from '../../components/imageWithFallback/ImageWithFallback';
 
 const paginationData = {
   page: 1,
@@ -68,7 +70,7 @@ const initialProfileDetails = {
 const ProfileDetailScreen = () => {
   const route = useRoute<ProfileScreenRouteProp>();
   const {userId} = route.params;
-  const [isModalVisible, setModalVisible] = useState(false);
+  const [isInfoModalVisible, setInfoModal] = useState(false);
 
   const {
     data: profileDetails,
@@ -139,19 +141,20 @@ const ProfileDetailScreen = () => {
   });
 
   const openModal = () => {
-    setModalVisible(true);
+    setInfoModal(true);
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <View>
+        <View style={styles.profileDetailsWrapper}>
           <View style={styles.profileDetailsBox}>
             <View style={styles.profileDetails}>
               {profile_image_url !== '' ? (
-                <Image
-                  style={styles.profileImage}
-                  source={{uri: profile_image_url}}
+                <ImageWithFallback
+                  imageUrl={profile_image_url}
+                  initials={<InitialAvatar name={userName} size={60} />}
+                  imageStyle={styles.profileImage}
                 />
               ) : (
                 <InitialAvatar name={userName} size={60} />
@@ -164,7 +167,7 @@ const ProfileDetailScreen = () => {
                   {userName}
                 </Text>
                 <Text ellipsizeMode="tail" numberOfLines={1}>
-                  {designation}
+                  {designation ? designation : null}
                 </Text>
                 {member}
               </View>
@@ -184,7 +187,9 @@ const ProfileDetailScreen = () => {
           <View>
             <Text style={[styles.name, styles.bold]}>
               Reward Balance{' '}
-              <TouchableOpacity onPress={openModal}>
+              <TouchableOpacity
+                onPress={openModal}
+                style={styles.infoIconWrapper}>
                 <InfoIcon width={16} height={16} />
               </TouchableOpacity>
             </Text>
@@ -197,7 +202,9 @@ const ProfileDetailScreen = () => {
               radius={30}
               maxValue={total_reward_quota}
               activeStrokeColor={colors.GOLD}
-              inActiveStrokeColor={colors.WHITE}>
+              inActiveStrokeColor={colors.WHITE}
+              activeStrokeWidth={8}
+              inActiveStrokeWidth={8}>
               <View>
                 <StarIcon width={25} height={25} />
               </View>
@@ -211,11 +218,13 @@ const ProfileDetailScreen = () => {
             expressedList={expressedAppriciationList}
             isLoading={isLoadingAppreciations || isFetchingAppreciations}
             disableBtn={isDisableTabBtn}
+            self={true}
           />
         </View>
-        <RewardInfoModal
-          visible={isModalVisible}
-          closeModal={() => setModalVisible(false)}
+        <InfoModal
+          message={message.REWARD_BALANCE_INFO}
+          visible={isInfoModalVisible}
+          closeModal={() => setInfoModal(false)}
         />
       </View>
     </SafeAreaView>
@@ -234,6 +243,9 @@ const styles = StyleSheet.create({
   pageLoader: {
     flex: 1,
     justifyContent: 'center',
+  },
+  profileDetailsWrapper: {
+    marginTop: 5,
   },
   profileDetailsBox: {
     flexDirection: 'row',
@@ -265,16 +277,17 @@ const styles = StyleSheet.create({
   },
   userNameWrapper: {
     marginLeft: 15,
+    maxWidth: 160,
   },
   badgeWrapper: {
     position: 'absolute',
     top: -20,
-    right: 15,
+    right: 18,
   },
   totalPoints: {
     marginLeft: 0,
     alignItems: 'center',
-    maxWidth: 55,
+    width: 70,
   },
   rewardDetailsBox: {
     flexDirection: 'row',
@@ -298,6 +311,9 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     height: '100%',
+  },
+  infoIconWrapper: {
+    paddingHorizontal: 5,
   },
 });
 export default ProfileDetailScreen;
