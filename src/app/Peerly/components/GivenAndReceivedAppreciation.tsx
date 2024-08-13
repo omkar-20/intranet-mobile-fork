@@ -81,25 +81,17 @@ const GivenAndReceivedAppriciation = ({
         {isLoading ? (
           <SkeletonLoader />
         ) : (
-          <>
-            {receivedList.length == 0 ? (
-              <View style={styles.noDataTextView}>
-                <Text style={styles.noDataText}>No search result found !</Text>
-              </View>
-            ) : (
-              <FlatList
-                data={receivedList || []}
-                renderItem={({item}) => (
-                  <AppreciationCard
-                    appreciationDetails={item}
-                    onPress={handleAppreciationCardClick}
-                  />
-                )}
-                keyExtractor={item => String(item.id)}
-                numColumns={2}
+          <FlatList
+            data={receivedList || []}
+            renderItem={({item}) => (
+              <AppreciationCard
+                appreciationDetails={item}
+                onPress={handleAppreciationCardClick}
               />
             )}
-          </>
+            keyExtractor={item => String(item.id)}
+            numColumns={2}
+          />
         )}
       </View>
     ),
@@ -112,25 +104,17 @@ const GivenAndReceivedAppriciation = ({
         {isLoading ? (
           <SkeletonLoader />
         ) : (
-          <>
-            {expressedList.length == 0 ? (
-              <View style={styles.noDataTextView}>
-                <Text>No search reult found !</Text>
-              </View>
-            ) : (
-              <FlatList
-                data={expressedList || []}
-                renderItem={({item}) => (
-                  <AppreciationCard
-                    appreciationDetails={item}
-                    onPress={handleAppreciationCardClick}
-                  />
-                )}
-                keyExtractor={item => String(item.id)}
-                numColumns={2}
+          <FlatList
+            data={expressedList || []}
+            renderItem={({item}) => (
+              <AppreciationCard
+                appreciationDetails={item}
+                onPress={handleAppreciationCardClick}
               />
             )}
-          </>
+            keyExtractor={item => String(item.id)}
+            numColumns={2}
+          />
         )}
       </View>
     ),
