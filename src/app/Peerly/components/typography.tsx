@@ -1,10 +1,10 @@
 import React, {memo, PropsWithChildren} from 'react';
-import {StyleProp, StyleSheet, Text, TextStyle} from 'react-native';
+import {StyleProp, StyleSheet, Text, TextProps, TextStyle} from 'react-native';
 
 import colors from '../constants/colors';
 import fonts from '../constants/fonts';
 
-type Props = PropsWithChildren & {
+type Props = PropsWithChildren<TextProps> & {
   style?: StyleProp<TextStyle>;
   type?:
     | 'title'
@@ -24,8 +24,23 @@ type Props = PropsWithChildren & {
     | 'h7';
 };
 
-const Typography = ({children, type = 'title', style}: Props) => (
-  <Text style={[styles[type], style]}>{children}</Text>
+const Typography = ({
+  children,
+  type = 'title',
+  style,
+  numberOfLines,
+  ellipsizeMode,
+  onPress,
+  ...rest
+}: Props) => (
+  <Text
+    style={[styles[type], style]}
+    numberOfLines={numberOfLines}
+    ellipsizeMode={ellipsizeMode}
+    onPress={onPress}
+    {...rest}>
+    {children}
+  </Text>
 );
 
 const styles = StyleSheet.create({
@@ -123,4 +138,5 @@ const styles = StyleSheet.create({
     paddingTop: 5,
   },
 });
+
 export default memo(Typography);

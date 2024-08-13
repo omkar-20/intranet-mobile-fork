@@ -19,15 +19,15 @@ import {
   RewardSuccessIcon,
   SuccessIcon,
 } from '../../constants/icons';
-import {AppreciationDetails} from '../../services/home/types';
-import {useRoute} from '@react-navigation/native';
-import {AppreciationDetailScreenRouteProp} from '../../navigation/types';
 import InitialAvatar from '../../components/InitialAvatar';
 import Typography from '../../components/typography';
-import RewardInfoModal from '../../components/RewardInfoModal';
+import InfoModal from '../../components/InfoModal';
 import RewardAcknowledgementModal from '../../components/RewardAcknowledgementModal';
 import {useGetProfileDetails} from '../ProfileDetailScreen/profileDetail.hooks';
 import toast from '../../../utils/toast';
+import message from '../../constants/message';
+import ImageWithFallback from '../../components/imageWithFallback/ImageWithFallback';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const AppreciationDetailsComponent = ({
   currentIndex,
@@ -38,7 +38,7 @@ const AppreciationDetailsComponent = ({
   const [reward, setReward] = useState(0);
   const [reason, setReason] = useState('');
   const [isObjectionModalVisible, setObjectionModalVisible] = useState(false);
-  const [isRewardInfoModalVisible, setRewardInfoModal] = useState(false);
+  const [isInfoModalVisible, setInfoModal] = useState(false);
   const [isOpenRewardAckModal, setOpenAckRewardModal] = useState(false);
   const [isRewardAlreadyGiven, setRewardAlreadyGivenStatus] = useState(false);
   const {data: profileDetails} = useGetProfileDetails();
@@ -190,9 +190,14 @@ const AppreciationDetailsComponent = ({
       <View style={styles.container}>
         <View style={styles.receiverImageBox}>
           {cardDetails?.receiver_image_url ? (
-            <Image
-              source={{uri: cardDetails.receiver_image_url}}
-              style={styles.receiverImage}
+            <ImageWithFallback
+              imageUrl={cardDetails.receiver_image_url}
+              imageStyle={styles.receiverImage}
+              initials={
+                <View style={styles.receiverImageAvatar}>
+                  <InitialAvatar name={receiverName} size={95} />
+                </View>
+              }
             />
           ) : (
             <View style={styles.receiverImageAvatar}>
@@ -202,9 +207,14 @@ const AppreciationDetailsComponent = ({
         </View>
         <View style={styles.senderImageBox}>
           {cardDetails?.sender_image_url ? (
-            <Image
-              source={{uri: cardDetails.sender_image_url}}
-              style={styles.senderImage}
+            <ImageWithFallback
+              imageUrl={cardDetails.sender_image_url}
+              imageStyle={styles.senderImage}
+              initials={
+                <View style={styles.senderImageAvatar}>
+                  <InitialAvatar name={senderName} size={66} />
+                </View>
+              }
             />
           ) : (
             <View style={styles.senderImageAvatar}>
@@ -222,12 +232,17 @@ const AppreciationDetailsComponent = ({
             </Typography>
           </View>
 
-          <Typography type="h4" style={styles.coreValue}>
-            {cardDetails.core_value_name}
-          </Typography>
-          <Text style={styles.description}>
-            {cardDetails.core_value_description}
-          </Text>
+          <View style={styles.coreValueView}>
+            <Typography type="h4" style={styles.coreValue}>
+              {cardDetails.core_value_name}
+            </Typography>
+          </View>
+
+          <View style={styles.descriptionView}>
+            <Text style={styles.description}>
+              {cardDetails.core_value_description}
+            </Text>
+          </View>
           <View style={styles.senderNameWrap}>
             <Text style={styles.authorByText}>Words by </Text>
             <Text style={styles.author}>{senderName}</Text>
@@ -244,7 +259,7 @@ const AppreciationDetailsComponent = ({
           <View style={styles.ratingCountContainer}>
             <Text style={styles.label}>Rewards</Text>
             <Pressable
-              onPress={() => setRewardInfoModal(true)}
+              onPress={() => setInfoModal(true)}
               style={styles.infoWrapper}>
               <InfoIcon width={16} height={16} />
             </Pressable>
@@ -253,26 +268,33 @@ const AppreciationDetailsComponent = ({
             </Text>
           </View>
 
-          <View style={styles.rewardAndReportWrapper}>
-            <Pressable onPress={() =>  selfAppreciations ?  toast('For self appreciations you are not allowed to give rating', 'success') : setObjectionModalVisible(true)} >
-              <View style={styles.flagIcon}>
-                <FlagIcon />
-              </View>
-            </Pressable>
-            <RatingBar
-              reward={reward}
-              setReward={handleReward}
-              disabled={
-                getRewardConversion > 0 ||
-                isRewardAlreadyGiven ||
-                selfAppreciations
-              }
-            />
-          </View>
+          {!selfAppreciations && (
+            <View style={styles.rewardAndReportWrapper}>
+              <Pressable
+                onPress={() =>
+                  selfAppreciations
+                    ? toast(
+                        'For self appreciations you are not allowed to give rating',
+                        'success',
+                      )
+                    : setObjectionModalVisible(true)
+                }>
+                <View style={styles.flagIcon}>
+                  <FlagIcon />
+                </View>
+              </Pressable>
+              <RatingBar
+                reward={reward}
+                setReward={handleReward}
+                disabled={getRewardConversion > 0 || isRewardAlreadyGiven}
+              />
+            </View>
+          )}
         </View>
-        <RewardInfoModal
-          visible={isRewardInfoModalVisible}
-          closeModal={() => setRewardInfoModal(false)}
+        <InfoModal
+          message={message.REWARD_INFO}
+          visible={isInfoModalVisible}
+          closeModal={() => setInfoModal(false)}
         />
         <ObjectionModal
           visible={isObjectionModalVisible}
@@ -307,7 +329,7 @@ const AppreciationDetailsComponent = ({
           <CenteredModal
             visible={isSuccessPostReward}
             message={
-              'Your Rewards has been submitted successfully. We appreciate your feedback.'
+              'Your rewards has been submitted successfully. We appreciate your feedback.'
             }
             svgImage={RewardSuccessIcon}
             btnTitle="Okay"
@@ -317,6 +339,7 @@ const AppreciationDetailsComponent = ({
           />
         </View>
       </View>
+      {isLoadingPostReward && <LoadingSpinner />}
     </View>
   );
 };
@@ -324,7 +347,8 @@ const AppreciationDetailsComponent = ({
 const styles = StyleSheet.create({
   screen: {
     backgroundColor: colors.WHITE,
-    flex: 1,
+    maxHeight: 1000,
+    minHeight: 670,
   },
   container: {
     flex: 1,
@@ -339,7 +363,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 5,
-    padding: 25,
+    paddingHorizontal: 25,
+    paddingTop: 25,
   },
   receiverImageBox: {
     alignItems: 'center',
@@ -401,24 +426,28 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   coreValue: {
-    backgroundColor: colors.WARM_CREAM,
     fontWeight: '400',
     padding: 10,
     lineHeight: 18,
-    borderRadius: 12,
-    marginTop: 15,
     textAlign: 'center',
     minWidth: 80,
+  },
+  descriptionView: {
+    backgroundColor: colors.WARM_CREAM,
+    borderRadius: 12,
+    marginTop: 8,
+    marginBottom: 15,
+  },
+  coreValueView: {
+    backgroundColor: colors.WARM_CREAM,
+    borderRadius: 999,
+    marginTop: 15,
   },
   description: {
     textAlign: 'center',
     fontSize: 12,
-    backgroundColor: colors.WARM_CREAM,
     color: colors.BLACK,
     padding: 10,
-    borderRadius: 12,
-    marginTop: 8,
-    marginBottom: 15,
     lineHeight: 15,
   },
   senderNameWrap: {
@@ -443,7 +472,7 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: 15,
     backgroundColor: colors.WHITE,
-    padding: 15,
+    padding: 10,
     borderRadius: 10,
     borderWidth: 0.25,
   },
@@ -473,7 +502,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   flagIcon: {
-    marginTop: 0,
+    marginTop: 7,
     backgroundColor: '#EE3E54',
     height: 25,
     width: 25,

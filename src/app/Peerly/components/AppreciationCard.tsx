@@ -1,11 +1,13 @@
-import React from 'react';
-import {View, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import React, {useState} from 'react';
+import {View, StyleSheet, Image, TouchableOpacity, Text} from 'react-native';
+import Tooltip from 'react-native-walkthrough-tooltip';
 import colors from '../constants/colors';
 import {AppreciationDetails} from '../services/home/types';
 import {formatNumber, timeFromNow} from '../utils';
 import {BlackStar} from '../constants/icons';
 import InitialAvatar from './InitialAvatar';
 import Typography from './typography';
+import ImageWithFallback from './imageWithFallback/ImageWithFallback';
 
 type Props = {
   onPress?: (id: number) => void;
@@ -13,21 +15,30 @@ type Props = {
 };
 
 const AppreciationCard = ({onPress, appreciationDetails}: Props) => {
+  const [showReceiverTooltip, setShowReceiverTooltip] = useState(false);
+  const [showSenderTooltip, setShowSenderTooltip] = useState(false);
+
   const receiverName = `${appreciationDetails.receiver_first_name || ''} ${
     appreciationDetails.receiver_last_name || ''
   }`;
   const senderName = `${appreciationDetails.sender_first_name || ''} ${
     appreciationDetails.sender_last_name || ''
   }`;
+
   return (
     <View style={styles.card}>
       <TouchableOpacity onPress={() => onPress(appreciationDetails.id)}>
         <View style={styles.header}>
           <View style={styles.avatarContainer}>
             {appreciationDetails.receiver_image_url !== '' ? (
-              <Image
-                source={{uri: appreciationDetails.receiver_image_url}}
-                style={styles.avatar}
+              <ImageWithFallback
+                imageUrl={appreciationDetails.receiver_image_url}
+                initials={
+                  <View style={styles.initialAvatarBig}>
+                    <InitialAvatar name={receiverName} size={60} />
+                  </View>
+                }
+                imageStyle={styles.avatar}
               />
             ) : (
               <View style={styles.initialAvatarBig}>
@@ -35,9 +46,14 @@ const AppreciationCard = ({onPress, appreciationDetails}: Props) => {
               </View>
             )}
             {appreciationDetails?.sender_image_url !== '' ? (
-              <Image
-                source={{uri: appreciationDetails.sender_image_url}}
-                style={[styles.smallAvatar]}
+              <ImageWithFallback
+                imageUrl={appreciationDetails.sender_image_url}
+                initials={
+                  <View style={styles.initialAvatarSmall}>
+                    <InitialAvatar name={senderName} size={47} />
+                  </View>
+                }
+                imageStyle={styles.smallAvatar}
               />
             ) : (
               <View style={styles.initialAvatarSmall}>
@@ -46,25 +62,35 @@ const AppreciationCard = ({onPress, appreciationDetails}: Props) => {
             )}
           </View>
           <View style={styles.totalRewardBox}>
-            <BlackStar widht={14} height={14} />
+            <BlackStar width={14} height={14} />
             <Typography type="h4" style={styles.starCount}>
               {formatNumber(appreciationDetails.total_reward_points)}
             </Typography>
           </View>
         </View>
         <View style={styles.content}>
-          <Typography type="h3" style={styles.receiverName}>
-            {receiverName}
-          </Typography>
+            <Typography
+              type="h3"
+              style={styles.receiverName}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              onPress={() => setShowReceiverTooltip(true)}>
+              {receiverName}
+            </Typography>
           <Typography type="h5" style={styles.role}>
             {appreciationDetails.receiver_designation}
           </Typography>
           <Typography type="h5" style={styles.appreciation}>
             Appreciated by
           </Typography>
-          <Typography type="h4" style={styles.senderName}>
-            {senderName}
-          </Typography>
+            <Typography
+              type="h4"
+              style={styles.senderName}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              onPress={() => setShowSenderTooltip(true)}>
+              {senderName}
+            </Typography>
           <Typography type="h6" style={styles.days}>
             {timeFromNow(appreciationDetails.created_at)}
           </Typography>
@@ -167,6 +193,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
     backgroundColor: colors.LIGHT_GREY_BACKGROUND,
+    zIndex: -1,
   },
   receiverName: {
     lineHeight: 21,

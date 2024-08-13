@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -29,12 +29,23 @@ import {
 } from '../../constants/screenNames';
 import {useNavigation} from '@react-navigation/native';
 import {HomeScreenNavigationProp} from '../../navigation/types';
-import {StarIcon} from '../../constants/icons';
+import {
+  BronzeIcon,
+  GoldIcon,
+  NoAppreciationIcon,
+  PlatinumIcon,
+  SilverIcon,
+  StarIcon,
+} from '../../constants/icons';
 import Search from '../../components/Search';
 import InitialsAvatar from '../../components/InitialAvatar';
 import FloatingButton from '../../components/button/floatingButton';
 import SkeletonLoader from '../../components/skeleton/skeleton';
 import {formatNumber} from '../../utils';
+import FallbackUI from '../../components/fallbackUI/NoDataScreen';
+import message from '../../constants/message';
+import {SvgProps} from 'react-native-svg';
+import ImageWithFallback from '../../components/imageWithFallback/ImageWithFallback';
 
 const paginationData = {
   page: 1,
@@ -42,9 +53,20 @@ const paginationData = {
   sort_order: 'DESC',
 };
 
+const userBadgeProperty: {[key: string]: React.FC<SvgProps>} = {
+  platinum: PlatinumIcon,
+  gold: GoldIcon,
+  silver: SilverIcon,
+  bronze: BronzeIcon,
+};
+
+type BadgeType = 'platinum' | 'gold' | 'silver' | 'bronze';
+
 const HomeScreen = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const layout = useWindowDimensions();
+  const [refreshing, setRefreshing] = useState(false);
+
   const {data: profileDetails} = useGetProfileDetails();
 
   const {
@@ -52,6 +74,9 @@ const HomeScreen = () => {
     metadata: appreciationListMeta,
     isLoading: isLoadingAppreciations,
     isFetching: isFetchingAppreciations,
+    isError: isErrorAppreciation,
+    isSuccess: isSuccessAppreciation,
+    refetch: refetchAppreciations,
   } = useGetAppreciationList(paginationData);
 
   const {data: activeUsersList} = useGetActiveUsersList();
@@ -63,6 +88,13 @@ const HomeScreen = () => {
     {key: 'leaderboard', title: 'Leaderboard'},
     {key: 'dynamicEngagers', title: 'Dynamic Engagers'},
   ]);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    refetchAppreciations().finally(() => {
+      setRefreshing(false);
+    });
+  }, [refetchAppreciations]);
 
   const FirstRoute = useCallback(
     () => (
@@ -140,6 +172,20 @@ const HomeScreen = () => {
     profileDetails?.last_name || ''
   }`;
 
+  const userBadge = useMemo(() => {
+    if (profileDetails?.badge) {
+      const badge = profileDetails.badge.toLowerCase();
+      const BadgeIcon = userBadgeProperty[badge as BadgeType];
+      return (
+        <View style={styles.userBadgePosition}>
+          <BadgeIcon width={14} height={14} />
+        </View>
+      );
+    } else {
+      <View>{null}</View>;
+    }
+  }, [profileDetails?.badge]);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -148,7 +194,7 @@ const HomeScreen = () => {
           <Pressable onPress={() => handleProfileIconClick()}>
             {!profileDetails?.total_points &&
             profileDetails?.profile_image_url === '' ? (
-              <InitialsAvatar name={userName} size={40} />
+              <InitialsAvatar name={userName} size={37} />
             ) : (
               <View style={[styles.userScoreBox, profileIconPadding]}>
                 {profileDetails?.total_points ? (
@@ -160,53 +206,87 @@ const HomeScreen = () => {
                   </>
                 ) : null}
                 {profileDetails?.profile_image_url !== '' ? (
-                  <Image
-                    source={{uri: profileDetails?.profile_image_url}}
-                    style={styles.userAvatar}
-                  />
+                  <View style={styles.profileIconWrapper}>
+                    <ImageWithFallback
+                      imageUrl={profileDetails?.profile_image_url || ''}
+                      initials={
+                        <View style={styles.profileIconWrapper}>
+                          <InitialsAvatar name={userName} size={37} />
+                        </View>
+                      }
+                      imageStyle={styles.userAvatar}
+                    />
+                  </View>
                 ) : (
-                  <InitialsAvatar name={userName} size={40} />
+                  <View style={styles.profileIconWrapper}>
+                    <InitialsAvatar name={userName} size={37} />
+                  </View>
                 )}
+                {userBadge}
               </View>
             )}
           </Pressable>
         </View>
         <Pressable onPressIn={handleSearchPress} style={styles.searchWrapper}>
-          <Search placeholder="Search Co-Worker" editable={false} />
-        </Pressable>
-        <View style={{height: layout.height * 0.23}}>
-          <TabView
-            navigationState={{index, routes}}
-            renderScene={renderScene}
-            renderTabBar={renderTabBar}
-            onIndexChange={setIndex}
-            initialLayout={{width: layout.width}}
+          <Search
+            placeholder="Search Co-Worker"
+            editable={false}
+            onPress={handleSearchPress}
           />
-        </View>
-        <View style={styles.appreciationListWrapper}>
-          <Text style={styles.totalAppreciationCountWrapper}>
-            Total:{' '}
-            <Text style={styles.totalAppreciationCount}>
-              {appreciationListMeta?.total_records} Appreciations
-            </Text>
-          </Text>
-          {isLoadingAppreciations || isFetchingAppreciations ? (
-            <SkeletonLoader />
-          ) : (
-            <FlatList
-              data={appreciationList || []}
-              renderItem={({item}) => (
-                <AppreciationCard
-                  appreciationDetails={item}
-                  onPress={handleAppreciationCardClick}
-                />
-              )}
-              keyExtractor={item => String(item.id)}
-              numColumns={2}
-              style={styles.flatListAppreciation}
+        </Pressable>
+        {isSuccessAppreciation && !appreciationList?.length ? (
+          <View style={styles.noAppreciatonUi}>
+            <FallbackUI
+              message={message.NO_APPRECIATION_YET}
+              icon={NoAppreciationIcon}
             />
-          )}
-        </View>
+          </View>
+        ) : (
+          <>
+            <View style={styles.tabViewWrapper}>
+              <TabView
+                navigationState={{index, routes}}
+                renderScene={renderScene}
+                renderTabBar={renderTabBar}
+                onIndexChange={setIndex}
+                initialLayout={{width: layout.width}}
+              />
+            </View>
+            {isErrorAppreciation ? (
+              <View style={styles.noAppreciatonUi}>
+                <FallbackUI message={message.SOMETHING_WENT_WRONG} />
+              </View>
+            ) : (
+              <View style={styles.appreciationListWrapper}>
+                <Text style={styles.totalAppreciationCountWrapper}>
+                  Total:{' '}
+                  <Text style={styles.totalAppreciationCount}>
+                    {appreciationListMeta?.total_records} Appreciations
+                  </Text>
+                </Text>
+                {isLoadingAppreciations || isFetchingAppreciations ? (
+                  <SkeletonLoader />
+                ) : (
+                  <FlatList
+                    data={appreciationList || []}
+                    renderItem={({item}) => (
+                      <AppreciationCard
+                        appreciationDetails={item}
+                        onPress={handleAppreciationCardClick}
+                      />
+                    )}
+                    keyExtractor={item => String(item.id)}
+                    numColumns={2}
+                    style={styles.flatListAppreciation}
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                    contentContainerStyle={styles.flatListContainerStyle}
+                  />
+                )}
+              </View>
+            )}
+          </>
+        )}
         <FloatingButton
           title="Give Appreciation"
           onPress={() => navigation.navigate(GIVE_APPRECIATION_SCREEN)}
@@ -237,14 +317,13 @@ const styles = StyleSheet.create({
     color: colors.BLACK,
   },
   userScoreBox: {
-    height: 39,
+    height: 32,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
     backgroundColor: colors.PRIMARY,
     borderRadius: 999,
     borderColor: colors.PRIMARY,
-    borderWidth: 2,
   },
   scoreText: {
     fontSize: 14,
@@ -252,14 +331,20 @@ const styles = StyleSheet.create({
     color: colors.WHITE,
   },
   userAvatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    paddingBottom: 18,
+    width: 37,
+    height: 37,
+    borderRadius: 32,
+    borderColor: colors.PRIMARY,
+    borderWidth: 1,
   },
   searchWrapper: {
     paddingHorizontal: 15,
     marginVertical: 15,
+  },
+  noAppreciatonUi: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   activeAndTopTenTab: {
     flex: 1,
@@ -307,6 +392,20 @@ const styles = StyleSheet.create({
   },
   flatListAppreciation: {
     backgroundColor: 'transparent',
+  },
+  tabViewWrapper: {
+    height: 190,
+  },
+  flatListContainerStyle: {
+    paddingBottom: 50,
+  },
+  userBadgePosition: {
+    position: 'absolute',
+    left: 90,
+    top: -8,
+  },
+  profileIconWrapper: {
+    marginBottom: 4,
   },
 });
 export default HomeScreen;

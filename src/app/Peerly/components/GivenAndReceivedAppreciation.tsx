@@ -22,6 +22,7 @@ import {AppreciationDetails} from '../services/home/types';
 import {useNavigation} from '@react-navigation/native';
 import {AppreciationDetailScreenNavigationProp} from '../navigation/types';
 import SkeletonLoader from './skeleton/skeleton';
+import message from '../constants/message';
 
 type GivenAndReceivedAppriciationProps = {
   appreciationList: AppreciationDetails[];
@@ -29,6 +30,7 @@ type GivenAndReceivedAppriciationProps = {
   expressedList: AppreciationDetails[];
   self?: boolean;
   isLoading?: boolean;
+  disableBtn: boolean;
 };
 
 interface tabBarRoute extends Route {
@@ -44,6 +46,7 @@ const GivenAndReceivedAppriciation = ({
   receivedList,
   expressedList,
   isLoading,
+  disableBtn,
 }: GivenAndReceivedAppriciationProps) => {
   const navigation = useNavigation<AppreciationDetailScreenNavigationProp>();
   const layout = useWindowDimensions();
@@ -79,21 +82,33 @@ const GivenAndReceivedAppriciation = ({
         {isLoading ? (
           <SkeletonLoader />
         ) : (
-          <FlatList
-            data={receivedList || []}
-            renderItem={({item}) => (
-              <AppreciationCard
-                appreciationDetails={item}
-                onPress={handleAppreciationCardClick}
+          <>
+            {!receivedList?.length ? (
+              <View style={styles.noDataTextView}>
+                <Text style={styles.noDataText}>
+                  {self
+                    ? message.NO_APPRECIATIONS_RECEIVED
+                    : message.NO_SEARCHE_RESULT_FOUND}
+                </Text>
+              </View>
+            ) : (
+              <FlatList
+                data={receivedList || []}
+                renderItem={({item}) => (
+                  <AppreciationCard
+                    appreciationDetails={item}
+                    onPress={handleAppreciationCardClick}
+                  />
+                )}
+                keyExtractor={item => String(item.id)}
+                numColumns={2}
               />
             )}
-            keyExtractor={item => String(item.id)}
-            numColumns={2}
-          />
+          </>
         )}
       </View>
     ),
-    [isLoading, receivedList, handleAppreciationCardClick],
+    [isLoading, receivedList, self, handleAppreciationCardClick],
   );
 
   const SecondRoute = useCallback(
@@ -102,21 +117,33 @@ const GivenAndReceivedAppriciation = ({
         {isLoading ? (
           <SkeletonLoader />
         ) : (
-          <FlatList
-            data={expressedList || []}
-            renderItem={({item}) => (
-              <AppreciationCard
-                appreciationDetails={item}
-                onPress={handleAppreciationCardClick}
+          <>
+            {!expressedList?.length ? (
+              <View style={styles.noDataTextView}>
+                <Text style={styles.noDataText}>
+                  {self
+                    ? message.NO_APPRECIATIONS_EXPRESSED
+                    : message.NO_SEARCHE_RESULT_FOUND}
+                </Text>
+              </View>
+            ) : (
+              <FlatList
+                data={expressedList || []}
+                renderItem={({item}) => (
+                  <AppreciationCard
+                    appreciationDetails={item}
+                    onPress={handleAppreciationCardClick}
+                  />
+                )}
+                keyExtractor={item => String(item.id)}
+                numColumns={2}
               />
             )}
-            keyExtractor={item => String(item.id)}
-            numColumns={2}
-          />
+          </>
         )}
       </View>
     ),
-    [expressedList, handleAppreciationCardClick, isLoading],
+    [expressedList, handleAppreciationCardClick, isLoading, self],
   );
 
   const renderScene = SceneMap({
@@ -139,7 +166,9 @@ const GivenAndReceivedAppriciation = ({
               styles.tab,
               isFocused ? styles.activeTab : styles.inactiveTab,
               i === 0 ? styles.leftTab : styles.rightTab,
-            ]}>
+              disableBtn && styles.btnOpacity,
+            ]}
+            disabled={disableBtn}>
             <Text
               style={[
                 styles.tabText,
@@ -213,6 +242,15 @@ const styles = StyleSheet.create({
   flatListWrapper: {
     backgroundColor: colors.WHITE,
   },
+  btnOpacity: {
+    opacity: 0.5,
+  },
+  noDataTextView: {
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  noDataText: {fontSize: 16, fontWeight: 'bold', color: colors.LIGHT_GRAY},
 });
 
 export default GivenAndReceivedAppriciation;
