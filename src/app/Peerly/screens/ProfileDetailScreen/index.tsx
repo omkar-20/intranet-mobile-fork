@@ -157,8 +157,15 @@ const ProfileDetailScreen = () => {
                 <InitialAvatar name={userName} size={60} />
               )}
               <View style={styles.userNameWrapper}>
-                <Text style={[styles.name, styles.bold]}>{userName}</Text>
-                <Text>{designation}</Text>
+                <Text
+                  style={[styles.name, styles.bold]}
+                  ellipsizeMode="tail"
+                  numberOfLines={1}>
+                  {userName}
+                </Text>
+                <Text ellipsizeMode="tail" numberOfLines={1}>
+                  {designation}
+                </Text>
                 {member}
               </View>
             </View>

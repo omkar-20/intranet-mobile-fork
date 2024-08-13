@@ -58,11 +58,6 @@ const AppreciationCard = ({onPress, appreciationDetails}: Props) => {
           </View>
         </View>
         <View style={styles.content}>
-          <Tooltip
-            isVisible={showReceiverTooltip}
-            content={<Typography>{receiverName}</Typography>}
-            placement="top"
-            onClose={() => setShowReceiverTooltip(false)}>
             <Typography
               type="h3"
               style={styles.receiverName}
@@ -72,18 +67,12 @@ const AppreciationCard = ({onPress, appreciationDetails}: Props) => {
             >
               {receiverName}
             </Typography>
-          </Tooltip>
           <Typography type="h5" style={styles.role}>
             {appreciationDetails.receiver_designation}
           </Typography>
           <Typography type="h5" style={styles.appreciation}>
             Appreciated by
           </Typography>
-          <Tooltip
-            isVisible={showSenderTooltip}
-            content={<Typography>{senderName}</Typography>}
-            placement="top"
-            onClose={() => setShowSenderTooltip(false)}>
             <Typography
               type="h4"
               style={styles.senderName}
@@ -92,7 +81,6 @@ const AppreciationCard = ({onPress, appreciationDetails}: Props) => {
               onPress={() => setShowSenderTooltip(true)}>
               {senderName}
             </Typography>
-          </Tooltip>
           <Typography type="h6" style={styles.days}>
             {timeFromNow(appreciationDetails.created_at)}
           </Typography>
