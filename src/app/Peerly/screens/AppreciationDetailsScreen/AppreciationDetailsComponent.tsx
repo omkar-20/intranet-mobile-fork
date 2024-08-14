@@ -100,12 +100,12 @@ const AppreciationDetailsComponent = ({
 
   const rewardLabel = useMemo(() => {
     if (reward === 3) {
-      return 'love';
+      return 'excellent';
     }
     if (reward === 2) {
-      return 'nice';
-    } else {
       return 'good';
+    } else {
+      return 'nice';
     }
   }, [reward]);
 

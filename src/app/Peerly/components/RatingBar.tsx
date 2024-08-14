@@ -26,13 +26,13 @@ const RatingBar: React.FC<RatingBarProps> = ({reward, setReward, disabled}) => {
       />
       <View style={styles.labelsContainer}>
         <Pressable onPress={() => setReward(1)} disabled={disabled || false}>
-          <Text style={styles.sliderGood}>Good</Text>
-        </Pressable>
-        <Pressable onPress={() => setReward(2)} disabled={disabled || false}>
           <Text style={styles.sliderNice}>Nice</Text>
         </Pressable>
+        <Pressable onPress={() => setReward(2)} disabled={disabled || false}>
+          <Text style={styles.sliderGood}>Good</Text>
+        </Pressable>
         <Pressable onPress={() => setReward(3)} disabled={disabled || false}>
-          <Text style={styles.sliderLove}>Excellent</Text>
+          <Text style={styles.sliderExcellent}>Excellent</Text>
         </Pressable>
       </View>
     </View>
@@ -60,24 +60,24 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '90%',
   },
-  sliderGood: {
-    fontSize: 14,
-    color: 'black',
-    marginLeft: 60,
-    fontWeight : 'bold'
-  },
   sliderNice: {
     fontSize: 14,
     color: 'black',
-    paddingLeft: 25,
-    fontWeight : 'bold'
+    marginLeft: 60,
+    fontWeight: 'bold',
   },
-  sliderLove: {
+  sliderGood: {
+    fontSize: 14,
+    color: 'black',
+    paddingLeft: 25,
+    fontWeight: 'bold',
+  },
+  sliderExcellent: {
     fontSize: 14,
     color: 'black',
     paddingLeft: 10,
     paddingRight: 10,
-    fontWeight : 'bold'
+    fontWeight: 'bold',
   },
 });
 
