@@ -32,7 +32,7 @@ const RatingBar: React.FC<RatingBarProps> = ({reward, setReward, disabled}) => {
           <Text style={styles.sliderNice}>Nice</Text>
         </Pressable>
         <Pressable onPress={() => setReward(3)} disabled={disabled || false}>
-          <Text style={styles.sliderLove}>Love</Text>
+          <Text style={styles.sliderLove}>Excellent</Text>
         </Pressable>
       </View>
     </View>
