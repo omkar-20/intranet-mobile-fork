@@ -1,9 +1,8 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState, memo} from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  Image,
   ScrollView,
   Pressable,
   Dimensions,
@@ -41,6 +40,7 @@ const AppreciationDetailsComponent = ({
   const [isInfoModalVisible, setInfoModal] = useState(false);
   const [isOpenRewardAckModal, setOpenAckRewardModal] = useState(false);
   const [isRewardAlreadyGiven, setRewardAlreadyGivenStatus] = useState(false);
+  const [isObjectionSuccess, setObjectionSuccess] = useState(false);
   const {data: profileDetails} = useGetProfileDetails();
 
   const {
@@ -133,6 +133,19 @@ const AppreciationDetailsComponent = ({
       setObjectionModalVisible(false);
     }
   }, [isSuccessPostObjection, isObjectionModalVisible]);
+
+  useEffect(() => {
+    if (isSuccessPostObjection) {
+      setObjectionSuccess(true);
+    }
+  }, [isSuccessPostObjection]);
+
+  const opacityObjectionFlag = useMemo(
+    () => ({
+      opacity: cardDetails?.reported_flag || isObjectionSuccess ? 0.5 : 1,
+    }),
+    [cardDetails?.reported_flag, isObjectionSuccess],
+  );
 
   const handleReward = (point: number) => {
     setOpenAckRewardModal(true);
@@ -278,8 +291,11 @@ const AppreciationDetailsComponent = ({
                         'success',
                       )
                     : setObjectionModalVisible(true)
+                }
+                disabled={
+                  cardDetails?.reported_flag || isObjectionSuccess || false
                 }>
-                <View style={styles.flagIcon}>
+                <View style={[styles.flagIcon, opacityObjectionFlag]}>
                   <FlagIcon />
                 </View>
               </Pressable>
@@ -511,4 +527,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AppreciationDetailsComponent;
+export default memo(AppreciationDetailsComponent);
