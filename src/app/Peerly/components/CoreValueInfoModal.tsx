@@ -23,27 +23,27 @@ const coreValuesMeta = [
   {
     id: 1,
     icon: TrustIcon,
-    backgroundColor: '#F5E6D6',
+    backgroundColor: colors.WARM_CREAM,
   },
   {
     id: 2,
     icon: TechnicalIcon,
-    backgroundColor: '#E5E1EA',
+    backgroundColor: colors.LIGHT_LAVENDER,
   },
   {
     id: 3,
     icon: EthicsIcon,
-    backgroundColor: '#E5EDDC',
+    backgroundColor: colors.LIGHT_MINT_GREEN,
   },
   {
     id: 4,
     icon: CustFocusIcon,
-    backgroundColor: '#FBE8F8',
+    backgroundColor: colors.SOFT_ROSE,
   },
   {
     id: 5,
     icon: RespectIcon,
-    backgroundColor: '#D8D6F5',
+    backgroundColor: colors.LAVENDER_LIGHT,
   },
 ];
 

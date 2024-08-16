@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import colors from '../constants/colors';
 import {AppreciationDetails} from '../services/home/types';
@@ -20,6 +20,23 @@ const AppreciationCard = ({onPress, appreciationDetails}: Props) => {
   const senderName = `${appreciationDetails.sender_first_name || ''} ${
     appreciationDetails.sender_last_name || ''
   }`;
+
+  const coreValueColors = useMemo(() => {
+    switch (appreciationDetails?.core_value_name) {
+      case 'Trust':
+        return {backgroundColor: colors.WARM_CREAM};
+      case 'Technical Excellence':
+        return {backgroundColor: colors.LIGHT_LAVENDER};
+      case 'Integrity & Ethics':
+        return {backgroundColor: colors.LIGHT_MINT_GREEN};
+      case 'Customer Focus':
+        return {backgroundColor: colors.SOFT_ROSE};
+      case 'Respect':
+        return {backgroundColor: colors.LAVENDER_LIGHT};
+      default:
+        return {backgroundColor: colors.WARM_CREAM};
+    }
+  }, [appreciationDetails.core_value_name]);
 
   return (
     <View style={styles.card}>
@@ -95,7 +112,7 @@ const AppreciationCard = ({onPress, appreciationDetails}: Props) => {
             {timeFromNow(appreciationDetails.created_at)}
           </Typography>
         </View>
-        <View style={styles.footer}>
+        <View style={[styles.footer, coreValueColors]}>
           <View style={styles.coreValueBox}>
             <Typography type="h6" style={styles.coreValueLabel}>
               Core Value
