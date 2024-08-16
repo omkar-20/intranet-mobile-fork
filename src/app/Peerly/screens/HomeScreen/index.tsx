@@ -261,7 +261,10 @@ const HomeScreen = () => {
                 <Text style={styles.totalAppreciationCountWrapper}>
                   Total:{' '}
                   <Text style={styles.totalAppreciationCount}>
-                    {appreciationListMeta?.total_records} Appreciations
+                    {appreciationListMeta?.total_records}
+                    {appreciationListMeta?.total_records === 1
+                      ? ' Appreciation'
+                      : ' Appreciations'}
                   </Text>
                 </Text>
                 {isLoadingAppreciations || isFetchingAppreciations ? (
