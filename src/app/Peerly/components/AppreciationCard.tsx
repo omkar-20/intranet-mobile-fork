@@ -3,7 +3,7 @@ import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import colors from '../constants/colors';
 import {AppreciationDetails} from '../services/home/types';
 import {formatNumber, timeFromNow} from '../utils';
-import {BlackStar} from '../constants/icons';
+import {StarIcon} from '../constants/icons';
 import InitialAvatar from './InitialAvatar';
 import Typography from './typography';
 import ImageWithFallback from './imageWithFallback/ImageWithFallback';
@@ -58,7 +58,7 @@ const AppreciationCard = ({onPress, appreciationDetails}: Props) => {
             )}
           </View>
           <View style={styles.totalRewardBox}>
-            <BlackStar width={14} height={14} />
+            <StarIcon width={14} height={14} />
             <Typography type="h4" style={styles.starCount}>
               {formatNumber(appreciationDetails.total_reward_points)}
             </Typography>
