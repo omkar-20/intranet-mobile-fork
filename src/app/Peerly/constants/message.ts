@@ -12,4 +12,7 @@ export default {
   REWARD_INFO:
     'Rewards are points that individuals can use to recognize and appreciate others.',
   NO_SEARCHE_RESULT_FOUND: 'No search result found!',
+  APPRECIATION_SUCCESS:
+    'Your appreciation has been submitted successfully. We appreciate your feedback.',
+  APPRECIATION_ACK: 'Are you sure you want to submit this appreciation?',
 };

@@ -21,7 +21,7 @@ import {
 import InitialAvatar from '../../components/InitialAvatar';
 import Typography from '../../components/typography';
 import InfoModal from '../../components/InfoModal';
-import RewardAcknowledgementModal from '../../components/RewardAcknowledgementModal';
+import AcknowledgementModal from '../../components/AcknowledgementModal';
 import {useGetProfileDetails} from '../ProfileDetailScreen/profileDetail.hooks';
 import toast from '../../../utils/toast';
 import message from '../../constants/message';
@@ -335,12 +335,14 @@ const AppreciationDetailsComponent = ({
           }}
         />
         <View>
-          <RewardAcknowledgementModal
+          <AcknowledgementModal
             visible={isOpenRewardAckModal}
             resetModal={() => handleRewardAckReset()}
             handleConfirm={() => handleRewardAckSubmit()}
             isLoading={isLoadingPostReward}
-            rewardLabel={rewardLabel}
+            btnOneLabel={'Reset'}
+            btnTwoLabel={'Confirm'}
+            message={`You have given ${rewardLabel} reward.`}
           />
         </View>
         <View>

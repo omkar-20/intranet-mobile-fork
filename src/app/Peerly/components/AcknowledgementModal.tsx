@@ -2,32 +2,41 @@ import React from 'react';
 import {Modal, StyleSheet, Text, View} from 'react-native';
 import Button from './button/button';
 
-interface RewardAcknowledgementModalProps {
+interface AcknowledgementModalProps {
   visible: boolean;
   isLoading: boolean;
-  rewardLabel: string;
   resetModal: () => void;
   handleConfirm: () => void;
+  btnOneLabel: string;
+  btnTwoLabel: string;
+  message: string;
 }
 
-const RewardAcknowledgementModal: React.FC<RewardAcknowledgementModalProps> = ({
+const AcknowledgementModal: React.FC<AcknowledgementModalProps> = ({
   visible,
   isLoading,
-  rewardLabel,
   resetModal,
   handleConfirm,
+  btnOneLabel,
+  btnTwoLabel,
+  message,
 }) => {
   return (
     <Modal transparent={true} visible={visible} onRequestClose={resetModal}>
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
-          <Text style={styles.text}>You have given {rewardLabel} reward.</Text>
+          <Text style={styles.text}>{message}</Text>
           <View style={styles.btnWrapper}>
             <View style={styles.btnMargin}>
-              <Button title="Reset" type="secondary" onPress={resetModal} />
+              <Button
+                title={btnOneLabel}
+                type="secondary"
+                onPress={resetModal}
+                disabled={isLoading}
+              />
             </View>
             <Button
-              title="Confirm"
+              title={btnTwoLabel}
               type="primary"
               isLoading={isLoading}
               onPress={handleConfirm}
@@ -79,4 +88,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RewardAcknowledgementModal;
+export default AcknowledgementModal;
