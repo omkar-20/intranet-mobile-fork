@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {
   Modal,
   View,
@@ -58,6 +58,28 @@ const CoreValueInfoModal: React.FC<CoreValueInfoModalProp> = ({
   onClose,
   coreValuesDetails,
 }) => {
+  const coreValues = useMemo(() => {
+    return coreValuesDetails.map((item, key) => {
+      const IconComponent = coreValuesMeta[key].icon;
+      return (
+        <View
+          key={item.id}
+          style={[
+            styles.card,
+            {backgroundColor: coreValuesMeta[key].backgroundColor},
+          ]}>
+          <View style={styles.iconWrapper}>
+            <IconComponent />
+          </View>
+          <View style={styles.cardContent}>
+            <Text style={styles.cardTitle}>{item.name}</Text>
+            <Text style={styles.cardDescription}>{item.description}</Text>
+          </View>
+        </View>
+      );
+    });
+  }, [coreValuesDetails]);
+
   return (
     <Modal
       visible={visible}
@@ -68,28 +90,7 @@ const CoreValueInfoModal: React.FC<CoreValueInfoModalProp> = ({
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
             <ScrollView contentContainerStyle={styles.scrollView}>
-              {coreValuesDetails.map((item, key) => {
-                const IconComponent = coreValuesMeta[key].icon;
-                return (
-                  <View
-                    key={item.id}
-                    style={[
-                      styles.card,
-                      {backgroundColor: coreValuesMeta[key].backgroundColor},
-                    ]}>
-                    <View style={styles.iconWrapper}>
-                      <IconComponent />
-                    </View>
-
-                    <View style={styles.cardContent}>
-                      <Text style={styles.cardTitle}>{item.name}</Text>
-                      <Text style={styles.cardDescription}>
-                        {item.description}
-                      </Text>
-                    </View>
-                  </View>
-                );
-              })}
+              {coreValues}
             </ScrollView>
           </View>
         </View>
