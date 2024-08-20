@@ -1,8 +1,5 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-
-import {WhiteStar} from '../../constants/icons';
-import {formatNumber} from '../../utils';
 import InitialsAvatar from '../InitialAvatar';
 import colors from '../../constants/colors';
 import ImageWithFallback from '../imageWithFallback/ImageWithFallback';
@@ -54,6 +51,7 @@ const LeaderBoardCard: React.FC<LeaderBoardCardProps> = ({userDetail}) => {
           <BadgeIcon width={21} height={21} />
         </View>
       ) : null}
+      {/* This code is for future purpose
       {userDetail?.appreciation_points > 0 ? (
         <View style={[styles.starContainer, avatarStyle.backgroundColor]}>
           <WhiteStar color={colors.SECONDARY} width={11} height={11} />
@@ -61,7 +59,7 @@ const LeaderBoardCard: React.FC<LeaderBoardCardProps> = ({userDetail}) => {
             {formatNumber(userDetail.appreciation_points)}
           </Text>
         </View>
-      ) : null}
+      ) : null} */}
       <View style={[styles.nameContainer]}>
         <Text style={styles.userName} ellipsizeMode="tail" numberOfLines={2}>
           {userName}
