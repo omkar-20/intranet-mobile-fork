@@ -20,6 +20,7 @@ const RatingBar: React.FC<RatingBarProps> = ({reward, setReward, disabled}) => {
         value={reward}
         onSlidingComplete={value => setReward(value)}
         thumbImage={GoldenStar}
+        onResponderGrant={() => true}
         minimumTrackTintColor="#FFD700"
         maximumTrackTintColor="#DDD"
         disabled={disabled || false}
