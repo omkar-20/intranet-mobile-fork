@@ -166,7 +166,10 @@ const ProfileDetailScreen = () => {
                   numberOfLines={1}>
                   {userName}
                 </Text>
-                <Text ellipsizeMode="tail" numberOfLines={1}>
+                <Text
+                  style={styles.designation}
+                  ellipsizeMode="tail"
+                  numberOfLines={2}>
                   {designation ? designation : null}
                 </Text>
                 {member}
@@ -174,7 +177,12 @@ const ProfileDetailScreen = () => {
             </View>
             <View style={[styles.totalPoints, rewardPointMargin]}>
               <Text style={[styles.name, styles.bold]}>{total_points}</Text>
-              <Text style={[styles.name, styles.bold]}>Reward Points</Text>
+              <Text style={[styles.name, styles.bold, styles.fontSize]}>
+                Appreciation
+              </Text>
+              <Text style={[styles.name, styles.bold, styles.fontSize]}>
+                Points
+              </Text>
             </View>
           </View>
           {badgeType && (
@@ -266,6 +274,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.PRIMARY,
   },
+  fontSize: {
+    fontSize: 14,
+  },
+  designation: {
+    color: colors.BLACK,
+  },
   name: {
     lineHeight: 19,
     textAlign: 'left',
@@ -277,17 +291,17 @@ const styles = StyleSheet.create({
   },
   userNameWrapper: {
     marginLeft: 15,
-    maxWidth: 160,
+    maxWidth: 150,
   },
   badgeWrapper: {
     position: 'absolute',
     top: -20,
-    right: 18,
+    right: 27,
   },
   totalPoints: {
     marginLeft: 0,
     alignItems: 'center',
-    width: 70,
+    width: 90,
   },
   rewardDetailsBox: {
     flexDirection: 'row',
