@@ -3,8 +3,6 @@ import 'react-native-gesture-handler';
 import React, {useState, useEffect} from 'react';
 import {StatusBar} from 'react-native';
 import {QueryClient, QueryClientProvider} from 'react-query';
-import messaging from '@react-native-firebase/messaging';
-import notifee from '@notifee/react-native';
 import Toast from './app/components/toast';
 
 import {Interceptor} from './app/services/api';
@@ -25,21 +23,19 @@ const App = () => {
   const versionContextValue = useState<CheckVersionResponse | null>(null);
 
   const {
-    getDeviceToken,
+    subscribeToTopic,
+    getInitialNotification,
     requestUserPermission,
     listenToBackgroundNotifications,
     listenToForegroundNotifications,
-    onForeGroundNotificationHandler,
-    onBackGroundNotifeeHandler,
   } = usePushNotification();
 
   useEffect(() => {
+    subscribeToTopic();
+    getInitialNotification();
     requestUserPermission();
-    getDeviceToken();
     listenToForegroundNotifications();
     listenToBackgroundNotifications();
-    onForeGroundNotificationHandler();
-    onBackGroundNotifeeHandler();
   }, []);
 
 
