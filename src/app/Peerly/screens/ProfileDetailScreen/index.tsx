@@ -166,12 +166,14 @@ const ProfileDetailScreen = () => {
                   numberOfLines={1}>
                   {userName}
                 </Text>
-                <Text
-                  style={styles.designation}
-                  ellipsizeMode="tail"
-                  numberOfLines={2}>
-                  {designation ? designation : null}
-                </Text>
+                {designation && (
+                  <Text
+                    style={styles.designation}
+                    ellipsizeMode="tail"
+                    numberOfLines={2}>
+                    {designation}
+                  </Text>
+                )}
                 {member}
               </View>
             </View>

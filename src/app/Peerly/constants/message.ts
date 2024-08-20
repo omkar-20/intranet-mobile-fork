@@ -15,4 +15,8 @@ export default {
   APPRECIATION_SUCCESS:
     'Your appreciation has been submitted successfully. We appreciate your feedback.',
   APPRECIATION_ACK: 'Are you sure you want to submit this appreciation?',
+  OBJECTION_SUCCESS:
+    'Your objection reason has been submitted successfully. We appreciate your feedback.',
+  REWARD_SUCCESS:
+    'Your rewards has been submitted successfully. We appreciate your feedback.',
 };

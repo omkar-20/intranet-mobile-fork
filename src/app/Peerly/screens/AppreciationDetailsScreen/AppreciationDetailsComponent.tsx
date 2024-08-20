@@ -324,9 +324,7 @@ const AppreciationDetailsComponent = ({
         />
         <CenteredModal
           visible={isSuccessPostObjection}
-          message={
-            'Your objection reason has been submitted successfully. We appreciate your feedback.'
-          }
+          message={message.OBJECTION_SUCCESS}
           svgImage={SuccessIcon}
           btnTitle="Okay"
           onClose={() => {
@@ -348,9 +346,7 @@ const AppreciationDetailsComponent = ({
         <View>
           <CenteredModal
             visible={isSuccessPostReward}
-            message={
-              'Your rewards has been submitted successfully. We appreciate your feedback.'
-            }
+            message={message.REWARD_SUCCESS}
             svgImage={RewardSuccessIcon}
             btnTitle="Okay"
             onClose={() => {

@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet, Pressable} from 'react-native';
 import Slider from '@react-native-community/slider';
 import {GoldenStar} from '../constants/icons';
+import colors from '../constants/colors';
 
 interface RatingBarProps {
   reward: number;
@@ -21,8 +22,8 @@ const RatingBar: React.FC<RatingBarProps> = ({reward, setReward, disabled}) => {
         onSlidingComplete={value => setReward(value)}
         thumbImage={GoldenStar}
         onResponderGrant={() => true}
-        minimumTrackTintColor="#FFD700"
-        maximumTrackTintColor="#DDD"
+        minimumTrackTintColor={colors.GOLD}
+        maximumTrackTintColor={colors.LIGHT_GRAY}
         disabled={disabled || false}
       />
       <View style={styles.labelsContainer}>
