@@ -96,7 +96,7 @@ const LeaderBoardCard: React.FC<LeaderBoardCardProps> = ({userDetail}) => {
         </View>
       ) : null}
       <View style={[styles.nameContainer]}>
-        <Text style={styles.useName} ellipsizeMode="tail" numberOfLines={2}>
+        <Text style={styles.userName} ellipsizeMode="tail" numberOfLines={2}>
           {userName}
         </Text>
       </View>
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 12,
   },
-  useName: {
+  userName: {
     width: 60,
     fontSize: 12,
     textAlign: 'center',
