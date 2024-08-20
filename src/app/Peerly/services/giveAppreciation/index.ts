@@ -18,7 +18,7 @@ export const getCoworkerList = async (payload: GetCoworkersListRequest) => {
     GetCoworkersListResponse
   >({
     method: 'GET',
-    url: GET_COWORKER_LIST,
+    url: `${GET_COWORKER_LIST}?exclude_self=true`,
     params: payload,
   });
   return response.data;

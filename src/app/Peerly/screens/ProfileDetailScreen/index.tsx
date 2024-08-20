@@ -1,22 +1,13 @@
 import React, {useMemo, useState} from 'react';
 import {
   ActivityIndicator,
-  Image,
   SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import {BadgeMetaData} from './types';
-import {
-  PlatinumIcon,
-  GoldIcon,
-  SilverIcon,
-  BronzeIcon,
-  InfoIcon,
-  StarIcon,
-} from '../../constants/icons';
+import {InfoIcon, StarIcon} from '../../constants/icons';
 import {dateFormat} from '../../utils';
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
 import {useGetAppreciationList} from '../HomeScreen/home.hooks';
@@ -29,43 +20,7 @@ import InitialAvatar from '../../components/InitialAvatar';
 import colors from '../../constants/colors';
 import message from '../../constants/message';
 import ImageWithFallback from '../../components/imageWithFallback/ImageWithFallback';
-
-const paginationData = {
-  page: 1,
-  page_size: 500,
-  self: true,
-};
-const badgeData: BadgeMetaData = {
-  platinum: {
-    member: 'Platinum Member',
-    icon: <PlatinumIcon width={60} height={60} />,
-  },
-  gold: {
-    member: 'Gold Member',
-    icon: <GoldIcon width={60} height={60} />,
-  },
-  silver: {
-    member: 'Silver Member',
-    icon: <SilverIcon width={60} height={60} />,
-  },
-  bronze: {
-    member: 'Bronze Member',
-    icon: <BronzeIcon width={60} height={60} />,
-  },
-};
-
-const initialProfileDetails = {
-  first_name: '',
-  last_name: '',
-  profile_image_url: '',
-  designation: '',
-  reward_quota_balance: 0,
-  total_reward_quota: 0,
-  grade_id: 0,
-  total_points: 0,
-  refil_date: 0,
-  badge: '',
-};
+import {paginationData, badgeData, initialProfileDetails} from './constants';
 
 const ProfileDetailScreen = () => {
   const route = useRoute<ProfileScreenRouteProp>();
@@ -166,15 +121,25 @@ const ProfileDetailScreen = () => {
                   numberOfLines={1}>
                   {userName}
                 </Text>
-                <Text ellipsizeMode="tail" numberOfLines={1}>
-                  {designation ? designation : null}
-                </Text>
+                {designation && (
+                  <Text
+                    style={styles.designation}
+                    ellipsizeMode="tail"
+                    numberOfLines={2}>
+                    {designation}
+                  </Text>
+                )}
                 {member}
               </View>
             </View>
             <View style={[styles.totalPoints, rewardPointMargin]}>
               <Text style={[styles.name, styles.bold]}>{total_points}</Text>
-              <Text style={[styles.name, styles.bold]}>Reward Points</Text>
+              <Text style={[styles.name, styles.bold, styles.fontSize]}>
+                Appreciation
+              </Text>
+              <Text style={[styles.name, styles.bold, styles.fontSize]}>
+                Points
+              </Text>
             </View>
           </View>
           {badgeType && (
@@ -266,6 +231,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.PRIMARY,
   },
+  fontSize: {
+    fontSize: 14,
+  },
+  designation: {
+    color: colors.BLACK,
+  },
   name: {
     lineHeight: 19,
     textAlign: 'left',
@@ -277,17 +248,17 @@ const styles = StyleSheet.create({
   },
   userNameWrapper: {
     marginLeft: 15,
-    maxWidth: 160,
+    maxWidth: 150,
   },
   badgeWrapper: {
     position: 'absolute',
     top: -20,
-    right: 18,
+    right: 27,
   },
   totalPoints: {
     marginLeft: 0,
     alignItems: 'center',
-    width: 70,
+    width: 90,
   },
   rewardDetailsBox: {
     flexDirection: 'row',

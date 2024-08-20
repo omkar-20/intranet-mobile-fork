@@ -1,9 +1,8 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState, memo} from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  Image,
   ScrollView,
   Pressable,
   Dimensions,
@@ -22,7 +21,7 @@ import {
 import InitialAvatar from '../../components/InitialAvatar';
 import Typography from '../../components/typography';
 import InfoModal from '../../components/InfoModal';
-import RewardAcknowledgementModal from '../../components/RewardAcknowledgementModal';
+import AcknowledgementModal from '../../components/AcknowledgementModal';
 import {useGetProfileDetails} from '../ProfileDetailScreen/profileDetail.hooks';
 import toast from '../../../utils/toast';
 import message from '../../constants/message';
@@ -41,6 +40,7 @@ const AppreciationDetailsComponent = ({
   const [isInfoModalVisible, setInfoModal] = useState(false);
   const [isOpenRewardAckModal, setOpenAckRewardModal] = useState(false);
   const [isRewardAlreadyGiven, setRewardAlreadyGivenStatus] = useState(false);
+  const [isObjectionSuccess, setObjectionSuccess] = useState(false);
   const {data: profileDetails} = useGetProfileDetails();
 
   const {
@@ -100,12 +100,12 @@ const AppreciationDetailsComponent = ({
 
   const rewardLabel = useMemo(() => {
     if (reward === 3) {
-      return 'love';
+      return 'excellent';
     }
     if (reward === 2) {
-      return 'nice';
-    } else {
       return 'good';
+    } else {
+      return 'nice';
     }
   }, [reward]);
 
@@ -134,8 +134,23 @@ const AppreciationDetailsComponent = ({
     }
   }, [isSuccessPostObjection, isObjectionModalVisible]);
 
+  useEffect(() => {
+    if (isSuccessPostObjection) {
+      setObjectionSuccess(true);
+    }
+  }, [isSuccessPostObjection]);
+
+  const opacityObjectionFlag = useMemo(
+    () => ({
+      opacity: cardDetails?.reported_flag || isObjectionSuccess ? 0.5 : 1,
+    }),
+    [cardDetails?.reported_flag, isObjectionSuccess],
+  );
+
   const handleReward = (point: number) => {
-    setOpenAckRewardModal(true);
+    if (point !== 0) {
+      setOpenAckRewardModal(true);
+    }
     setReward(point);
   };
 
@@ -278,8 +293,11 @@ const AppreciationDetailsComponent = ({
                         'success',
                       )
                     : setObjectionModalVisible(true)
+                }
+                disabled={
+                  cardDetails?.reported_flag || isObjectionSuccess || false
                 }>
-                <View style={styles.flagIcon}>
+                <View style={[styles.flagIcon, opacityObjectionFlag]}>
                   <FlagIcon />
                 </View>
               </Pressable>
@@ -306,9 +324,7 @@ const AppreciationDetailsComponent = ({
         />
         <CenteredModal
           visible={isSuccessPostObjection}
-          message={
-            'Your objection reason has been submitted successfully. We appreciate your feedback.'
-          }
+          message={message.OBJECTION_SUCCESS}
           svgImage={SuccessIcon}
           btnTitle="Okay"
           onClose={() => {
@@ -317,20 +333,20 @@ const AppreciationDetailsComponent = ({
           }}
         />
         <View>
-          <RewardAcknowledgementModal
+          <AcknowledgementModal
             visible={isOpenRewardAckModal}
             resetModal={() => handleRewardAckReset()}
             handleConfirm={() => handleRewardAckSubmit()}
             isLoading={isLoadingPostReward}
-            rewardLabel={rewardLabel}
+            btnOneLabel={'Reset'}
+            btnTwoLabel={'Confirm'}
+            message={`You have given ${rewardLabel} reward.`}
           />
         </View>
         <View>
           <CenteredModal
             visible={isSuccessPostReward}
-            message={
-              'Your rewards has been submitted successfully. We appreciate your feedback.'
-            }
+            message={message.REWARD_SUCCESS}
             svgImage={RewardSuccessIcon}
             btnTitle="Okay"
             onClose={() => {
@@ -511,4 +527,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AppreciationDetailsComponent;
+export default memo(AppreciationDetailsComponent);

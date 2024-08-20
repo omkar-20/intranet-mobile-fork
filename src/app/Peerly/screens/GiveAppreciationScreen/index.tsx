@@ -28,6 +28,8 @@ import Button from '../../components/button/button';
 import Typography from '../../components/typography';
 import colors from '../../constants/colors';
 import messages from '../../constants/message';
+import AcknowledgementModal from '../../components/AcknowledgementModal';
+import message from '../../constants/message';
 
 const paginationData = {
   page: 1,
@@ -44,6 +46,7 @@ const AppreciationScreen = () => {
   const navigation = useNavigation<GiveAppreciationScreenNavigationProp>();
 
   const [isCoreValueModalVisible, setCoreValueModalVisible] = useState(false);
+  const [isAckModalVisible, setAckModalVisible] = useState(false);
   const {
     data: coworkerList,
     isLoading: isCorworkerListLoading,
@@ -66,6 +69,7 @@ const AppreciationScreen = () => {
 
   const {
     control,
+    getValues,
     handleSubmit,
     formState: {errors},
     reset: resetForm,
@@ -78,14 +82,19 @@ const AppreciationScreen = () => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit: SubmitHandler<FormInput> = data => {
+  const onSubmit: SubmitHandler<FormInput> = () => {
+    setAckModalVisible(true);
+  };
+
+  const handleAppreciationSubmit = useCallback(() => {
     let payload = {
-      receiver: Number(data.receiver),
-      core_value_id: Number(data.core_value_id),
-      description: data.description,
+      receiver: Number(getValues().receiver),
+      core_value_id: Number(getValues().core_value_id),
+      description: getValues().description,
     };
     postAppriciation(payload);
-  };
+  }, [getValues, postAppriciation]);
+
   const handleSuccessModalClose = useCallback(() => {
     resetPostAppreciation();
     resetForm();
@@ -170,11 +179,18 @@ const AppreciationScreen = () => {
             isLoading={isAppreciationLoading}
           />
           <View>
+            <AcknowledgementModal
+              visible={isAckModalVisible}
+              btnOneLabel={'No'}
+              btnTwoLabel={'Yes'}
+              resetModal={() => setAckModalVisible(false)}
+              handleConfirm={() => handleAppreciationSubmit()}
+              isLoading={isAppreciationLoading}
+              message={message.APPRECIATION_ACK}
+            />
             <CenteredModal
               visible={isAppreciationSuccess}
-              message={
-                'Your appreciation has been submitted successfully. We appreciate your feedback.'
-              }
+              message={message.APPRECIATION_SUCCESS}
               svgImage={SuccessIcon}
               btnTitle="Okay"
               onClose={handleSuccessModalClose}

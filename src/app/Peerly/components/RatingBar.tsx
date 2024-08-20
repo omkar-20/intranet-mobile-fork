@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet, Pressable} from 'react-native';
 import Slider from '@react-native-community/slider';
 import {GoldenStar} from '../constants/icons';
+import colors from '../constants/colors';
 
 interface RatingBarProps {
   reward: number;
@@ -20,19 +21,20 @@ const RatingBar: React.FC<RatingBarProps> = ({reward, setReward, disabled}) => {
         value={reward}
         onSlidingComplete={value => setReward(value)}
         thumbImage={GoldenStar}
-        minimumTrackTintColor="#FFD700"
-        maximumTrackTintColor="#DDD"
+        onResponderGrant={() => true}
+        minimumTrackTintColor={colors.GOLD}
+        maximumTrackTintColor={colors.LIGHT_GRAY}
         disabled={disabled || false}
       />
       <View style={styles.labelsContainer}>
         <Pressable onPress={() => setReward(1)} disabled={disabled || false}>
-          <Text style={styles.sliderGood}>Good</Text>
-        </Pressable>
-        <Pressable onPress={() => setReward(2)} disabled={disabled || false}>
           <Text style={styles.sliderNice}>Nice</Text>
         </Pressable>
+        <Pressable onPress={() => setReward(2)} disabled={disabled || false}>
+          <Text style={styles.sliderGood}>Good</Text>
+        </Pressable>
         <Pressable onPress={() => setReward(3)} disabled={disabled || false}>
-          <Text style={styles.sliderLove}>Love</Text>
+          <Text style={styles.sliderExcellent}>Excellent</Text>
         </Pressable>
       </View>
     </View>
@@ -60,24 +62,24 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '90%',
   },
-  sliderGood: {
-    fontSize: 14,
-    color: 'black',
-    marginLeft: 60,
-    fontWeight : 'bold'
-  },
   sliderNice: {
     fontSize: 14,
     color: 'black',
-    paddingLeft: 25,
-    fontWeight : 'bold'
+    marginLeft: 60,
+    fontWeight: 'bold',
   },
-  sliderLove: {
+  sliderGood: {
+    fontSize: 14,
+    color: 'black',
+    paddingLeft: 25,
+    fontWeight: 'bold',
+  },
+  sliderExcellent: {
     fontSize: 14,
     color: 'black',
     paddingLeft: 10,
     paddingRight: 10,
-    fontWeight : 'bold'
+    fontWeight: 'bold',
   },
 });
 

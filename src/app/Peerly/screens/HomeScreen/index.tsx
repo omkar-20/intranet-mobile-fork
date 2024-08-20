@@ -14,7 +14,7 @@ import colors from '../../constants/colors';
 import AppreciationCard from '../../components/AppreciationCard';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import fonts from '../../../constant/fonts';
-import LeaderBoardCard from '../../components/LeaderBoardCard';
+import LeaderBoardCard from '../../components/LeaderBoard/LeaderBoardCard';
 import {
   useGetAppreciationList,
   useGetActiveUsersList,
@@ -261,7 +261,10 @@ const HomeScreen = () => {
                 <Text style={styles.totalAppreciationCountWrapper}>
                   Total:{' '}
                   <Text style={styles.totalAppreciationCount}>
-                    {appreciationListMeta?.total_records} Appreciations
+                    {appreciationListMeta?.total_records}
+                    {appreciationListMeta?.total_records === 1
+                      ? ' Appreciation'
+                      : ' Appreciations'}
                   </Text>
                 </Text>
                 {isLoadingAppreciations || isFetchingAppreciations ? (

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {
   Modal,
   View,
@@ -23,27 +23,27 @@ const coreValuesMeta = [
   {
     id: 1,
     icon: TrustIcon,
-    backgroundColor: '#F5E6D6',
+    backgroundColor: colors.WARM_CREAM,
   },
   {
     id: 2,
     icon: TechnicalIcon,
-    backgroundColor: '#E5E1EA',
+    backgroundColor: colors.LIGHT_LAVENDER,
   },
   {
     id: 3,
     icon: EthicsIcon,
-    backgroundColor: '#E5EDDC',
+    backgroundColor: colors.LIGHT_MINT_GREEN,
   },
   {
     id: 4,
     icon: CustFocusIcon,
-    backgroundColor: '#FBE8F8',
+    backgroundColor: colors.SOFT_ROSE,
   },
   {
     id: 5,
     icon: RespectIcon,
-    backgroundColor: '#D8D6F5',
+    backgroundColor: colors.LAVENDER_LIGHT,
   },
 ];
 
@@ -58,6 +58,28 @@ const CoreValueInfoModal: React.FC<CoreValueInfoModalProp> = ({
   onClose,
   coreValuesDetails,
 }) => {
+  const coreValues = useMemo(() => {
+    return coreValuesDetails.map((item, key) => {
+      const IconComponent = coreValuesMeta[key].icon;
+      return (
+        <View
+          key={item.id}
+          style={[
+            styles.card,
+            {backgroundColor: coreValuesMeta[key].backgroundColor},
+          ]}>
+          <View style={styles.iconWrapper}>
+            <IconComponent />
+          </View>
+          <View style={styles.cardContent}>
+            <Text style={styles.cardTitle}>{item.name}</Text>
+            <Text style={styles.cardDescription}>{item.description}</Text>
+          </View>
+        </View>
+      );
+    });
+  }, [coreValuesDetails]);
+
   return (
     <Modal
       visible={visible}
@@ -68,28 +90,7 @@ const CoreValueInfoModal: React.FC<CoreValueInfoModalProp> = ({
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
             <ScrollView contentContainerStyle={styles.scrollView}>
-              {coreValuesDetails.map((item, key) => {
-                const IconComponent = coreValuesMeta[key].icon;
-                return (
-                  <View
-                    key={item.id}
-                    style={[
-                      styles.card,
-                      {backgroundColor: coreValuesMeta[key].backgroundColor},
-                    ]}>
-                    <View style={styles.iconWrapper}>
-                      <IconComponent />
-                    </View>
-
-                    <View style={styles.cardContent}>
-                      <Text style={styles.cardTitle}>{item.name}</Text>
-                      <Text style={styles.cardDescription}>
-                        {item.description}
-                      </Text>
-                    </View>
-                  </View>
-                );
-              })}
+              {coreValues}
             </ScrollView>
           </View>
         </View>

@@ -31,9 +31,9 @@ const CenteredModal: React.FC<CenteredModalProps> = ({
         <View style={styles.modalContainer}>
           <SvgImage />
           <Text style={styles.modalText}>{message}</Text>
-          {children}  
+          {children}
           <View style={styles.buttonContainer}>
-          <Button  title={btnTitle} type="secondary" onPress={onClose} />
+            <Button title={btnTitle} type="secondary" onPress={onClose} />
           </View>
         </View>
       </View>
@@ -60,12 +60,12 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    padding: "5%",
+    padding: '5%',
   },
   modalText: {
     fontSize: 16,
     textAlign: 'center',
-    color: '#000'
+    color: '#000',
   },
   buttonRow: {
     flexDirection: 'row',

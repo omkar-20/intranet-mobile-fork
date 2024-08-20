@@ -36,6 +36,18 @@ import {
 } from '../constant/screenNames';
 import colors from '../constant/colors';
 import {BUNDLE_ID} from '../constant';
+import {
+  APPRECIATION_DETAILS_SCREEN,
+  APPRECIATION_SEARCH_SCREEN,
+  GIVE_APPRECIATION_SCREEN,
+  HOME_SCREEN,
+  PROFILE_DETAILS_SCREEN,
+} from '../Peerly/constants/screenNames';
+import HomeScreen from '../Peerly/screens/HomeScreen';
+import AppreciationScreen from '../Peerly/screens/GiveAppreciationScreen';
+import ProfileDetailScreen from '../Peerly/screens/ProfileDetailScreen';
+import AppreciationDetailsScreen from '../Peerly/screens/AppreciationDetailsScreen';
+import SearchScreen from '../Peerly/screens/SearchScreen';
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 
@@ -131,6 +143,47 @@ const RootNavigator = () => {
             <RootStack.Screen
               name={LEAVE_DETAIL_SCREEN}
               component={LeaveDetailScreen}
+            />
+            <RootStack.Screen
+              name={HOME_SCREEN}
+              component={HomeScreen}
+              options={{headerShown: false}}
+            />
+            <RootStack.Screen
+              name={GIVE_APPRECIATION_SCREEN}
+              component={AppreciationScreen}
+              options={{
+                headerTitle: 'Appreciation',
+                headerShadowVisible: false,
+                headerShown: true,
+              }}
+            />
+            <RootStack.Screen
+              name={APPRECIATION_DETAILS_SCREEN}
+              component={AppreciationDetailsScreen}
+              options={{
+                headerTitle: '',
+                headerShadowVisible: false,
+                headerShown: true,
+              }}
+            />
+            <RootStack.Screen
+              name={PROFILE_DETAILS_SCREEN}
+              component={ProfileDetailScreen}
+              options={{
+                headerShadowVisible: false,
+                headerShown: true,
+                headerTitle: 'Profile',
+              }}
+            />
+            <RootStack.Screen
+              name={APPRECIATION_SEARCH_SCREEN}
+              component={SearchScreen}
+              options={{
+                headerShown: true,
+                headerTitle: '',
+                headerShadowVisible: false,
+              }}
             />
           </>
         ) : (

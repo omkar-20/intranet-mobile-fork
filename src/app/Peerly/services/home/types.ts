@@ -33,6 +33,7 @@ export interface AppreciationDetails {
   receiver_designation: string;
   receiver_id: number;
   sender_id: number;
+  reported_flag: boolean;
   created_at: number;
   updated_at: number;
 }
