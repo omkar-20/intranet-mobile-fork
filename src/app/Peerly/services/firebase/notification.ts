@@ -40,8 +40,8 @@ const usePushNotification = () => {
       }
   };
 
-  const getInitialNotification = async () => {
-    messaging().getInitialNotification();
+  const getInitialNotification =  () => {
+    return messaging().getInitialNotification();
 };
   // Handler to display notifications when the app is in the foreground
   const onDisplayNotification = async (message: any) => {
@@ -52,8 +52,8 @@ const usePushNotification = () => {
       });
   };
 
-  const requestUserPermission = async (): Promise<void> => {
-    messaging().requestPermission();
+  const requestUserPermission =  () => {
+   return  messaging().requestPermission();
   };
 
   const listenToForegroundNotifications = () => {
@@ -62,9 +62,8 @@ const usePushNotification = () => {
     });
   };
 
-  const listenToBackgroundNotifications = async () => {
-    messaging().setBackgroundMessageHandler(async () => {});
-    return
+  const listenToBackgroundNotifications =  () => {
+    return messaging().setBackgroundMessageHandler(async () => {});
   };
 
   const subscribeToTopic = async () => {

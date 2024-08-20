@@ -23,8 +23,8 @@ const App = () => {
   const versionContextValue = useState<CheckVersionResponse | null>(null);
 
   const {
-    subscribeToTopic,
     getInitialNotification,
+    subscribeToTopic,
     requestUserPermission,
     listenToBackgroundNotifications,
     listenToForegroundNotifications,
