@@ -40,6 +40,7 @@ const AcknowledgementModal: React.FC<AcknowledgementModalProps> = ({
               type="primary"
               isLoading={isLoading}
               onPress={handleConfirm}
+              disabled={isLoading}
             />
           </View>
         </View>

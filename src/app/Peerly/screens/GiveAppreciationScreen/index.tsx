@@ -93,6 +93,7 @@ const AppreciationScreen = () => {
       description: getValues().description,
     };
     postAppriciation(payload);
+    setAckModalVisible(false);
   }, [getValues, postAppriciation]);
 
   const handleSuccessModalClose = useCallback(() => {
