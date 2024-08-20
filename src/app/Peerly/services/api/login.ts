@@ -1,7 +1,7 @@
 import {PeerlyLoginResponse} from './types';
 import {PEERLY_LOGIN_ROUTE} from '../../constants/apiRoutes';
 import {apiCall} from './index';
-import {getNotificationToken} from '../firebase/messaging';
+import getNotificationToken from '../firebase/notification';
 
 export const loginPeerly = async () => {
   const notificationToken = await getNotificationToken();
