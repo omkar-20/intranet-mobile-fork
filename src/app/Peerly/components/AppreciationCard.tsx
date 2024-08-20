@@ -13,6 +13,14 @@ type Props = {
   appreciationDetails: AppreciationDetails;
 };
 
+enum CoreValue {
+  TRUST = 'Trust',
+  TECHNICALEXCELLENCE = 'Technical Excellence',
+  INTEGRITYANDETHICS = 'Integrity & Ethics',
+  CUSTFOCUS = 'Customer Focus',
+  RESPECT = 'Respect',
+}
+
 const AppreciationCard = ({onPress, appreciationDetails}: Props) => {
   const receiverName = `${appreciationDetails.receiver_first_name || ''} ${
     appreciationDetails.receiver_last_name || ''
@@ -23,15 +31,15 @@ const AppreciationCard = ({onPress, appreciationDetails}: Props) => {
 
   const coreValueColors = useMemo(() => {
     switch (appreciationDetails?.core_value_name) {
-      case 'Trust':
+      case CoreValue.TRUST:
         return {backgroundColor: colors.WARM_CREAM};
-      case 'Technical Excellence':
+      case CoreValue.TECHNICALEXCELLENCE:
         return {backgroundColor: colors.LIGHT_LAVENDER};
-      case 'Integrity & Ethics':
+      case CoreValue.INTEGRITYANDETHICS:
         return {backgroundColor: colors.LIGHT_MINT_GREEN};
-      case 'Customer Focus':
+      case CoreValue.CUSTFOCUS:
         return {backgroundColor: colors.SOFT_ROSE};
-      case 'Respect':
+      case CoreValue.RESPECT:
         return {backgroundColor: colors.LAVENDER_LIGHT};
       default:
         return {backgroundColor: colors.WARM_CREAM};
