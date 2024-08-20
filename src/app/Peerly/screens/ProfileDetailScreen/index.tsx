@@ -1,22 +1,13 @@
 import React, {useMemo, useState} from 'react';
 import {
   ActivityIndicator,
-  Image,
   SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import {BadgeMetaData} from './types';
-import {
-  PlatinumIcon,
-  GoldIcon,
-  SilverIcon,
-  BronzeIcon,
-  InfoIcon,
-  StarIcon,
-} from '../../constants/icons';
+import {InfoIcon, StarIcon} from '../../constants/icons';
 import {dateFormat} from '../../utils';
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
 import {useGetAppreciationList} from '../HomeScreen/home.hooks';
@@ -29,43 +20,7 @@ import InitialAvatar from '../../components/InitialAvatar';
 import colors from '../../constants/colors';
 import message from '../../constants/message';
 import ImageWithFallback from '../../components/imageWithFallback/ImageWithFallback';
-
-const paginationData = {
-  page: 1,
-  page_size: 500,
-  self: true,
-};
-const badgeData: BadgeMetaData = {
-  platinum: {
-    member: 'Platinum Member',
-    icon: <PlatinumIcon width={60} height={60} />,
-  },
-  gold: {
-    member: 'Gold Member',
-    icon: <GoldIcon width={60} height={60} />,
-  },
-  silver: {
-    member: 'Silver Member',
-    icon: <SilverIcon width={60} height={60} />,
-  },
-  bronze: {
-    member: 'Bronze Member',
-    icon: <BronzeIcon width={60} height={60} />,
-  },
-};
-
-const initialProfileDetails = {
-  first_name: '',
-  last_name: '',
-  profile_image_url: '',
-  designation: '',
-  reward_quota_balance: 0,
-  total_reward_quota: 0,
-  grade_id: 0,
-  total_points: 0,
-  refil_date: 0,
-  badge: '',
-};
+import {paginationData, badgeData, initialProfileDetails} from './constants';
 
 const ProfileDetailScreen = () => {
   const route = useRoute<ProfileScreenRouteProp>();

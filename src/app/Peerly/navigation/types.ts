@@ -38,7 +38,10 @@ export type AppreciationDetailScreenNavigationProp = NativeStackNavigationProp<
   'AppreciationDetail'
 >;
 
-export type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'Profile'>;
+export type ProfileScreenRouteProp = RouteProp<
+  RootStackParamList,
+  'PeerlyProfile'
+>;
 
 export type AppreciationDetailScreenRouteProp = RouteProp<
   RootStackParamList,
