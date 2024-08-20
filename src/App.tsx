@@ -38,7 +38,6 @@ const App = () => {
     listenToBackgroundNotifications();
   }, []);
 
-
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <VersionContext.Provider value={versionContextValue}>
