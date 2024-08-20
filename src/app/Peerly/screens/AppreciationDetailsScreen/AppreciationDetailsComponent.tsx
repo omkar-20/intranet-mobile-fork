@@ -148,7 +148,9 @@ const AppreciationDetailsComponent = ({
   );
 
   const handleReward = (point: number) => {
-    setOpenAckRewardModal(true);
+    if (point !== 0) {
+      setOpenAckRewardModal(true);
+    }
     setReward(point);
   };
 
