@@ -14,7 +14,7 @@ import colors from '../../constants/colors';
 import AppreciationCard from '../../components/AppreciationCard';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import fonts from '../../../constant/fonts';
-import LeaderBoardCard from '../../components/LeaderBoardCard';
+import LeaderBoardCard from '../../components/LeaderBoard/LeaderBoardCard';
 import {
   useGetAppreciationList,
   useGetActiveUsersList,

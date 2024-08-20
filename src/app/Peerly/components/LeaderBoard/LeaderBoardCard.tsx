@@ -1,45 +1,13 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
-import {
-  WhiteStar,
-  PlatinumIcon,
-  GoldIcon,
-  SilverIcon,
-  BronzeIcon,
-} from '../constants/icons';
-import {formatNumber} from '../utils';
-import InitialsAvatar from './InitialAvatar';
-import colors from '../constants/colors';
-import ImageWithFallback from './imageWithFallback/ImageWithFallback';
-
-const userBadgeProperty = {
-  platinum: {
-    border: {borderColor: colors.PLATINUM},
-    backgroundColor: {backgroundColor: colors.PLATINUM},
-    icon: PlatinumIcon,
-  },
-  gold: {
-    border: {borderColor: colors.GOLD},
-    backgroundColor: {backgroundColor: colors.GOLD},
-    icon: GoldIcon,
-  },
-  silver: {
-    border: {borderColor: colors.SILVER},
-    backgroundColor: {backgroundColor: colors.SILVER},
-    icon: SilverIcon,
-  },
-  bronze: {
-    border: {borderColor: colors.BRONZE},
-    backgroundColor: {backgroundColor: colors.BRONZE},
-    icon: BronzeIcon,
-  },
-  basicUser: {
-    border: {borderColor: colors.PRIMARY},
-    backgroundColor: {backgroundColor: colors.PRIMARY},
-    icon: '',
-  },
-};
+import {WhiteStar} from '../../constants/icons';
+import {formatNumber} from '../../utils';
+import InitialsAvatar from '../InitialAvatar';
+import colors from '../../constants/colors';
+import ImageWithFallback from '../imageWithFallback/ImageWithFallback';
+import userBadgeProperty from './constants';
+import {BadgeType} from '../../types';
 
 interface LeaderBoardCardProps {
   userDetail: {
@@ -51,7 +19,6 @@ interface LeaderBoardCardProps {
     appreciation_points: number;
   };
 }
-type BadgeType = 'platinum' | 'gold' | 'silver' | 'bronze' | 'basicUser';
 
 const LeaderBoardCard: React.FC<LeaderBoardCardProps> = ({userDetail}) => {
   const userName = `${userDetail.first_name || ''}  ${
@@ -119,7 +86,7 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 30,
     borderWidth: 1,
-    borderColor: 'white',
+    borderColor: colors.WHITE,
   },
   starContainer: {
     position: 'absolute',
