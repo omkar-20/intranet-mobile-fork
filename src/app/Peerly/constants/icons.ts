@@ -6,6 +6,7 @@ import TrustIcon from '../assets/peerly/svg/trust.svg';
 import TechnicalIcon from '../assets/peerly/svg/technical.svg';
 import RespectIcon from '../assets/peerly/svg/respect.svg';
 import EthicsIcon from '../assets/peerly/svg/ethics.svg';
+import EmployeeIcon from '../assets/peerly/svg/employee.svg';
 import CustFocusIcon from '../assets/peerly/svg/custfocus.svg';
 import SuccessIcon from '../assets/peerly/svg/Vector.svg';
 import InfoIcon from '../assets/peerly/svg/info.svg';
@@ -29,6 +30,7 @@ export {
   TechnicalIcon,
   RespectIcon,
   EthicsIcon,
+  EmployeeIcon,
   CustFocusIcon,
   SuccessIcon,
   InfoIcon,

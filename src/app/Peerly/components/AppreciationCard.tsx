@@ -18,6 +18,7 @@ enum CoreValue {
   TECHNICALEXCELLENCE = 'Technical Excellence',
   INTEGRITYANDETHICS = 'Integrity & Ethics',
   CUSTFOCUS = 'Customer Focus',
+  EMPFOCUS = 'Employee Focus',
   RESPECT = 'Respect',
 }
 
@@ -35,15 +36,17 @@ const AppreciationCard = ({
   const coreValueColors = useMemo(() => {
     switch (appreciationDetails?.core_value_name) {
       case CoreValue.TRUST:
-        return {backgroundColor: colors.WARM_CREAM};
+        return {backgroundColor: colors.LIGHT_PINK};
       case CoreValue.TECHNICALEXCELLENCE:
-        return {backgroundColor: colors.LIGHT_LAVENDER};
+        return {backgroundColor: colors.LIGHT_LIME};
       case CoreValue.INTEGRITYANDETHICS:
-        return {backgroundColor: colors.LIGHT_MINT_GREEN};
+        return {backgroundColor: colors.LIGHT_AQUA};
+      case CoreValue.EMPFOCUS:
+        return {backgroundColor: colors.LIGHT_SKYBLUE};
       case CoreValue.CUSTFOCUS:
-        return {backgroundColor: colors.SOFT_ROSE};
+        return {backgroundColor: colors.LIGHT_TEAL};
       case CoreValue.RESPECT:
-        return {backgroundColor: colors.LAVENDER_LIGHT};
+        return {backgroundColor: colors.LIGHT_PEACH};
       default:
         return {backgroundColor: colors.WARM_CREAM};
     }

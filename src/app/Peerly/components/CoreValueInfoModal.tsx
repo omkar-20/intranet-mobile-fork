@@ -14,6 +14,7 @@ import {
   RespectIcon,
   EthicsIcon,
   CustFocusIcon,
+  EmployeeIcon,
 } from '../constants/icons';
 
 import {CoreValue} from '../services/giveAppreciation/types';
@@ -23,27 +24,32 @@ const coreValuesMeta = [
   {
     id: 1,
     icon: TrustIcon,
-    backgroundColor: colors.WARM_CREAM,
+    backgroundColor: colors.LIGHT_PINK,
   },
   {
     id: 2,
-    icon: TechnicalIcon,
-    backgroundColor: colors.LIGHT_LAVENDER,
+    icon: RespectIcon,
+    backgroundColor: colors.LIGHT_PEACH,
   },
   {
     id: 3,
     icon: EthicsIcon,
-    backgroundColor: colors.LIGHT_MINT_GREEN,
+    backgroundColor: colors.LIGHT_AQUA,
   },
   {
     id: 4,
-    icon: CustFocusIcon,
-    backgroundColor: colors.SOFT_ROSE,
+    icon: EmployeeIcon,
+    backgroundColor: colors.LIGHT_SKYBLUE,
   },
   {
     id: 5,
-    icon: RespectIcon,
-    backgroundColor: colors.LAVENDER_LIGHT,
+    icon: CustFocusIcon,
+    backgroundColor: colors.LIGHT_TEAL,
+  },
+  {
+    id: 6,
+    icon: TechnicalIcon,
+    backgroundColor: colors.LIGHT_LIME,
   },
 ];
 
@@ -118,6 +124,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   card: {
+    paddingTop: 10,
+    paddingRight: 10,
     flexGrow: 1,
     borderRadius: 10,
     flexDirection: 'row',
@@ -127,6 +135,7 @@ const styles = StyleSheet.create({
   },
   cardContent: {
     paddingLeft: 10,
+    paddingBottom: 10,
     flex: 3,
   },
   iconWrapper: {
