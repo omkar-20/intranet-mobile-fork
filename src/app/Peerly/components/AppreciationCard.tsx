@@ -8,10 +8,10 @@ import InitialAvatar from './InitialAvatar';
 import Typography from './typography';
 import ImageWithFallback from './imageWithFallback/ImageWithFallback';
 
-type Props = {
+interface AppreciationCardProps {
   onPress?: (id: number) => void;
   appreciationDetails: AppreciationDetails;
-};
+}
 
 enum CoreValue {
   TRUST = 'Trust',
@@ -21,7 +21,10 @@ enum CoreValue {
   RESPECT = 'Respect',
 }
 
-const AppreciationCard = ({onPress, appreciationDetails}: Props) => {
+const AppreciationCard = ({
+  onPress,
+  appreciationDetails,
+}: AppreciationCardProps) => {
   const receiverName = `${appreciationDetails.receiver_first_name || ''} ${
     appreciationDetails.receiver_last_name || ''
   }`;
