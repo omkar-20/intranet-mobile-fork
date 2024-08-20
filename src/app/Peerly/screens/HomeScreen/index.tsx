@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -14,7 +14,7 @@ import colors from '../../constants/colors';
 import AppreciationCard from '../../components/AppreciationCard';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import fonts from '../../../constant/fonts';
-import LeaderBoardCard from '../../components/LeaderBoardCard';
+import LeaderBoardCard from '../../components/LeaderBoard/LeaderBoardCard';
 import {
   useGetAppreciationList,
   useGetActiveUsersList,
@@ -29,7 +29,14 @@ import {
 } from '../../constants/screenNames';
 import {useNavigation} from '@react-navigation/native';
 import {HomeScreenNavigationProp} from '../../navigation/types';
-import {NoAppreciationIcon, StarIcon} from '../../constants/icons';
+import {
+  BronzeIcon,
+  GoldIcon,
+  NoAppreciationIcon,
+  PlatinumIcon,
+  SilverIcon,
+  StarIcon,
+} from '../../constants/icons';
 import Search from '../../components/Search';
 import InitialsAvatar from '../../components/InitialAvatar';
 import FloatingButton from '../../components/button/floatingButton';
@@ -37,12 +44,23 @@ import SkeletonLoader from '../../components/skeleton/skeleton';
 import {formatNumber} from '../../utils';
 import FallbackUI from '../../components/fallbackUI/NoDataScreen';
 import message from '../../constants/message';
+import {SvgProps} from 'react-native-svg';
+import ImageWithFallback from '../../components/imageWithFallback/ImageWithFallback';
 
 const paginationData = {
   page: 1,
   page_size: 500,
   sort_order: 'DESC',
 };
+
+const userBadgeProperty: {[key: string]: React.FC<SvgProps>} = {
+  platinum: PlatinumIcon,
+  gold: GoldIcon,
+  silver: SilverIcon,
+  bronze: BronzeIcon,
+};
+
+type BadgeType = 'platinum' | 'gold' | 'silver' | 'bronze';
 
 const HomeScreen = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
@@ -154,6 +172,20 @@ const HomeScreen = () => {
     profileDetails?.last_name || ''
   }`;
 
+  const userBadge = useMemo(() => {
+    if (profileDetails?.badge) {
+      const badge = profileDetails.badge.toLowerCase();
+      const BadgeIcon = userBadgeProperty[badge as BadgeType];
+      return (
+        <View style={styles.userBadgePosition}>
+          <BadgeIcon width={14} height={14} />
+        </View>
+      );
+    } else {
+      <View>{null}</View>;
+    }
+  }, [profileDetails?.badge]);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -162,7 +194,7 @@ const HomeScreen = () => {
           <Pressable onPress={() => handleProfileIconClick()}>
             {!profileDetails?.total_points &&
             profileDetails?.profile_image_url === '' ? (
-              <InitialsAvatar name={userName} size={40} />
+              <InitialsAvatar name={userName} size={37} />
             ) : (
               <View style={[styles.userScoreBox, profileIconPadding]}>
                 {profileDetails?.total_points ? (
@@ -174,13 +206,23 @@ const HomeScreen = () => {
                   </>
                 ) : null}
                 {profileDetails?.profile_image_url !== '' ? (
-                  <Image
-                    source={{uri: profileDetails?.profile_image_url}}
-                    style={styles.userAvatar}
-                  />
+                  <View style={styles.profileIconWrapper}>
+                    <ImageWithFallback
+                      imageUrl={profileDetails?.profile_image_url || ''}
+                      initials={
+                        <View style={styles.profileIconWrapper}>
+                          <InitialsAvatar name={userName} size={37} />
+                        </View>
+                      }
+                      imageStyle={styles.userAvatar}
+                    />
+                  </View>
                 ) : (
-                  <InitialsAvatar name={userName} size={40} />
+                  <View style={styles.profileIconWrapper}>
+                    <InitialsAvatar name={userName} size={37} />
+                  </View>
                 )}
+                {userBadge}
               </View>
             )}
           </Pressable>
@@ -219,7 +261,10 @@ const HomeScreen = () => {
                 <Text style={styles.totalAppreciationCountWrapper}>
                   Total:{' '}
                   <Text style={styles.totalAppreciationCount}>
-                    {appreciationListMeta?.total_records} Appreciations
+                    {appreciationListMeta?.total_records}
+                    {appreciationListMeta?.total_records === 1
+                      ? ' Appreciation'
+                      : ' Appreciations'}
                   </Text>
                 </Text>
                 {isLoadingAppreciations || isFetchingAppreciations ? (
@@ -238,9 +283,7 @@ const HomeScreen = () => {
                     style={styles.flatListAppreciation}
                     refreshing={refreshing}
                     onRefresh={onRefresh}
-                    contentContainerStyle={{
-                      paddingBottom: 50
-                    }}
+                    contentContainerStyle={styles.flatListContainerStyle}
                   />
                 )}
               </View>
@@ -277,14 +320,13 @@ const styles = StyleSheet.create({
     color: colors.BLACK,
   },
   userScoreBox: {
-    height: 39,
+    height: 32,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
     backgroundColor: colors.PRIMARY,
     borderRadius: 999,
     borderColor: colors.PRIMARY,
-    borderWidth: 2,
   },
   scoreText: {
     fontSize: 14,
@@ -292,10 +334,11 @@ const styles = StyleSheet.create({
     color: colors.WHITE,
   },
   userAvatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    paddingBottom: 18,
+    width: 37,
+    height: 37,
+    borderRadius: 32,
+    borderColor: colors.PRIMARY,
+    borderWidth: 1,
   },
   searchWrapper: {
     paddingHorizontal: 15,
@@ -353,6 +396,19 @@ const styles = StyleSheet.create({
   flatListAppreciation: {
     backgroundColor: 'transparent',
   },
-  tabViewWrapper: {height: 190},
+  tabViewWrapper: {
+    height: 190,
+  },
+  flatListContainerStyle: {
+    paddingBottom: 50,
+  },
+  userBadgePosition: {
+    position: 'absolute',
+    left: 90,
+    top: -8,
+  },
+  profileIconWrapper: {
+    marginBottom: 4,
+  },
 });
 export default HomeScreen;

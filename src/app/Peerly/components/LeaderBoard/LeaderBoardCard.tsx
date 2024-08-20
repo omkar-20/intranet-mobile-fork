@@ -1,44 +1,13 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 
-import {
-  WhiteStar,
-  PlatinumIcon,
-  GoldIcon,
-  SilverIcon,
-  BronzeIcon,
-} from '../constants/icons';
-import {formatNumber} from '../utils';
-import InitialsAvatar from './InitialAvatar';
-import colors from '../constants/colors';
-
-const userBadgeProperty = {
-  platinum: {
-    border: {borderColor: colors.PLATINUM},
-    backgroundColor: {backgroundColor: colors.PLATINUM},
-    icon: PlatinumIcon,
-  },
-  gold: {
-    border: {borderColor: colors.GOLD},
-    backgroundColor: {backgroundColor: colors.GOLD},
-    icon: GoldIcon,
-  },
-  silver: {
-    border: {borderColor: colors.SILVER},
-    backgroundColor: {backgroundColor: colors.SILVER},
-    icon: SilverIcon,
-  },
-  bronze: {
-    border: {borderColor: colors.BRONZE},
-    backgroundColor: {backgroundColor: colors.BRONZE},
-    icon: BronzeIcon,
-  },
-  basicUser: {
-    border: {borderColor: colors.PRIMARY},
-    backgroundColor: {backgroundColor: colors.PRIMARY},
-    icon: '',
-  },
-};
+import {WhiteStar} from '../../constants/icons';
+import {formatNumber} from '../../utils';
+import InitialsAvatar from '../InitialAvatar';
+import colors from '../../constants/colors';
+import ImageWithFallback from '../imageWithFallback/ImageWithFallback';
+import userBadgeProperty from './constants';
+import {BadgeType} from '../../types';
 
 interface LeaderBoardCardProps {
   userDetail: {
@@ -50,7 +19,6 @@ interface LeaderBoardCardProps {
     appreciation_points: number;
   };
 }
-type BadgeType = 'platinum' | 'gold' | 'silver' | 'bronze' | 'basicUser';
 
 const LeaderBoardCard: React.FC<LeaderBoardCardProps> = ({userDetail}) => {
   const userName = `${userDetail.first_name || ''}  ${
@@ -63,19 +31,22 @@ const LeaderBoardCard: React.FC<LeaderBoardCardProps> = ({userDetail}) => {
   return (
     <View style={styles.container}>
       {userDetail?.profile_image_url ? (
-        <Image
-          source={{uri: userDetail.profile_image_url}}
-          style={[styles.profileImage, avatarStyle.border]}
+        <ImageWithFallback
+          imageUrl={userDetail.profile_image_url}
+          initials={
+            <InitialsAvatar
+              name={userName}
+              size={60}
+              borderColor={avatarStyle.border.borderColor}
+            />
+          }
+          imageStyle={[styles.profileImage, avatarStyle.border]}
         />
       ) : (
         <InitialsAvatar
           name={userName}
           size={60}
-          borderColor={
-            userDetail?.appreciation_points > 0
-              ? avatarStyle.border.borderColor
-              : ''
-          }
+          borderColor={avatarStyle.border.borderColor}
         />
       )}
       {BadgeIcon !== '' ? (
@@ -92,7 +63,9 @@ const LeaderBoardCard: React.FC<LeaderBoardCardProps> = ({userDetail}) => {
         </View>
       ) : null}
       <View style={[styles.nameContainer]}>
-        <Text style={styles.useName}>{userName}</Text>
+        <Text style={styles.userName} ellipsizeMode="tail" numberOfLines={2}>
+          {userName}
+        </Text>
       </View>
     </View>
   );
@@ -113,7 +86,7 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 30,
     borderWidth: 1,
-    borderColor: 'white',
+    borderColor: colors.WHITE,
   },
   starContainer: {
     position: 'absolute',
@@ -134,7 +107,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 12,
   },
-  useName: {
+  userName: {
     width: 60,
     fontSize: 12,
     textAlign: 'center',

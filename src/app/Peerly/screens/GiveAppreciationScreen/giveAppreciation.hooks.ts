@@ -73,6 +73,8 @@ export function usePostAppreciation() {
       postAppreciationRequest(payload),
     onSuccess: () => {
       queryClient.invalidateQueries(['appreciation_list']);
+      queryClient.invalidateQueries(['top_users_list']);
+      queryClient.invalidateQueries(['active_user_list']);
     },
     onError: (error: AxiosError<APIError>) => {
       if (error.response?.data.message) {
