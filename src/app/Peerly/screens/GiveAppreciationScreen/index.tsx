@@ -39,7 +39,8 @@ const paginationData = {
 const schema = yup.object().shape({
   receiver: yup.string().required(messages.SELECT_COWORKER_NAME),
   core_value_id: yup.string().required(messages.SELECT_CORE_VALUE),
-  description: yup.string().required(messages.ENTER_DESCIPTION),
+  description: yup.string().required(messages.ENTER_DESCIPTION)
+  .min(150, messages.MIN_DESCRIPTION_LENGTH),
 });
 
 const AppreciationScreen = () => {
@@ -159,18 +160,19 @@ const AppreciationScreen = () => {
             <Controller
               control={control}
               render={({field: {onChange, value}}) => (
-                <TextInput
-                  style={styles.description}
-                  onChangeText={onChange}
-                  value={value}
-                  multiline
-                />
+                  <TextInput
+                    style={styles.description}
+                    onChangeText={onChange}
+                    value={value}
+                    multiline
+                  />           
               )}
               name="description"
             />
-            {errors.description && (
-              <Typography type="error">{errors.description.message}</Typography>
-            )}
+            <Typography type={errors.description ? "error" : "title"} style={errors.description ? {} : styles.noteText}>
+                {errors.description ? errors.description.message : messages.MIN_DESCRIPTION_LENGTH
+              }
+            </Typography>  
           </View>
           <Button
             title="Submit"
@@ -258,6 +260,11 @@ const styles = StyleSheet.create({
     height: 20,
     fontSize: 16,
     borderRadius: 12,
+  },
+  noteText: {
+    color: 'gray',
+    fontSize: 12,
+    marginTop: 4,
   },
 });
 
