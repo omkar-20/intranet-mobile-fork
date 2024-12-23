@@ -13,7 +13,11 @@
     "lint": "eslint .",
     "start": "react-native start",
     "updateversion": "react-native-version --never-amend",
-    "test": "jest"
+    "test": "jest",
+    "clean": "./android/gradlew -p android clean",
+    "bundle:prod": "./android/gradlew -p android bundleProdRelease",
+    "assemble:prod": "./android/gradlew -p android assembleProdRelease",
+    "build:prod": "npm run bundle:prod && npm run assemble:prod"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.1.1",
