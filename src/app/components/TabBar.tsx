@@ -1,10 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {
-  DrawerActions,
-  NavigationHelpers,
-  TabNavigationState,
-} from '@react-navigation/native';
+import {NavigationHelpers, TabNavigationState} from '@react-navigation/native';
 import {
   BottomTabBarProps,
   BottomTabNavigationEventMap,
@@ -18,6 +14,7 @@ import {useIsKeyboardShown} from '../hooks/useIsKeyboardShown';
 import {Home, Calendar, Clock, Menu as MenuIcon} from '../constant/icons';
 import {MainTabParamList} from '../navigation/types';
 import colors from '../constant/colors';
+import {PeerlyIcon} from '../Peerly/constants/icons';
 
 // Defining specific types because
 // ButtonTabBarProps is not generic in the library
@@ -31,6 +28,7 @@ const screenIcons: Record<keyof MainTabParamList, React.FC<SvgProps>> = {
   Home: Home,
   Leave: Calendar,
   Timesheet: Clock,
+  Peerly: PeerlyIcon,
 };
 
 const TabBar = (props: BottomTabBarProps) => {
@@ -81,22 +79,9 @@ const TabBar = (props: BottomTabBarProps) => {
     );
   });
 
-  const handleMenuButtonPress = () => {
-    navigation.dispatch(DrawerActions.toggleDrawer());
-  };
-
   return (
     <View style={[styles.container, {paddingBottom: inset.bottom}]}>
-      <View style={styles.contentContainer}>
-        {tabButtons}
-
-        <TabBarButton
-          icon={MenuIcon}
-          title="Menu"
-          active={false}
-          onPress={handleMenuButtonPress}
-        />
-      </View>
+      <View style={styles.contentContainer}>{tabButtons}</View>
     </View>
   );
 };
