@@ -26,6 +26,10 @@ const dateTypes: Record<string, {color: string; type: string}> = {
     color: colors.GRAY_BACKGROUND,
     type: 'holiday',
   },
+  weekends: {
+    color: colors.TRANSPARENT,
+    type: 'weekends',
+  }
 };
 
 export const generateMarkedDates = (data: Record<string, string[]>) => {
@@ -85,7 +89,21 @@ export const generateMarkedDates = (data: Record<string, string[]>) => {
       };
     });
   });
-
+  data['weekends'].forEach(date => {
+    if (!result[date]) {
+      const { color, type } = dateTypes['weekends'];
+      result[date] = {
+        customStyles: {
+          container: {
+            backgroundColor: color,
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+        },
+        type,
+      };
+    }
+  });
   return result;
 };
 

@@ -45,7 +45,7 @@ function Calendar() {
   );
   const [year, setYear] = useState(todaysDate().getFullYear());
 
-  const {approved, pending, not_filled, rejected, leaves, holidays, isLoading} =
+  const {approved, pending, not_filled, rejected, leaves, holidays, weekends, isLoading} =
     useHomeCalendar(month, year);
 
   const handleMonthChange = (date: DateData) => {
@@ -63,8 +63,9 @@ function Calendar() {
       not_filled,
       leaves,
       holidays,
+      weekends,
     });
-  }, [approved, pending, rejected, not_filled, leaves, holidays]);
+  }, [approved, pending, rejected, not_filled, leaves, holidays, weekends]);
 
   const onDatePress = useCallback(
     ({
@@ -109,6 +110,13 @@ function Calendar() {
 
         case 'rejected':
           navigation.navigate(screen, params);
+          return;
+
+        case 'weekends':
+          navigation.navigate(screen, {
+            ...params,
+            isAddModalOpen: true,
+          });
           return;
 
         default:
