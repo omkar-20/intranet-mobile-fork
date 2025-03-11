@@ -10,6 +10,7 @@ import {
 import { Dropdown } from 'react-native-element-dropdown';
 import Button from './button/button';
 import colors from '../constants/colors';
+import message from '../constants/message';
 
 interface CenteredModalProps {
   visible: boolean;
@@ -29,15 +30,10 @@ const ObjectionModal: React.FC<CenteredModalProps> = ({
   isLoading,
 }) => {
   const [selectedReason, setSelectedReason] = useState(reason);
-
-  const reasonOptions = [
-    {label: 'Insufficient Description', value: 'Insufficient Description'},
-    {label: 'Values Mismatch', value: 'Values Mismatch'},
-    {label: 'Inappropriate appreciation', value: 'Inappropriate appreciation'},
-    {label: 'Part of routine roles and responsibilties', value: 'Part of routine roles and responsibilties'},
-    {label: 'Action is not from current quarter ', value: 'Action is not from current quarter '},
-    {label: 'Others', value: 'Others'},
-  ];
+  const handleReasonChange = (item: { value: string }) => {
+    setSelectedReason(item.value);
+    setReason(item.value);
+  };
 
   const isReasonEmpty = useMemo(() => {
     if (!reason.trim().length) {
@@ -68,16 +64,13 @@ const ObjectionModal: React.FC<CenteredModalProps> = ({
                 placeholderStyle={styles.placeholderStyle}
                 selectedTextStyle={styles.selectedTextStyle}
                 containerStyle={styles.containerStyle}
-                data={reasonOptions}
+                data={message.REASON_OPTIONS}
                 maxHeight={300}
                 labelField="label"
                 valueField="value"
                 placeholder="Select a reason"
                 value={selectedReason}
-                onChange={item => {
-                  setSelectedReason(item.value);
-                  setReason(item.value);
-                }}
+                onChange={handleReasonChange}
               />
               <View style={styles.buttonContainer}>
                 <Button

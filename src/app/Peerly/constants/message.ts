@@ -20,4 +20,12 @@ export default {
   REWARD_SUCCESS:
     'Your rewards has been submitted successfully. We appreciate your feedback.',
   MIN_DESCRIPTION_LENGTH: 'Description must be at least 150 characters long.',
+  REASON_OPTIONS: [
+    { label: 'Insufficient Description', value: 'Insufficient Description' },
+    { label: 'Values Mismatch', value: 'Values Mismatch' },
+    { label: 'Inappropriate appreciation', value: 'Inappropriate appreciation' },
+    { label: 'Part of routine roles and responsibilities', value: 'Part of routine roles and responsibilities' },
+    { label: 'Action is not from current quarter', value: 'Action is not from current quarter' },
+    { label: 'Others', value: 'Others' },
+  ]
 };
