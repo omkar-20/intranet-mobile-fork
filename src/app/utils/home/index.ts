@@ -52,7 +52,7 @@ export const generateMarkedDates = (data: Record<string, string[]>) => {
     });
   });
 
-  ['approved', 'not_filled', 'pending', 'rejected'].forEach(dateType => {
+  ['approved', 'not_filled', 'pending', 'rejected', 'weekends'].forEach(dateType => {
     const {color, type} = dateTypes[dateType];
 
     data[dateType].forEach(date => {
@@ -74,6 +74,9 @@ export const generateMarkedDates = (data: Record<string, string[]>) => {
             break;
         }
       }
+      if (dateType === 'weekends' && result[date]) {
+        return;
+      }
 
       result[date] = {
         customStyles: {
@@ -88,21 +91,6 @@ export const generateMarkedDates = (data: Record<string, string[]>) => {
         type,
       };
     });
-  });
-  data['weekends'].forEach(date => {
-    if (!result[date]) {
-      const { color, type } = dateTypes['weekends'];
-      result[date] = {
-        customStyles: {
-          container: {
-            backgroundColor: color,
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
-        },
-        type,
-      };
-    }
   });
   return result;
 };
