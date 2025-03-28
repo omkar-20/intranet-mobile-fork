@@ -33,6 +33,7 @@ export const useHomeCalendar = (month: string, year: number) => {
     not_filled: data?.data?.data?.not_filled || [],
     leaves: data?.data?.data?.leaves || [],
     holidays: data?.data?.data?.holidays || [],
+    weekends: data?.data?.data?.weekends || [],
     isLoading,
   };
 };
