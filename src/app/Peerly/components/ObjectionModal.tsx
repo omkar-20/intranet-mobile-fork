@@ -1,13 +1,16 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 import {
   Modal,
   View,
   Text,
   StyleSheet,
-  TextInput,
   TouchableWithoutFeedback,
+  Dimensions,
 } from 'react-native';
+import { Dropdown } from 'react-native-element-dropdown';
 import Button from './button/button';
+import colors from '../constants/colors';
+import message from '../constants/message';
 
 interface CenteredModalProps {
   visible: boolean;
@@ -17,7 +20,7 @@ interface CenteredModalProps {
   reason: string;
   isLoading: boolean;
 }
-
+const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 const ObjectionModal: React.FC<CenteredModalProps> = ({
   visible,
   onClose,
@@ -26,8 +29,10 @@ const ObjectionModal: React.FC<CenteredModalProps> = ({
   reason,
   isLoading,
 }) => {
-  const handleReason = (value: string) => {
-    setReason(value);
+  const [selectedReason, setSelectedReason] = useState(reason);
+  const handleReasonChange = (item: { value: string }) => {
+    setSelectedReason(item.value);
+    setReason(item.value);
   };
 
   const isReasonEmpty = useMemo(() => {
@@ -54,12 +59,18 @@ const ObjectionModal: React.FC<CenteredModalProps> = ({
               <Text style={styles.modalText}>
                 HR team will contact you shortly.
               </Text>
-              <TextInput
-                style={styles.description}
-                placeholder="Enter you text here"
-                onChangeText={handleReason}
-                value={reason}
-                multiline
+              <Dropdown
+                style={styles.dropdown}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                containerStyle={styles.containerStyle}
+                data={message.REASON_OPTIONS}
+                maxHeight={300}
+                labelField="label"
+                valueField="value"
+                placeholder="Select a reason"
+                value={selectedReason}
+                onChange={handleReasonChange}
               />
               <View style={styles.buttonContainer}>
                 <Button
@@ -107,16 +118,27 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 40,
   },
-  description: {
-    textAlignVertical: 'top',
-    borderRadius: 12,
+  dropdown: {
+    height: 50,
+    width:200,
+    borderColor: colors.MEDIUM_GRAY,
+    borderRadius: 4,
+    paddingHorizontal: 8,
     borderWidth: 1,
-    height: '40%',
-    width: '90%',
-    borderColor: 'transparent',
-    marginBottom: 16,
-    backgroundColor: 'white',
-    padding: 10,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+  },
+  containerStyle: {
+    borderRadius: 10,
+    paddingBottom: 0,
+    paddingVertical: 0,
+    marginVertical: 0,
+    maxHeight: SCREEN_HEIGHT / 4.5,
+    width:'50%',
   },
 });
 
