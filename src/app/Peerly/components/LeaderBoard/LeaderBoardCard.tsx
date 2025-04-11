@@ -21,7 +21,7 @@ const LeaderBoardCard: React.FC<LeaderBoardCardProps> = ({userDetail}) => {
   const userName = `${userDetail.first_name || ''}  ${
     userDetail.last_name || ''
   }`;
-  const badge = userDetail?.badge_name?.toLowerCase() || 'basicUser';
+  const badge = 'basicUser';
   const avatarStyle = userBadgeProperty[badge as BadgeType];
   const BadgeIcon = avatarStyle.icon;
 

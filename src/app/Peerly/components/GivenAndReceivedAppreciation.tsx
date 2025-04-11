@@ -98,6 +98,7 @@ const GivenAndReceivedAppriciation = ({
                   <AppreciationCard
                     appreciationDetails={item}
                     onPress={handleAppreciationCardClick}
+                    showAppreciatorName={true}
                   />
                 )}
                 keyExtractor={item => String(item.id)}
@@ -133,6 +134,7 @@ const GivenAndReceivedAppriciation = ({
                   <AppreciationCard
                     appreciationDetails={item}
                     onPress={handleAppreciationCardClick}
+                    showAppreciatorName={true}
                   />
                 )}
                 keyExtractor={item => String(item.id)}

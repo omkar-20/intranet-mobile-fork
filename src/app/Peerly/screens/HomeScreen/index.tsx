@@ -82,6 +82,7 @@ const HomeScreen = () => {
   const {data: activeUsersList} = useGetActiveUsersList();
 
   const {data: topUsersList} = useGetTopUsersList();
+  const topUsers = topUsersList.slice(0,3);
 
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
@@ -100,7 +101,7 @@ const HomeScreen = () => {
     () => (
       <View style={styles.activeAndTopTenTab}>
         <FlatList
-          data={topUsersList}
+          data={topUsers}
           renderItem={({item}) => <LeaderBoardCard userDetail={item} />}
           keyExtractor={item => String(item.id)}
           horizontal={true}
@@ -276,6 +277,7 @@ const HomeScreen = () => {
                       <AppreciationCard
                         appreciationDetails={item}
                         onPress={handleAppreciationCardClick}
+                        showAppreciatorName={false}
                       />
                     )}
                     keyExtractor={item => String(item.id)}

@@ -11,6 +11,7 @@ import ImageWithFallback from './imageWithFallback/ImageWithFallback';
 interface AppreciationCardProps {
   onPress?: (id: number) => void;
   appreciationDetails: AppreciationDetails;
+  showAppreciatorName: boolean
 }
 
 enum CoreValue {
@@ -25,6 +26,7 @@ enum CoreValue {
 const AppreciationCard = ({
   onPress,
   appreciationDetails,
+  showAppreciatorName
 }: AppreciationCardProps) => {
   const receiverName = `${appreciationDetails.receiver_first_name || ''} ${
     appreciationDetails.receiver_last_name || ''
@@ -72,20 +74,24 @@ const AppreciationCard = ({
                 <InitialAvatar name={receiverName} size={60} />
               </View>
             )}
-            {appreciationDetails?.sender_image_url !== '' ? (
-              <ImageWithFallback
-                imageUrl={appreciationDetails.sender_image_url}
-                initials={
+            { showAppreciatorName && (
+              <>
+                {appreciationDetails?.sender_image_url !== '' ? (
+                  <ImageWithFallback
+                    imageUrl={appreciationDetails.sender_image_url}
+                    initials={
+                      <View style={styles.initialAvatarSmall}>
+                        <InitialAvatar name={senderName} size={47} />
+                      </View>
+                    }
+                    imageStyle={styles.smallAvatar}
+                  />
+                ) : (
                   <View style={styles.initialAvatarSmall}>
                     <InitialAvatar name={senderName} size={47} />
                   </View>
-                }
-                imageStyle={styles.smallAvatar}
-              />
-            ) : (
-              <View style={styles.initialAvatarSmall}>
-                <InitialAvatar name={senderName} size={47} />
-              </View>
+                )}
+              </>
             )}
           </View>
           <View style={styles.totalRewardBox}>
@@ -112,16 +118,21 @@ const AppreciationCard = ({
               {appreciationDetails.receiver_designation}
             </Typography>
           </View>
-          <Typography type="h5" style={styles.appreciation}>
-            Appreciated by
-          </Typography>
-          <Typography
-            type="h4"
-            style={styles.senderName}
-            numberOfLines={1}
-            ellipsizeMode="tail">
-            {senderName}
-          </Typography>
+          {showAppreciatorName && (
+            <>
+              <Typography type="h5" style={styles.appreciation}>
+                Appreciated by
+              </Typography>
+              <Typography
+                type="h4"
+                style={styles.senderName}
+                numberOfLines={1}
+                ellipsizeMode="tail">
+                {senderName}
+                </Typography>
+            </>
+          )}
+         
           <Typography type="h6" style={styles.days}>
             {timeFromNow(appreciationDetails.created_at)}
           </Typography>

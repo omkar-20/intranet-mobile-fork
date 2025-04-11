@@ -196,10 +196,6 @@ const AppreciationDetailsComponent = ({
     cardDetails?.receiver_last_name || ''
   } `;
 
-  const senderName = `${cardDetails?.sender_first_name || ''} ${
-    cardDetails?.sender_last_name || ''
-  }`;
-
   return (
     <View style={styles.screen}>
       <View style={styles.container}>
@@ -217,23 +213,6 @@ const AppreciationDetailsComponent = ({
           ) : (
             <View style={styles.receiverImageAvatar}>
               <InitialAvatar name={receiverName} size={95} />
-            </View>
-          )}
-        </View>
-        <View style={styles.senderImageBox}>
-          {cardDetails?.sender_image_url ? (
-            <ImageWithFallback
-              imageUrl={cardDetails.sender_image_url}
-              imageStyle={styles.senderImage}
-              initials={
-                <View style={styles.senderImageAvatar}>
-                  <InitialAvatar name={senderName} size={66} />
-                </View>
-              }
-            />
-          ) : (
-            <View style={styles.senderImageAvatar}>
-              <InitialAvatar name={senderName} size={66} />
             </View>
           )}
         </View>
@@ -257,10 +236,6 @@ const AppreciationDetailsComponent = ({
             <Text style={styles.description}>
               {cardDetails.core_value_description}
             </Text>
-          </View>
-          <View style={styles.senderNameWrap}>
-            <Text style={styles.authorByText}>Words by </Text>
-            <Text style={styles.author}>{senderName}</Text>
           </View>
           <View style={styles.appreciationDescriptionBox}>
             <ScrollView>
