@@ -88,13 +88,13 @@ const RootNavigator = () => {
 
   useEffect(() => {
     const run = async () => {
-      try {
-        const version = await checkVersion({
-          bundleId: BUNDLE_ID,
-        });
+      // try {
+      //   const version = await checkVersion({
+      //     bundleId: BUNDLE_ID,
+      //   });
 
-        setVersionContextData(version);
-      } catch {}
+      //   setVersionContextData(version);
+      // } catch {}
 
       const authToken = await AsyncStore.getItem(AsyncStore.AUTH_TOKEN_KEY);
       const userData = await AsyncStore.getItem(AsyncStore.USER_DATA);

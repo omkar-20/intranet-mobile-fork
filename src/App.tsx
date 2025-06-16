@@ -71,8 +71,8 @@ const App = () => {
   }
 
   return (
-    <GestureHandlerRootView style={{flex: 1}}>
-      <ErrorBoundary>
+    <ErrorBoundary>
+      <GestureHandlerRootView style={{flex: 1}}>
         <VersionContext.Provider value={versionContextValue}>
           <UserContext.Provider value={userContextValue}>
             <Interceptor>
@@ -86,9 +86,10 @@ const App = () => {
             </Interceptor>
           </UserContext.Provider>
         </VersionContext.Provider>
-      </ErrorBoundary>
       <Toast />
-    </GestureHandlerRootView>
+      </GestureHandlerRootView>
+    </ErrorBoundary>
+    
   );
 };
 
