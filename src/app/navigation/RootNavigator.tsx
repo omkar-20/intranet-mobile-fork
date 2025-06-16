@@ -124,14 +124,18 @@ const RootNavigator = () => {
       <RootStack.Navigator
         screenOptions={screenOptions}
         initialRouteName={DRAWER}>
-        {versionContextData === null || versionContextData.version === null ? (
-          <RootStack.Screen name={NO_VERSION} component={NoVersionScreen} />
-        ) : versionContextData.needsUpdate ? (
-          <RootStack.Screen
-            name={UPDATE_VERSION}
-            component={UpdateVersionScreen}
-          />
-        ) : userContextData ? (
+        {
+        // versionContextData === null || versionContextData.version === null ? (
+        //   <RootStack.Screen name={NO_VERSION} component={NoVersionScreen} />
+        // ) 
+        // : versionContextData.needsUpdate ? (
+        //   <RootStack.Screen
+        //     name={UPDATE_VERSION}
+        //     component={UpdateVersionScreen}
+        //   />
+        // ) 
+        // : 
+        userContextData ? (
           <>
             <RootStack.Screen name={DRAWER} component={DrawerNavigator} />
 
